@@ -32,6 +32,7 @@
 import { 
   defineComponent,
 } from 'vue';
+import { useStore } from '../store';
 
 export default defineComponent ({
   name: 'LoginPage',
@@ -39,7 +40,9 @@ export default defineComponent ({
 
   },
   setup() {
-
+    // storeを取得する
+    const store = useStore();
+    console.log(store.state.user)
     return {
 
     }

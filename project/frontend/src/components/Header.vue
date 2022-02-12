@@ -3,8 +3,17 @@
     <div class="header-title">
       <h1 class="header-title">RSpace</h1>
     </div>
-    <div class="header-user-name">
-      <h4>{{ username }}</h4>
+    <div class="header-user-info" v-show="userInfo.isLogined">
+      <div>
+        <p>{{ userInfo.name }}</p>
+      </div>
+      <div>
+        <fa-icon 
+          icon="arrow-right-from-bracket"
+          class="header-logout-btn" 
+          @click="onclickLogout($event)" 
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -24,9 +33,15 @@ export default defineComponent ({
   setup() {
     // storeを取得する
     const store = useStore();
-    const username = computed(() => store.state.user.name);
+    const userInfo = computed(() => store.state.user);
+  console.log(userInfo)
+    const onclickLogout = (event: MouseEvent) => {
+      event.preventDefault();
+      alert("ログアウトします");
+    }
     return {
-      username
+      userInfo,
+      onclickLogout
     }
   }
 }) // export default defineComponent
@@ -44,10 +59,28 @@ export default defineComponent ({
   margin-left: 20px;
 }
 
-.header-user-name {
+.header-user-info {
   margin-left: auto;
   margin-right: 50px;
   margin-top: 20px;
+  display: flex;
 }
+
+.header-logout-btn {
+  font-size: 25px;
+  line-height: 20px;
+  margin-top: 8px;
+  margin-left: 10px;
+  background-color: #ddd;
+  padding: 8px;
+  border-radius: 12px;
+}
+
+.header-logout-btn:hover {
+  opacity: 0.8;
+  cursor: pointer;
+}
+
+
 
 </style>

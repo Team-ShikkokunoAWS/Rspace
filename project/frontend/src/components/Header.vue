@@ -23,6 +23,7 @@ import {
   computed,
   defineComponent,
 } from 'vue';
+import { useRouter } from 'vue-router';
 import { useStore } from '../store';
 
 export default defineComponent ({
@@ -33,11 +34,19 @@ export default defineComponent ({
   setup() {
     // storeを取得する
     const store = useStore();
+    // storeにあるユーザー情報を監視（常に参照する）
     const userInfo = computed(() => store.state.user);
-  console.log(userInfo)
+    const router = useRouter();
+
+    // ログアウトボタン押下時の処理
     const onclickLogout = (event: MouseEvent) => {
       event.preventDefault();
-      alert("ログアウトします");
+      if (confirm("ログアウトしますか？")) {
+        store.dispatch('logout');
+        router.push('/login');
+      } else {
+        /** DO NOT NOTIHNG */
+      }
     }
     return {
       userInfo,

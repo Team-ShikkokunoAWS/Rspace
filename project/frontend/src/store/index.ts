@@ -15,21 +15,31 @@ export const store = createStore<State>({
   // ユーザーの状態
   state: {
     user: {
-      name: 'test',
-      password: 'test'
+      name: '',
+      password: ''
     }
   },
   // 状態の取得メソッド設定
   getters: {
-
+    // ユーザー情報を返却する
+    getLoginUser: function(state) {
+      return state.user;
+    }
   },
   // 変更のためのmutationsにコミット
   actions: {
-
+    // ユーザー情報を追加（ログイン状態に）するためのコミット
+    login({commit, state}, user: User) {
+      commit('login', {user: user})
+    }
   },
   // storeの状態を変更するためのmutation
   mutations: {
-
+    // ユーザー情報を追加（ログイン状態に）する
+    login(state, {user}) {
+      state.user.name = user.name;
+      state.user.password = user.password;
+    }
   }
 })
 

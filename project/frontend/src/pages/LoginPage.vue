@@ -21,7 +21,7 @@
           <button>ログイン</button>
         </div>
         <div class="login-btn">
-          <button>ゲストログイン</button>
+          <button @click="onclickGuestLogin($event)">ゲストログイン</button>
         </div>
       </div>
     </div>
@@ -33,6 +33,8 @@ import {
   defineComponent,
 } from 'vue';
 import { useStore } from '../store';
+import { User } from '../types/user';
+import { useRouter } from 'vue-router';
 
 export default defineComponent ({
   name: 'LoginPage',
@@ -42,9 +44,19 @@ export default defineComponent ({
   setup() {
     // storeを取得する
     const store = useStore();
-    console.log(store.state.user)
+    // VueRouter
+    const router = useRouter();
+    
+    // ゲストログインボタン押下時処理
+    const onclickGuestLogin = (event: MouseEvent) => {
+      event.preventDefault();
+      // ゲストとしてのログイン情報を与える
+      store.dispatch('login', { name: 'ゲストユーザー', password: 'test1234' } as User);
+      // Homeに遷移
+      router.push("/");
+    }
     return {
-
+      onclickGuestLogin
     }
   }
 }) // export default defineComponent

@@ -16,14 +16,8 @@ export const store = createStore<State>({
   state: {
     user: {
       name: '',
-      password: ''
-    }
-  },
-  // 状態の取得メソッド設定
-  getters: {
-    // ユーザー情報を返却する
-    getLoginUser: function(state) {
-      return state.user;
+      password: '',
+      isLogined: false,
     }
   },
   // 変更のためのmutationsにコミット
@@ -31,6 +25,10 @@ export const store = createStore<State>({
     // ユーザー情報を追加（ログイン状態に）するためのコミット
     login({commit, state}, user: User) {
       commit('login', {user: user})
+    },
+    // ユーザー情報をログアウト状態にするためのコミット
+    logout({commit, state}) {
+      commit('logout')
     }
   },
   // storeの状態を変更するためのmutation
@@ -39,6 +37,15 @@ export const store = createStore<State>({
     login(state, {user}) {
       state.user.name = user.name;
       state.user.password = user.password;
+      state.user.isLogined = user.isLogined;
+      // TODO: バックエンドから得たsessionトークンをブラウザに保持させる必要がある？
+    },
+    // ログアウト状態にする
+    logout(state) {
+      state.user.name = '';
+      state.user.password = '';
+      state.user.isLogined = false;
+      // TODO: ブラウザに保持させていたsessionトークンを破棄する必要がある？
     }
   }
 })

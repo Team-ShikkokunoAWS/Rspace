@@ -51,7 +51,7 @@ export default defineComponent ({
     const onclickGuestLogin = (event: MouseEvent) => {
       event.preventDefault();
       // ゲストとしてのログイン情報を与える
-      store.dispatch('login', { name: 'ゲストユーザー', password: 'test1234' } as User);
+      store.dispatch('login', { name: 'ゲストユーザー', password: 'test1234', isLogined: true } as User);
       // Homeに遷移
       router.push("/");
     }

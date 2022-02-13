@@ -13,13 +13,19 @@
 					<label>ユーザー名</label>
 				</div>
 				<div class="input-form">
-					<input type="text" v-model="state.username" placeholder="username" />
+					<input
+						id="username"
+						type="text"
+						v-model="state.username"
+						placeholder="username"
+					/>
 				</div>
 				<div class="form-label">
 					<label>パスワード</label>
 				</div>
 				<div class="input-form">
 					<input
+						id="password"
 						type="password"
 						v-model="state.password"
 						placeholder="password"
@@ -45,7 +51,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from 'vue';
+import { defineComponent, reactive, onMounted } from 'vue';
 import { useStore } from '@/store';
 import { User } from '@/types/user';
 import { useRouter } from 'vue-router';
@@ -74,6 +80,11 @@ export default defineComponent({
 		const store = useStore();
 		// VueRouter
 		const router = useRouter();
+
+		// 画面初期表示時の処理
+		onMounted(() => {
+			focusForm();
+		});
 
 		// ログインボタン押下時処理
 		const onclickLogin = (event: MouseEvent) => {
@@ -128,6 +139,12 @@ export default defineComponent({
 		const onclickSignUpLink = (event: MouseEvent) => {
 			event.preventDefault();
 			router.push('/signup');
+		};
+
+		// フォームにフォーカスを当てる
+		const focusForm = () => {
+			const form = document.getElementById('username');
+			form?.focus();
 		};
 
 		return {

@@ -3,7 +3,9 @@
     <div class="login-title">
       <h2>Login</h2>
     </div>
+
     <div class="login-card">
+
       <div class="login-form">
         <div class="form-label">
           <label>ユーザー名</label>
@@ -17,6 +19,7 @@
         <div class="input-form">
           <input type="password" />
         </div>
+
         <div class="login-btn">
           <button>ログイン</button>
         </div>
@@ -24,7 +27,15 @@
           <button @click="onclickGuestLogin($event)">ゲストログイン</button>
         </div>
       </div>
-    </div>
+
+      <div class="signup-link-container">
+        <div class="signup-link-btn">
+          <button @click="onclickSignUpLink($event)">新規登録</button>
+        </div>
+      </div>
+
+    </div><!-- .login-card -->
+
   </div>
 </template>
 
@@ -55,8 +66,16 @@ export default defineComponent ({
       // Homeに遷移
       router.push("/");
     }
+
+    // 新規登録ボタン押下時処理
+    const onclickSignUpLink = (event: MouseEvent) => {
+      event.preventDefault();
+      router.push("/signup");
+    }
+
     return {
-      onclickGuestLogin
+      onclickGuestLogin,
+      onclickSignUpLink
     }
   }
 }) // export default defineComponent
@@ -101,6 +120,7 @@ export default defineComponent ({
     padding: 8px;
     background-color: rgb(91, 155, 155);
     color: #eee;
+    font-size: 18px;
     font-weight: bold;
     border-radius: 8px;
     width: 40%;
@@ -110,6 +130,27 @@ export default defineComponent ({
     opacity: 0.8;
   }
   .login-btn button:active {
+    width: 39%;
+  }
+
+  /* 新規登録案内関連 */
+  .signup-link-container {
+    margin-top: 50px;
+  }
+  .signup-link-btn button {
+    padding: 8px;
+    background-color: rgb(103, 129, 212);
+    color: #eee;
+    font-weight: bold;
+    font-size: 18px;
+    border-radius: 8px;
+    width: 40%;
+  }
+  .signup-link-btn button:hover {
+    cursor: pointer;
+    opacity: 0.8;
+  }
+  .signup-link-btn button:active {
     width: 39%;
   }
 </style>

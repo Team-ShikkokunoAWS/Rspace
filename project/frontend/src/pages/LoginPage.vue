@@ -3,20 +3,27 @@
 		<div class="login-title">
 			<h2>Login</h2>
 		</div>
+
+		<!-- エラーメッセージ表示 -->
 		<ErrorList :errorMessages="state.errorMessages" />
+
 		<div class="login-card">
 			<div class="login-form">
 				<div class="form-label">
 					<label>ユーザー名</label>
 				</div>
 				<div class="input-form">
-					<input type="text" />
+					<input type="text" v-model="state.username" placeholder="username" />
 				</div>
 				<div class="form-label">
 					<label>パスワード</label>
 				</div>
 				<div class="input-form">
-					<input type="password" />
+					<input
+						type="password"
+						v-model="state.password"
+						placeholder="password"
+					/>
 				</div>
 
 				<div class="login-btn">
@@ -45,6 +52,8 @@ import { useRouter } from 'vue-router';
 import ErrorList from '../components/ErrorList.vue';
 
 interface State {
+	username: string;
+	password: string;
 	errorMessages: Array<String>;
 }
 
@@ -56,6 +65,8 @@ export default defineComponent({
 	setup() {
 		// リアクティブ定義
 		const state = reactive<State>({
+			username: '',
+			password: '',
 			errorMessages: [],
 		});
 		// storeを取得する
@@ -66,7 +77,27 @@ export default defineComponent({
 		// ログインボタン押下時処理
 		const onclickLogin = (event: MouseEvent) => {
 			event.preventDefault();
-			state.errorMessages = [...state.errorMessages, 'test'];
+
+			// エラーメッセージ初期化
+			state.errorMessages = [];
+
+			// ユーザー名の必須チェック
+			if (!state.username) {
+				const message = 'ユーザー名が入力されていません';
+				state.errorMessages.push(message);
+			}
+			// パスワードの必須チェック
+			if (!state.password) {
+				const message = 'パスワードが入力されていません';
+				state.errorMessages.push(message);
+			}
+			// エラー発生時、処理中断
+			if (state.errorMessages.length > 0) return;
+
+			// ログイン処理のAPI操作
+
+      // 必須チェックでエラーがない場合、仮で成功メッセージ
+			alert('ログイン成功');
 		};
 
 		// ゲストログインボタン押下時処理

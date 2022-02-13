@@ -46,11 +46,11 @@
 
 <script lang="ts">
 import { defineComponent, reactive } from 'vue';
-import { useStore } from '../store';
-import { User } from '../types/user';
+import { useStore } from '@/store';
+import { User } from '@/types/user';
 import { useRouter } from 'vue-router';
-import ErrorList from '../components/ErrorList.vue';
-import { MessageManager, getMessage } from '../constants/MessageManager';
+import ErrorList from '@/components/ErrorList.vue';
+import { MessageManager, getMessage } from '@/constants/MessageManager';
 
 interface State {
 	username: string;

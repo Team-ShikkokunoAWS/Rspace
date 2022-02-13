@@ -50,6 +50,7 @@ import { useStore } from '../store';
 import { User } from '../types/user';
 import { useRouter } from 'vue-router';
 import ErrorList from '../components/ErrorList.vue';
+import { MessageManager, getMessage } from '../constants/MessageManager';
 
 interface State {
 	username: string;
@@ -83,20 +84,30 @@ export default defineComponent({
 
 			// ユーザー名の必須チェック
 			if (!state.username) {
-				const message = 'ユーザー名が入力されていません';
-				state.errorMessages.push(message);
+				state.errorMessages.push(
+					getMessage(MessageManager.MSG_001, ['ユーザー名'])
+				);
 			}
+
+			// ユーザー名の文字数チェック
+			if (state.username.length > 20) {
+				state.errorMessages.push(
+					getMessage(MessageManager.MSG_003, ['ユーザー名', '20'])
+				);
+			}
+
 			// パスワードの必須チェック
 			if (!state.password) {
-				const message = 'パスワードが入力されていません';
-				state.errorMessages.push(message);
+				state.errorMessages.push(
+					getMessage(MessageManager.MSG_001, ['パスワード'])
+				);
 			}
 			// エラー発生時、処理中断
 			if (state.errorMessages.length > 0) return;
 
 			// ログイン処理のAPI操作
 
-      // 必須チェックでエラーがない場合、仮で成功メッセージ
+			// 必須チェックでエラーがない場合、仮で成功メッセージ
 			alert('ログイン成功');
 		};
 

@@ -1,27 +1,30 @@
 <template>
-  <div>
-    <Header />
-    <router-view />
-  </div>
+	<div>
+		<ToastMessage />
+		<Header />
+		<router-view />
+	</div>
 </template>
 
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
 import Header from '@/components/Header.vue';
+import ToastMessage from '@/components/ToastMessage.vue';
 
 @Options({
-  components: {
-    Header
-  },
+	components: {
+		Header,
+		ToastMessage,
+	},
 })
 export default class App extends Vue {}
 </script>
 
 <style>
-  body {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    height: 100vh;
-  }
+body {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	height: 100vh;
+}
 </style>

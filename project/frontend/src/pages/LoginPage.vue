@@ -133,6 +133,20 @@ export default defineComponent({
 			} as User);
 			// Homeに遷移
 			router.push('/');
+			// 遷移後、トーストメッセージ表示
+			store.dispatch('setToastShow', {
+				message: getMessage(MessageManager.MSG_004, ['ログイン']),
+				toastType: 'success',
+				isShow: true,
+			});
+			// トーストを2秒表示し、消す
+			setTimeout(() => {
+				store.dispatch('setToastShow', {
+					message: '',
+					toastType: '',
+					isShow: false,
+				});
+			}, 2000);
 		};
 
 		// 新規登録ボタン押下時処理

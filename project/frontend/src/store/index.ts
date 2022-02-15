@@ -1,10 +1,12 @@
 import { InjectionKey } from 'vue';
 import { createStore, useStore as baseUseStore, Store } from 'vuex';
 import { User } from '@/types/user';
+import { Toast } from '@/types/toast';
 
 // storeの型設定
 export interface State {
 	user: User;
+	toast: Toast;
 }
 
 // InjectionKeyの設定
@@ -12,12 +14,18 @@ export const key: InjectionKey<Store<State>> = Symbol();
 
 // storeの設定
 export const store = createStore<State>({
-	// ユーザーの状態
 	state: {
+		// ユーザーの状態
 		user: {
 			name: '',
 			password: '',
 			isLogined: false,
+		},
+		// メッセージトーストの状態
+		toast: {
+			message: '',
+			toastType: '',
+			isShow: false,
 		},
 	},
 	// 変更のためのmutationsにコミット
@@ -29,6 +37,13 @@ export const store = createStore<State>({
 		// ユーザー情報をログアウト状態にするためのコミット
 		logout({ commit, state }) {
 			commit('logout');
+		},
+		// メッセージトーストの表示・非表示切り替え
+		setToastShow(
+			{ commit, state },
+			toast: { message: string; toastColor: string; isShow: boolean }
+		) {
+			commit('setToastShow', { toast: toast });
 		},
 	},
 	// storeの状態を変更するためのmutation
@@ -46,6 +61,12 @@ export const store = createStore<State>({
 			state.user.password = '';
 			state.user.isLogined = false;
 			// TODO: ブラウザに保持させていたsessionトークンを破棄する必要がある？
+		},
+		// メッセージトーストの表示・非表示を切り替える
+		setToastShow(state, { toast }) {
+			state.toast.message = toast.message;
+			state.toast.toastType = toast.toastType;
+			state.toast.isShow = toast.isShow;
 		},
 	},
 });

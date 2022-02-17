@@ -53,8 +53,8 @@
 <script lang="ts">
 import { defineComponent, reactive, onMounted } from 'vue';
 import { useStore } from '@/store';
-import { User } from '@/types/user';
 import { useRouter } from 'vue-router';
+import { useCookie } from 'vue-cookie-next';
 import ErrorList from '@/components/ErrorList.vue';
 import { MessageManager, getMessage } from '@/constants/MessageManager';
 
@@ -80,6 +80,8 @@ export default defineComponent({
 		const store = useStore();
 		// VueRouter
 		const router = useRouter();
+		// クッキー管理
+		const cookie = useCookie();
 
 		// 画面初期表示時の処理
 		onMounted(() => {
@@ -130,7 +132,9 @@ export default defineComponent({
 				name: 'ゲストユーザー',
 				password: 'test1234',
 				isLogined: true,
-			} as User);
+			});
+			cookie.setCookie('loginUser', store.state.user.name);
+			console.log(cookie.getCookie('loginUser'));
 			// Homeに遷移
 			router.push('/');
 			// 遷移後、トーストメッセージ表示

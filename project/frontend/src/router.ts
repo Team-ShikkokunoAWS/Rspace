@@ -2,7 +2,7 @@ import { createWebHistory, createRouter } from 'vue-router';
 import HomePage from '@/pages/HomePage.vue';
 import LoginPage from '@/pages/LoginPage.vue';
 import SignUpPage from '@/pages/SignUpPage.vue';
-import { store } from '@/store';
+import { VueCookieNext } from 'vue-cookie-next';
 
 // ルーティングパスと表示内容を配列として設定
 const routes = [
@@ -11,7 +11,7 @@ const routes = [
 		name: 'HomePage',
 		component: HomePage,
 		beforeEnter: (_to: any, _from: any, next: any) => {
-			if (store.state.user.isLogined) {
+			if (VueCookieNext.getCookie('loginUser')) {
 				next();
 			} else {
 				next('/login');
@@ -23,7 +23,7 @@ const routes = [
 		name: 'LoginPage',
 		component: LoginPage,
 		beforeEnter: (_to: any, _from: any, next: any) => {
-			if (store.state.user.isLogined) {
+			if (VueCookieNext.getCookie('loginUser')) {
 				next('/');
 			} else {
 				next();
@@ -35,7 +35,7 @@ const routes = [
 		name: 'SignUpPage',
 		component: SignUpPage,
 		beforeEnter: (_to: any, _from: any, next: any) => {
-			if (store.state.user.isLogined) {
+			if (VueCookieNext.getCookie('loginUser')) {
 				next('/');
 			} else {
 				next();

@@ -1,5 +1,6 @@
 <template>
 	<h1>HomePage</h1>
+	<button @click="getCookie">クッキー取得</button>
 </template>
 
 <script lang="ts">
@@ -16,8 +17,13 @@ export default defineComponent({
 			console.log(cookie.getCookie('loginUser'));
 		});
 
+		const getCookie = () => {
+			console.log(cookie.getCookie('loginUser'));
+		};
+
 		return {
 			onMounted,
+			getCookie,
 		};
 	},
 }); // export default defineComponent

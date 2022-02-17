@@ -2,6 +2,7 @@
 	<div>
 		<ToastMessage />
 		<Header />
+		<Dialog />
 		<router-view />
 	</div>
 </template>
@@ -10,11 +11,13 @@
 import { Options, Vue } from 'vue-class-component';
 import Header from '@/components/Header.vue';
 import ToastMessage from '@/components/ToastMessage.vue';
+import Dialog from '@/components/Dialog.vue';
 
 @Options({
 	components: {
 		Header,
 		ToastMessage,
+		Dialog,
 	},
 })
 export default class App extends Vue {}

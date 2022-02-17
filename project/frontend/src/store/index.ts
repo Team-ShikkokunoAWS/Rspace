@@ -2,11 +2,13 @@ import { InjectionKey } from 'vue';
 import { createStore, useStore as baseUseStore, Store } from 'vuex';
 import { User } from '@/types/user';
 import { Toast } from '@/types/toast';
+import { Dialog } from '@/types/dialog';
 
 // storeの型設定
 export interface State {
 	user: User;
 	toast: Toast;
+	dialog: Dialog;
 }
 
 // InjectionKeyの設定
@@ -27,6 +29,13 @@ export const store = createStore<State>({
 			toastType: '',
 			isShow: false,
 		},
+		// 確認ダイアログの状態
+		dialog: {
+			title: '',
+			message: '',
+			dialogType: '',
+			isShow: false,
+		},
 	},
 	// 変更のためのmutationsにコミット
 	actions: {
@@ -39,11 +48,12 @@ export const store = createStore<State>({
 			commit('logout');
 		},
 		// メッセージトーストの表示・非表示切り替え
-		setToastShow(
-			{ commit, state },
-			toast: { message: string; toastColor: string; isShow: boolean }
-		) {
+		setToastShow({ commit, state }, toast: Toast) {
 			commit('setToastShow', { toast: toast });
+		},
+		// 確認ダイアログの表示・非表示切り替え
+		setDialog({ commit, state }, dialog: Dialog) {
+			commit('setDialog', { dialog: dialog });
 		},
 	},
 	// storeの状態を変更するためのmutation
@@ -67,6 +77,13 @@ export const store = createStore<State>({
 			state.toast.message = toast.message;
 			state.toast.toastType = toast.toastType;
 			state.toast.isShow = toast.isShow;
+		},
+		// 確認ダイアログの表示・非表示を切り替える
+		setDialog(state, { dialog }) {
+			state.dialog.title = dialog.title;
+			state.dialog.message = dialog.message;
+			state.dialog.dialogType = dialog.dialogType;
+			state.dialog.isShow = dialog.isShow;
 		},
 	},
 });

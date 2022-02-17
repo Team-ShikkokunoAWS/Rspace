@@ -8,19 +8,22 @@
 </template>
 
 <script lang="ts">
-import { Options, Vue } from 'vue-class-component';
+import { defineComponent } from 'vue';
 import Header from '@/components/Header.vue';
 import ToastMessage from '@/components/ToastMessage.vue';
 import Dialog from '@/components/Dialog.vue';
 
-@Options({
+export default defineComponent({
+	name: 'App',
 	components: {
 		Header,
 		ToastMessage,
 		Dialog,
 	},
-})
-export default class App extends Vue {}
+	setup() {
+		return {};
+	},
+});
 </script>
 
 <style>

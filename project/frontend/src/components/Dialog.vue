@@ -56,8 +56,8 @@ export default defineComponent({
 						});
 					}, 2000);
 					store.dispatch('logout');
-					cookie.removeCookie('user'); // ログインユーザーのクッキー削除
-					console.log(cookie.getCookie('user'));
+					cookie.removeCookie('loginUser'); // ログインユーザーのクッキー削除
+					console.log(cookie.getCookie('loginUser'));
 					router.push('/login');
 					break;
 			}

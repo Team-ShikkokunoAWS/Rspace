@@ -14,7 +14,7 @@ library.add(fas);
 // クッキーのグローバル設定
 VueCookieNext.config({
 	// 期限: y:年, m:月, d:日, h:時間, min:分, s:秒で設定
-	expire: '30s', // 期限:30秒（テスト用）
+	expire: '1d', // 期限:1日
 	path: '/',
 	domain: '',
 	secure: '',

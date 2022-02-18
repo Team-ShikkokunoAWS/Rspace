@@ -21,7 +21,6 @@
 import { defineComponent } from 'vue';
 import { useStore } from '@/store';
 import { useRouter } from 'vue-router';
-import { useCookie } from 'vue-cookie-next';
 import { MessageManager, getMessage } from '@/constants/MessageManager';
 
 export default defineComponent({
@@ -32,8 +31,6 @@ export default defineComponent({
 		// 状態管理
 		const store = useStore();
 		const dialog = store.state.dialog;
-		// クッキー管理
-		const cookie = useCookie();
 
 		// OKボタン押下時の処理
 		const onclickOk = () => {
@@ -55,9 +52,8 @@ export default defineComponent({
 							isShow: false,
 						});
 					}, 2000);
+					// ログアウト処理
 					store.dispatch('logout');
-					cookie.removeCookie('loginUser'); // ログインユーザーのクッキー削除
-					console.log(cookie.getCookie('loginUser'));
 					router.push('/login');
 					break;
 			}

@@ -3,6 +3,8 @@ import { createStore, useStore as baseUseStore, Store } from 'vuex';
 import { User } from '@/types/user';
 import { Toast } from '@/types/toast';
 import { Dialog } from '@/types/dialog';
+import createPersistedState from 'vuex-persistedstate';
+import { VueCookieNext } from 'vue-cookie-next';
 
 // storeの型設定
 export interface State {
@@ -16,6 +18,17 @@ export const key: InjectionKey<Store<State>> = Symbol();
 
 // storeの設定
 export const store = createStore<State>({
+	plugins: [
+		createPersistedState({
+			paths: ['user'], // userデータのみpersistedによる永続化対象とする
+			storage: {
+				getItem: (key) => VueCookieNext.getCookie(key),
+				setItem: (key, value) =>
+					VueCookieNext.setCookie(key, value, { expire: '1d' }),
+				removeItem: (key) => VueCookieNext.removeCookie(key),
+			},
+		}),
+	],
 	state: {
 		// ユーザーの状態
 		user: {

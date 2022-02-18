@@ -3,7 +3,7 @@
 		<div class="header-title">
 			<h1 class="header-title">RSpace</h1>
 		</div>
-		<div class="header-user-info" v-show="userInfo.isLogined">
+		<div class="header-user-info" v-if="userInfo.name">
 			<div>
 				<p>{{ userInfo.name }}</p>
 			</div>
@@ -19,7 +19,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue';
+import { defineComponent, computed } from 'vue';
 import { useStore } from '@/store';
 
 export default defineComponent({
@@ -28,7 +28,6 @@ export default defineComponent({
 	setup() {
 		// storeを取得する
 		const store = useStore();
-		// storeにあるユーザー情報を監視（常に参照する）
 		const userInfo = computed(() => store.state.user);
 
 		// ログアウトボタン押下時の処理
@@ -37,7 +36,7 @@ export default defineComponent({
 			store.dispatch('setDialog', {
 				title: 'ログアウト確認',
 				message: 'ログアウトしますか？',
-        dialogType: 'logout',
+				dialogType: 'logout',
 				isShow: true,
 			});
 		};

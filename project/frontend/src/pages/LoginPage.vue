@@ -127,7 +127,6 @@ export default defineComponent({
 			store.dispatch('login', {
 				uuid: 'test-1234-user-5678-abcd-9012-gues-tuse',
 				name: 'ゲストユーザー',
-				password: 'test1234',
 				isLogined: true,
 			});
 			// Homeに遷移

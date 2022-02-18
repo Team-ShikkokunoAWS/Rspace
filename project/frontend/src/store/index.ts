@@ -19,8 +19,9 @@ export const key: InjectionKey<Store<State>> = Symbol();
 // storeの設定
 export const store = createStore<State>({
 	plugins: [
+		// storeのstateがリロードなどで消えないようにする設定
 		createPersistedState({
-			paths: ['user'], // userデータのみpersistedによる永続化対象とする
+			paths: ['user'], // userデータをpersistedによる永続化対象とする
 			storage: {
 				getItem: (key) => VueCookieNext.getCookie(key),
 				setItem: (key, value) =>
@@ -34,7 +35,6 @@ export const store = createStore<State>({
 		user: {
 			uuid: '',
 			name: '',
-			password: '',
 			isLogined: false,
 		},
 		// メッセージトーストの状態
@@ -76,17 +76,13 @@ export const store = createStore<State>({
 		login(state, { user }) {
 			state.user.uuid = user.uuid;
 			state.user.name = user.name;
-			state.user.password = user.password;
 			state.user.isLogined = user.isLogined;
-			// TODO: バックエンドから得たsessionトークンをブラウザに保持させる必要がある？
 		},
 		// ログアウト状態にする
 		logout(state) {
 			state.user.uuid = '';
 			state.user.name = '';
-			state.user.password = '';
 			state.user.isLogined = false;
-			// TODO: ブラウザに保持させていたsessionトークンを破棄する必要がある？
 		},
 		// メッセージトーストの表示・非表示を切り替える
 		setToastShow(state, { toast }) {

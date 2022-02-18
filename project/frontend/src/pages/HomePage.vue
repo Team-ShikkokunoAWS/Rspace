@@ -1,30 +1,15 @@
 <template>
 	<h1>HomePage</h1>
-	<button @click="getCookie">クッキー取得</button>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted } from 'vue';
-import { useCookie } from 'vue-cookie-next';
+import { defineComponent } from 'vue';
 
 export default defineComponent({
 	name: 'HomePage',
 	components: {},
 	setup() {
-		const cookie = useCookie();
-		// 画面初期表示時の処理
-		onMounted(() => {
-			console.log(cookie.getCookie('loginUser'));
-		});
-
-		const getCookie = () => {
-			console.log(cookie.getCookie('loginUser'));
-		};
-
-		return {
-			onMounted,
-			getCookie,
-		};
+		return {};
 	},
 }); // export default defineComponent
 </script>

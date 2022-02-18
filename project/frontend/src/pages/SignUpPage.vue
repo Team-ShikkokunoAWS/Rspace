@@ -4,6 +4,9 @@
 			<h2>SignUp</h2>
 		</div>
 
+		<!-- エラーメッセージ表示 -->
+		<ErrorList :errorMessages="state.errorMessages" />
+
 		<div class="signup-card">
 			<div class="signup-form">
 				<div class="form-label">
@@ -41,13 +44,23 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, reactive } from 'vue';
 import { useRouter } from 'vue-router';
+import ErrorList from '@/components/ErrorList.vue';
+
+interface State {
+	errorMessages: Array<String>;
+}
 
 export default defineComponent({
 	name: 'SignUpPage',
-	components: {},
+	components: {
+		ErrorList,
+	},
 	setup() {
+		const state = reactive<State>({
+			errorMessages: [],
+		});
 		// VueRouter
 		const router = useRouter();
 
@@ -57,6 +70,7 @@ export default defineComponent({
 			router.push('/login');
 		};
 		return {
+			state,
 			onclickLoginLink,
 		};
 	},

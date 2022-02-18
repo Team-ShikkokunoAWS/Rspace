@@ -129,11 +129,12 @@ export default defineComponent({
 			event.preventDefault();
 			// ゲストとしてのログイン情報を与える
 			store.dispatch('login', {
+				uuid: 'test-1234-user-5678-abcd-9012-gues-tuse',
 				name: 'ゲストユーザー',
 				password: 'test1234',
 				isLogined: true,
 			});
-			cookie.setCookie('loginUser', store.state.user.name);
+			cookie.setCookie('loginUser', store.state.user.uuid);
 			console.log(cookie.getCookie('loginUser'));
 			// Homeに遷移
 			router.push('/');

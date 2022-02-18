@@ -1,8 +1,8 @@
 <template>
 	<div>
 		<ToastMessage />
-		<Header />
 		<Dialog />
+		<Header />
 		<router-view />
 	</div>
 </template>

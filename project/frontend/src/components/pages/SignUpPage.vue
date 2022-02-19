@@ -60,7 +60,7 @@
 import { defineComponent, reactive, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import ErrorList from '@/components/parts/ErrorList.vue';
-import { MessageManager, getMessage } from '@/constants/MessageManager';
+import { MessageManager, Messages } from '@/constants/MessageManager';
 
 interface State {
 	username: string;
@@ -99,21 +99,21 @@ export default defineComponent({
 			// 必須チェック
 			if (!state.username) {
 				state.errorMessages.push(
-					getMessage(MessageManager.MSG_001, ['ユーザー名'])
+					MessageManager(Messages.MSG_001, 'ユーザー名')
 				);
 			}
 
 			// パスワードの必須チェック
 			if (!state.password) {
 				state.errorMessages.push(
-					getMessage(MessageManager.MSG_001, ['パスワード'])
+					MessageManager(Messages.MSG_001, 'パスワード')
 				);
 			}
 
 			// 確認用パスワードの必須チェック
 			if (!state.password) {
 				state.errorMessages.push(
-					getMessage(MessageManager.MSG_001, ['確認用パスワード'])
+					MessageManager(Messages.MSG_001, '確認用パスワード')
 				);
 			}
 

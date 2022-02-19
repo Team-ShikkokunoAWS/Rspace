@@ -9,26 +9,25 @@
 
 		<div class="login-card">
 			<div class="login-form">
-				<div class="form-label">
-					<label>ユーザー名</label>
-				</div>
-				<div class="input-form">
-					<input
-						id="username"
-						type="text"
+				<div>
+					<InputForm
 						v-model="state.username"
-						placeholder="username"
+						ctlName="username"
+						labelName="userName"
+						required="true"
+						type="text"
+						maxlength="20"
+						focus="true"
 					/>
 				</div>
-				<div class="form-label">
-					<label>パスワード</label>
-				</div>
-				<div class="input-form">
-					<input
-						id="password"
-						type="password"
+				<div>
+					<InputForm
 						v-model="state.password"
-						placeholder="password"
+						ctlName="password"
+						labelName="password"
+						required="true"
+						type="password"
+						maxlength="20"
 					/>
 				</div>
 
@@ -55,6 +54,7 @@ import { defineComponent, reactive, onMounted } from 'vue';
 import { useStore } from '@/store';
 import { useRouter } from 'vue-router';
 import ErrorList from '@/components/parts/ErrorList.vue';
+import InputForm from '@/components/parts/InputForm.vue';
 import { MessageManager, Messages } from '@/constants/MessageManager';
 
 interface State {
@@ -67,6 +67,7 @@ export default defineComponent({
 	name: 'LoginPage',
 	components: {
 		ErrorList,
+		InputForm,
 	},
 	setup() {
 		// リアクティブ定義
@@ -96,13 +97,6 @@ export default defineComponent({
 			if (!state.username) {
 				state.errorMessages.push(
 					MessageManager(Messages.MSG_001, 'ユーザー名')
-				);
-			}
-
-			// ユーザー名の文字数チェック
-			if (state.username.length > 20) {
-				state.errorMessages.push(
-					MessageManager(Messages.MSG_003, ['ユーザー名', '20'])
 				);
 			}
 

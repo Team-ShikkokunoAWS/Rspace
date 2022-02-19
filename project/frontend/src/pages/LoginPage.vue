@@ -129,21 +129,33 @@ export default defineComponent({
 				name: 'ゲストユーザー',
 				isLogined: true,
 			});
-			// Homeに遷移
-			router.push('/');
-			// 遷移後、トーストメッセージ表示
-			store.dispatch('setToastShow', {
-				message: getMessage(MessageManager.MSG_004, ['ログイン']),
-				toastType: 'success',
+			// ローディング表示
+			store.dispatch('setLoading', {
 				isShow: true,
 			});
-			// トーストを2秒表示し、消す
+			// 2秒後、ローディングを解除
 			setTimeout(() => {
-				store.dispatch('setToastShow', {
-					message: '',
-					toastType: '',
+				store.dispatch('setLoading', {
 					isShow: false,
 				});
+			}, 2000);
+			setTimeout(() => {
+				// Homeに遷移
+				router.push('/');
+				// 遷移後、トーストメッセージ表示
+				store.dispatch('setToastShow', {
+					message: getMessage(MessageManager.MSG_004, ['ログイン']),
+					toastType: 'success',
+					isShow: true,
+				});
+				// トーストを2秒表示し、消す
+				setTimeout(() => {
+					store.dispatch('setToastShow', {
+						message: '',
+						toastType: '',
+						isShow: false,
+					});
+				}, 2000);
 			}, 2000);
 		};
 
@@ -215,7 +227,7 @@ export default defineComponent({
 }
 .login-btn button:hover {
 	cursor: pointer;
-	opacity: 0.8;
+	background-color: rgb(91, 155, 155, 0.8);
 }
 .login-btn button:active {
 	width: 39%;
@@ -236,7 +248,7 @@ export default defineComponent({
 }
 .signup-link-btn button:hover {
 	cursor: pointer;
-	opacity: 0.8;
+	background-color: rgb(103, 129, 212, 0.8);
 }
 .signup-link-btn button:active {
 	width: 39%;

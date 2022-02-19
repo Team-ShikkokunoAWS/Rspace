@@ -3,6 +3,7 @@ import { createStore, useStore as baseUseStore, Store } from 'vuex';
 import { User } from '@/types/user';
 import { Toast } from '@/types/toast';
 import { Dialog } from '@/types/dialog';
+import { Loading } from '@/types/loading';
 import createPersistedState from 'vuex-persistedstate';
 import { VueCookieNext } from 'vue-cookie-next';
 
@@ -11,6 +12,7 @@ export interface State {
 	user: User;
 	toast: Toast;
 	dialog: Dialog;
+	loading: Loading;
 }
 
 // InjectionKeyの設定
@@ -50,6 +52,10 @@ export const store = createStore<State>({
 			dialogType: '',
 			isShow: false,
 		},
+		// ローディングの状態
+		loading: {
+			isShow: false,
+		},
 	},
 	// 変更のためのmutationsにコミット
 	actions: {
@@ -68,6 +74,10 @@ export const store = createStore<State>({
 		// 確認ダイアログの表示・非表示切り替え
 		setDialog({ commit, state }, dialog: Dialog) {
 			commit('setDialog', { dialog: dialog });
+		},
+		// ローディングの表示・非表示切り替え
+		setLoading({ commit, state }, loading: Loading) {
+			commit('setLoading', { loading: loading });
 		},
 	},
 	// storeの状態を変更するためのmutation
@@ -96,6 +106,10 @@ export const store = createStore<State>({
 			state.dialog.message = dialog.message;
 			state.dialog.dialogType = dialog.dialogType;
 			state.dialog.isShow = dialog.isShow;
+		},
+		// ローディングの表示・非表示切り替え
+		setLoading(state, { loading }) {
+			state.loading.isShow = loading.isShow;
 		},
 	},
 });

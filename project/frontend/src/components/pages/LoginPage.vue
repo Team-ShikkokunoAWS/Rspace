@@ -197,14 +197,6 @@ export default defineComponent({
 .login-form {
 	margin-top: 40px;
 }
-.form-label {
-	margin-bottom: 10px;
-}
-.input-form input {
-	margin-bottom: 10px;
-	width: 40%;
-	padding: 8px;
-}
 
 /* ボタン関連 */
 .login-btn {

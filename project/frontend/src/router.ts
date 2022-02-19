@@ -1,7 +1,7 @@
 import { createWebHistory, createRouter } from 'vue-router';
-import HomePage from '@/pages/HomePage.vue';
-import LoginPage from '@/pages/LoginPage.vue';
-import SignUpPage from '@/pages/SignUpPage.vue';
+import HomePage from '@/components/pages/HomePage.vue';
+import LoginPage from '@/components/pages/LoginPage.vue';
+import SignUpPage from '@/components/pages/SignUpPage.vue';
 import { store } from '@/store';
 
 // ルーティングパスと表示内容を配列として設定

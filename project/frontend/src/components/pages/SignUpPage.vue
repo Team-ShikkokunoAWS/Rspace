@@ -59,7 +59,7 @@
 <script lang="ts">
 import { defineComponent, reactive, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import ErrorList from '@/components/ErrorList.vue';
+import ErrorList from '@/components/parts/ErrorList.vue';
 import { MessageManager, getMessage } from '@/constants/MessageManager';
 
 interface State {
@@ -124,8 +124,6 @@ export default defineComponent({
 			// TODO: API処理(defaultで最後にローディング非表示)
 			// TODO: storeへログインでdispatch
 			// TODO: HOMEへ遷移
-			
-			
 		};
 
 		// 新規登録ボタン押下時処理

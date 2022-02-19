@@ -13,23 +13,36 @@
 					<label>ユーザー名</label>
 				</div>
 				<div class="input-form">
-					<input type="text" />
+					<input
+						id="username"
+						v-model="state.username"
+						placeholder="username"
+						type="text"
+					/>
 				</div>
 				<div class="form-label">
 					<label>パスワード</label>
 				</div>
 				<div class="input-form">
-					<input type="password" />
+					<input
+						v-model="state.password"
+						placeholder="password"
+						type="password"
+					/>
 				</div>
 				<div class="form-label">
 					<label>パスワード（確認用）</label>
 				</div>
 				<div class="input-form">
-					<input type="password" />
+					<input
+						v-model="state.passwordConfirm"
+						placeholder="passwordConfirm"
+						type="password"
+					/>
 				</div>
 
 				<div class="signup-btn">
-					<button>新規登録</button>
+					<button @click="onclickSignUp($event)">新規登録</button>
 				</div>
 			</div>
 
@@ -44,11 +57,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from 'vue';
+import { defineComponent, reactive, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import ErrorList from '@/components/ErrorList.vue';
+import { MessageManager, getMessage } from '@/constants/MessageManager';
 
 interface State {
+	username: string;
+	password: string;
+	passwordConfirm: string;
 	errorMessages: Array<String>;
 }
 
@@ -59,18 +76,73 @@ export default defineComponent({
 	},
 	setup() {
 		const state = reactive<State>({
+			username: '',
+			password: '',
+			passwordConfirm: '',
 			errorMessages: [],
 		});
 		// VueRouter
 		const router = useRouter();
+
+		// 画面初期表示時の処理
+		onMounted(() => {
+			focusForm();
+		});
+
+		// 新規登録ボタン押下時の処理
+		const onclickSignUp = (event: MouseEvent) => {
+			event.preventDefault();
+
+			// エラーメッセージオブジェクトの初期化
+			state.errorMessages = [];
+
+			// 必須チェック
+			if (!state.username) {
+				state.errorMessages.push(
+					getMessage(MessageManager.MSG_001, ['ユーザー名'])
+				);
+			}
+
+			// パスワードの必須チェック
+			if (!state.password) {
+				state.errorMessages.push(
+					getMessage(MessageManager.MSG_001, ['パスワード'])
+				);
+			}
+
+			// 確認用パスワードの必須チェック
+			if (!state.password) {
+				state.errorMessages.push(
+					getMessage(MessageManager.MSG_001, ['確認用パスワード'])
+				);
+			}
+
+			// エラー発生時、処理中断
+			if (state.errorMessages.length > 0) return;
+
+			// TODO: ローディング表示
+			// TODO: API処理(defaultで最後にローディング非表示)
+			// TODO: storeへログインでdispatch
+			// TODO: HOMEへ遷移
+			
+			
+		};
 
 		// 新規登録ボタン押下時処理
 		const onclickLoginLink = (event: MouseEvent) => {
 			event.preventDefault();
 			router.push('/login');
 		};
+
+		// フォームにフォーカスを当てる
+		const focusForm = () => {
+			const form = document.getElementById('username');
+			form?.focus();
+		};
+
 		return {
 			state,
+			onclickSignUp,
 			onclickLoginLink,
 		};
 	},

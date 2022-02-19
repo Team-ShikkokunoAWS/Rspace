@@ -52,7 +52,8 @@ export default defineComponent({
 
 <style scoped>
 .btn {
-	margin-top: 5px;
+	width: var(--width);
+	margin: 5px auto;
 }
 .btn button {
 	padding: 8px;

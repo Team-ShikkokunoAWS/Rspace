@@ -1,29 +1,18 @@
 <template>
-	<form :id="`${props.ctlName}Form`">
-		<div class="container" :style="styles">
-			<div class="group">
-				<span v-if="props.required === 'true'" style="color: red">*</span>
-				<input
-					:id="props.ctlName"
-					:maxlength="props.maxlength"
-					:type="props.type"
-					:value="modelValue"
-					@input="$emit('update:modelValue', $event.target.value)"
-				/>
-				<div class="deleteBtn-wrapper">
-					<span class="deleteBtn-text">x</span>
-					<input
-						class="deleteBtn"
-						type="reset"
-						:form="`${props.ctlName}Form`"
-						value=" "
-					/>
-				</div>
-				<span class="highlight"></span>
-				<label>{{ props.labelName }}</label>
-			</div>
+	<div class="container" :style="styles">
+		<div class="group">
+			<span v-if="props.required === 'true'" style="color: red">*</span>
+			<input
+				:id="props.ctlName"
+				:maxlength="props.maxlength"
+				:type="props.type"
+				:value="modelValue"
+				@input="$emit('update:modelValue', $event.target.value)"
+			/>
+			<span class="highlight"></span>
+			<label>{{ props.labelName }}</label>
 		</div>
-	</form>
+	</div>
 </template>
 
 <script lang="ts">
@@ -83,7 +72,6 @@ export default defineComponent({
 		const styles = computed(() => {
 			return {
 				'--formWidth': `${props.width}`,
-				'--cleanBtnWidth': `calc(${props.width} - 30px)`,
 			};
 		});
 		// 呼び出し元でfocus="true"を設定している場合、表示時にフォーカスを当てる
@@ -127,46 +115,6 @@ input:focus {
 	outline: none;
 	border-bottom: 2px solid #5264ae;
 	background-color: none;
-}
-
-.deleteBtn input {
-	background-color: #fff;
-	border: none;
-}
-
-.deleteBtn-wrapper {
-	position: absolute;
-	left: var(--cleanBtnWidth);
-	top: 10px;
-	font-weight: bold;
-	width: 20px;
-	padding: 0px 2px;
-	border-radius: 50%;
-}
-
-.deleteBtn-text {
-	z-index: 2;
-}
-
-.deleteBtn {
-	position: absolute;
-	left: 2px;
-	font-weight: bold;
-	width: 20px;
-	height: 20px;
-	padding: 8px 10px;
-	border-radius: 50%;
-	background-color: rgba(238, 238, 238, 0);
-	border: 1px;
-	z-index: 1;
-}
-.deleteBtn:hover {
-	cursor: pointer;
-	background-color: rgba(238, 238, 238, 0.6);
-}
-.deleteBtn:focus {
-	outline: none;
-	border: none;
 }
 
 /* LABEL ======================================= */

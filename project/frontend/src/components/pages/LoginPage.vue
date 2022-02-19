@@ -8,42 +8,48 @@
 		<ErrorList :errorMessages="state.errorMessages" />
 
 		<div class="login-card">
-			<div class="login-form">
-				<div>
-					<InputForm
-						v-model="state.username"
-						ctlName="username"
-						labelName="userName"
-						required="true"
-						type="text"
-						maxlength="20"
-						focus="true"
-					/>
-				</div>
-				<div>
-					<InputForm
-						v-model="state.password"
-						ctlName="password"
-						labelName="password"
-						required="true"
-						type="password"
-						maxlength="20"
-					/>
-				</div>
-
-				<div class="login-btn">
-					<button @click="onclickLogin($event)">ログイン</button>
-				</div>
-				<div class="login-btn">
-					<button @click="onclickGuestLogin($event)">ゲストログイン</button>
-				</div>
+			<div>
+				<InputForm
+					v-model="state.username"
+					ctlName="username"
+					labelName="userName"
+					required="true"
+					type="text"
+					maxlength="20"
+					focus="true"
+					width="400px"
+				/>
+			</div>
+			<div>
+				<InputForm
+					v-model="state.password"
+					ctlName="password"
+					labelName="password"
+					required="true"
+					type="password"
+					maxlength="20"
+					width="400px"
+				/>
 			</div>
 
-			<div class="signup-link-container">
-				<div class="signup-link-btn">
-					<button @click="onclickSignUpLink($event)">新規登録</button>
-				</div>
-			</div>
+			<CButton
+				name="ログイン"
+				width="400px"
+				colorType="teal"
+				@click="onclickLogin($event)"
+			/>
+			<CButton
+				name="ゲストログイン"
+				width="400px"
+				colorType="teal"
+				@click="onclickGuestLogin($event)"
+			/>
+			<CButton
+				name="新規登録画面"
+				width="400px"
+				colorType="primary"
+				@click="onclickSignUpLink($event)"
+			/>
 		</div>
 		<!-- .login-card -->
 	</div>
@@ -55,6 +61,7 @@ import { useStore } from '@/store';
 import { useRouter } from 'vue-router';
 import ErrorList from '@/components/parts/ErrorList.vue';
 import InputForm from '@/components/parts/InputForm.vue';
+import CButton from '@/components/parts/CButton.vue';
 import { MessageManager, Messages } from '@/constants/MessageManager';
 
 interface State {
@@ -68,6 +75,7 @@ export default defineComponent({
 	components: {
 		ErrorList,
 		InputForm,
+		CButton,
 	},
 	setup() {
 		// リアクティブ定義
@@ -191,52 +199,6 @@ export default defineComponent({
 	border: 1px solid #333;
 	margin: 30px auto;
 	box-shadow: 4px 4px gray;
-}
-
-/* フォーム関連 */
-.login-form {
-	margin-top: 40px;
-}
-
-/* ボタン関連 */
-.login-btn {
-	margin-top: 5px;
-}
-.login-btn button {
-	padding: 8px;
-	background-color: rgb(91, 155, 155);
-	color: #eee;
-	font-size: 18px;
-	font-weight: bold;
-	border-radius: 8px;
-	width: 40%;
-}
-.login-btn button:hover {
-	cursor: pointer;
-	background-color: rgb(91, 155, 155, 0.8);
-}
-.login-btn button:active {
-	width: 39%;
-}
-
-/* 新規登録案内関連 */
-.signup-link-container {
-	margin-top: 50px;
-}
-.signup-link-btn button {
-	padding: 8px;
-	background-color: rgb(103, 129, 212);
-	color: #eee;
-	font-weight: bold;
-	font-size: 18px;
-	border-radius: 8px;
-	width: 40%;
-}
-.signup-link-btn button:hover {
-	cursor: pointer;
-	background-color: rgb(103, 129, 212, 0.8);
-}
-.signup-link-btn button:active {
-	width: 39%;
+	padding-top: 60px;
 }
 </style>

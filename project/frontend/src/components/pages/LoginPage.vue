@@ -54,7 +54,7 @@
 import { defineComponent, reactive, onMounted } from 'vue';
 import { useStore } from '@/store';
 import { useRouter } from 'vue-router';
-import ErrorList from '@/components/ErrorList.vue';
+import ErrorList from '@/components/parts/ErrorList.vue';
 import { MessageManager, getMessage } from '@/constants/MessageManager';
 
 interface State {

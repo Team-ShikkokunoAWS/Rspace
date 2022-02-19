@@ -55,7 +55,7 @@ import { defineComponent, reactive, onMounted } from 'vue';
 import { useStore } from '@/store';
 import { useRouter } from 'vue-router';
 import ErrorList from '@/components/parts/ErrorList.vue';
-import { MessageManager, getMessage } from '@/constants/MessageManager';
+import { MessageManager, Messages } from '@/constants/MessageManager';
 
 interface State {
 	username: string;
@@ -95,21 +95,21 @@ export default defineComponent({
 			// ユーザー名の必須チェック
 			if (!state.username) {
 				state.errorMessages.push(
-					getMessage(MessageManager.MSG_001, ['ユーザー名'])
+					MessageManager(Messages.MSG_001, 'ユーザー名')
 				);
 			}
 
 			// ユーザー名の文字数チェック
 			if (state.username.length > 20) {
 				state.errorMessages.push(
-					getMessage(MessageManager.MSG_003, ['ユーザー名', '20'])
+					MessageManager(Messages.MSG_003, ['ユーザー名', '20'])
 				);
 			}
 
 			// パスワードの必須チェック
 			if (!state.password) {
 				state.errorMessages.push(
-					getMessage(MessageManager.MSG_001, ['パスワード'])
+					MessageManager(Messages.MSG_001, 'パスワード')
 				);
 			}
 			// エラー発生時、処理中断
@@ -144,7 +144,7 @@ export default defineComponent({
 				router.push('/');
 				// 遷移後、トーストメッセージ表示
 				store.dispatch('setToastShow', {
-					message: getMessage(MessageManager.MSG_004, ['ログイン']),
+					message: MessageManager(Messages.MSG_004, ['ログイン']),
 					toastType: 'success',
 					isShow: true,
 				});

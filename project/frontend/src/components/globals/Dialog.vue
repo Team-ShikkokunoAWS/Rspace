@@ -21,7 +21,7 @@
 import { defineComponent } from 'vue';
 import { useStore } from '@/store';
 import { useRouter } from 'vue-router';
-import { MessageManager, getMessage } from '@/constants/MessageManager';
+import { MessageManager, Messages } from '@/constants/MessageManager';
 
 export default defineComponent({
 	name: 'Dialog',
@@ -40,7 +40,7 @@ export default defineComponent({
 				case 'logout':
 					// 遷移後、トーストの表示
 					store.dispatch('setToastShow', {
-						message: getMessage(MessageManager.MSG_004, ['ログアウト']),
+						message: MessageManager(Messages.MSG_004, ['ログアウト']),
 						toastType: 'danger',
 						isShow: true,
 					});

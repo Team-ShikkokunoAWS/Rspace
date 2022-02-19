@@ -8,49 +8,53 @@
 		<ErrorList :errorMessages="state.errorMessages" />
 
 		<div class="signup-card">
-			<div class="signup-form">
-				<div class="form-label">
-					<label>ユーザー名</label>
-				</div>
-				<div class="input-form">
-					<input
-						id="username"
-						v-model="state.username"
-						placeholder="username"
-						type="text"
-					/>
-				</div>
-				<div class="form-label">
-					<label>パスワード</label>
-				</div>
-				<div class="input-form">
-					<input
-						v-model="state.password"
-						placeholder="password"
-						type="password"
-					/>
-				</div>
-				<div class="form-label">
-					<label>パスワード（確認用）</label>
-				</div>
-				<div class="input-form">
-					<input
-						v-model="state.passwordConfirm"
-						placeholder="passwordConfirm"
-						type="password"
-					/>
-				</div>
-
-				<div class="signup-btn">
-					<button @click="onclickSignUp($event)">新規登録</button>
-				</div>
+			<div>
+				<InputForm
+					v-model="state.username"
+					ctlName="username"
+					labelName="userName"
+					required="true"
+					type="text"
+					maxlength="20"
+					focus="true"
+					width="400px"
+				/>
+			</div>
+			<div>
+				<InputForm
+					v-model="state.password"
+					ctlName="password"
+					labelName="password"
+					required="true"
+					type="password"
+					maxlength="20"
+					width="400px"
+				/>
+			</div>
+			<div>
+				<InputForm
+					v-model="state.passwordConfirm"
+					ctlName="passwordConfirm"
+					labelName="passwordConfirm"
+					required="true"
+					type="password"
+					maxlength="20"
+					width="400px"
+				/>
 			</div>
 
-			<div class="login-link-container">
-				<div class="login-link-btn">
-					<button @click="onclickLoginLink($event)">ログイン画面へ</button>
-				</div>
-			</div>
+			<CButton
+				name="ログイン"
+				width="400px"
+				colorType="teal"
+				@click="onclickSignUp($event)"
+			/>
+			<CButton
+				name="ログイン画面"
+				width="400px"
+				colorType="primary"
+				@click="onclickLoginLink($event)"
+			/>
 		</div>
 		<!-- .signup-card -->
 	</div>
@@ -60,6 +64,8 @@
 import { defineComponent, reactive, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import ErrorList from '@/components/parts/ErrorList.vue';
+import InputForm from '@/components/parts/InputForm.vue';
+import CButton from '@/components/parts/CButton.vue';
 import { MessageManager, Messages } from '@/constants/MessageManager';
 
 interface State {
@@ -73,6 +79,8 @@ export default defineComponent({
 	name: 'SignUpPage',
 	components: {
 		ErrorList,
+		InputForm,
+		CButton,
 	},
 	setup() {
 		const state = reactive<State>({
@@ -163,60 +171,6 @@ export default defineComponent({
 	border: 1px solid #333;
 	margin: 30px auto;
 	box-shadow: 4px 4px gray;
-}
-
-/* フォーム関連 */
-.signup-form {
-	margin-top: 40px;
-}
-.form-label {
-	margin-bottom: 10px;
-}
-.input-form input {
-	margin-bottom: 10px;
-	width: 40%;
-	padding: 8px;
-}
-
-/* ボタン関連 */
-.signup-btn {
-	margin-top: 5px;
-}
-.signup-btn button {
-	padding: 8px;
-	background-color: rgb(91, 155, 155);
-	color: #eee;
-	font-size: 18px;
-	font-weight: bold;
-	border-radius: 8px;
-	width: 40%;
-}
-.signup-btn button:hover {
-	cursor: pointer;
-	opacity: 0.8;
-}
-.signup-btn button:active {
-	width: 39%;
-}
-
-/* 新規登録案内関連 */
-.login-link-container {
-	margin-top: 30px;
-}
-.login-link-btn button {
-	padding: 8px;
-	background-color: rgb(103, 129, 212);
-	color: #eee;
-	font-weight: bold;
-	font-size: 18px;
-	border-radius: 8px;
-	width: 40%;
-}
-.login-link-btn button:hover {
-	cursor: pointer;
-	opacity: 0.8;
-}
-.login-link-btn button:active {
-	width: 39%;
+	padding-top: 60px;
 }
 </style>

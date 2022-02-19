@@ -39,7 +39,7 @@ export default defineComponent({
 						: props.colorType === 'primary'
 						? 'rgb(103, 129, 212)'
 						: 'rgb(91, 155, 155)', // どれでもなければteal
-				'--width': `calc(${props.width})`,
+				'--width': `${props.width}`,
 			};
 		});
 		return {
@@ -52,7 +52,8 @@ export default defineComponent({
 
 <style scoped>
 .btn {
-	margin-top: 5px;
+	width: var(--width);
+	margin: 5px auto;
 }
 .btn button {
 	padding: 8px;

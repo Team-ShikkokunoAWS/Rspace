@@ -7,7 +7,7 @@
 		<!-- エラーメッセージ表示 -->
 		<ErrorList :errorMessages="state.errorMessages" />
 
-		<div class="signup-card">
+		<MainCard color="#fff" height="50vh">
 			<div>
 				<InputForm
 					v-model="state.username"
@@ -55,8 +55,7 @@
 				colorType="primary"
 				@click="onclickLoginLink($event)"
 			/>
-		</div>
-		<!-- .signup-card -->
+		</MainCard>
 	</div>
 </template>
 
@@ -66,6 +65,7 @@ import { useRouter } from 'vue-router';
 import ErrorList from '@/components/parts/ErrorList.vue';
 import InputForm from '@/components/parts/InputForm.vue';
 import CButton from '@/components/parts/CButton.vue';
+import MainCard from '@/components/parts/MainCard.vue';
 import { MessageManager, Messages } from '@/constants/MessageManager';
 
 interface State {
@@ -81,6 +81,7 @@ export default defineComponent({
 		ErrorList,
 		InputForm,
 		CButton,
+		MainCard,
 	},
 	setup() {
 		const state = reactive<State>({

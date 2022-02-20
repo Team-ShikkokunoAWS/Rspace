@@ -4,6 +4,7 @@ import { User } from '@/types/user';
 import { Toast } from '@/types/toast';
 import { Dialog } from '@/types/dialog';
 import { Loading } from '@/types/loading';
+import { SideBar } from '@/types/SideBar';
 import createPersistedState from 'vuex-persistedstate';
 import { VueCookieNext } from 'vue-cookie-next';
 
@@ -13,6 +14,7 @@ export interface State {
 	toast: Toast;
 	dialog: Dialog;
 	loading: Loading;
+	sidebar: SideBar;
 }
 
 // InjectionKeyの設定
@@ -56,6 +58,11 @@ export const store = createStore<State>({
 		loading: {
 			isShow: false,
 		},
+		// サイドバーの状態
+		sidebar: {
+			active: '',
+			isShow: false,
+		},
 	},
 	// 変更のためのmutationsにコミット
 	actions: {
@@ -78,6 +85,10 @@ export const store = createStore<State>({
 		// ローディングの表示・非表示切り替え
 		setLoading({ commit, state }, loading: Loading) {
 			commit('setLoading', { loading: loading });
+		},
+		// サイドバーの表示・非表示切り替え
+		setSideBar({ commit, state }, sidebar: SideBar) {
+			commit('setSideBar', { sidebar: sidebar });
 		},
 	},
 	// storeの状態を変更するためのmutation
@@ -110,6 +121,11 @@ export const store = createStore<State>({
 		// ローディングの表示・非表示切り替え
 		setLoading(state, { loading }) {
 			state.loading.isShow = loading.isShow;
+		},
+		// サイドバーの表示・非表示切り替え
+		setSideBar(state, { sidebar }) {
+			state.sidebar.active = sidebar.active;
+			state.sidebar.isShow = sidebar.isShow;
 		},
 	},
 });

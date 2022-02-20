@@ -3,6 +3,7 @@
 		<ToastMessage />
 		<Loader />
 		<Dialog />
+		<SideBar />
 		<Header />
 		<router-view />
 	</div>
@@ -14,6 +15,7 @@ import Header from '@/components/globals/Header.vue';
 import ToastMessage from '@/components/globals/ToastMessage.vue';
 import Dialog from '@/components/globals/Dialog.vue';
 import Loader from '@/components/globals/Loader.vue';
+import SideBar from '@/components/globals/SideBar.vue';
 
 export default defineComponent({
 	name: 'App',
@@ -22,6 +24,7 @@ export default defineComponent({
 		ToastMessage,
 		Dialog,
 		Loader,
+		SideBar,
 	},
 	setup() {
 		return {};

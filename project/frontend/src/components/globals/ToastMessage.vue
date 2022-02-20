@@ -48,17 +48,18 @@ export default defineComponent({
 <style scoped>
 .toast-container {
 	width: 100%;
-	height: 80px;
+	height: 120px;
 	background-color: var(
 		--toast-background-color
 	); /** toastTypeの値によって変化させる */
 	position: absolute; /** 浮いているように見える */
+	z-index: 9999;
 }
 .toast-message {
 	color: var(--toast-message-color); /** toastTypeの値によって変化させる */
 	font-weight: bold;
 	text-align: center;
-	line-height: 80px;
+	line-height: 120px;
 	font-size: 25px;
 }
 </style>

@@ -2,6 +2,13 @@
 	<div class="header-container">
 		<div class="header-title">
 			<h1 class="header-title">RSpace</h1>
+			<!-- ハンバーガーメニュー -->
+			<div class="btn-trigger" id="btn" @click="onclickMenu" :class="active">
+				<span></span>
+				<span></span>
+				<span></span>
+			</div>
+			<!-- ハンバーガーメニュー -->
 		</div>
 		<div class="header-user-info" v-if="userInfo.name">
 			<div>
@@ -29,6 +36,7 @@ export default defineComponent({
 		// storeを取得する
 		const store = useStore();
 		const userInfo = computed(() => store.state.user);
+		const active = computed(() => store.state.sidebar.active);
 
 		// ログアウトボタン押下時の処理
 		const onclickLogout = (event: MouseEvent) => {
@@ -40,9 +48,18 @@ export default defineComponent({
 				isShow: true,
 			});
 		};
+
+		const onclickMenu = () => {
+			const btn = document.getElementById('btn');
+			btn?.classList.toggle('active');
+			store.dispatch('setSideBar', { active: 'active', isShow: true });
+		};
+
 		return {
 			userInfo,
 			onclickLogout,
+			onclickMenu,
+			active,
 		};
 	},
 }); // export default defineComponent
@@ -51,13 +68,19 @@ export default defineComponent({
 <style scoped>
 .header-container {
 	width: 100%;
-	height: 80px;
+	height: 120px;
 	border-bottom: 1.5px solid #333;
 	display: flex;
+	box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+	z-index: 1;
 }
 
 .header-title {
 	margin-left: 20px;
+}
+
+.header-title h1 {
+	margin: 0;
 }
 
 .header-user-info {
@@ -80,5 +103,67 @@ export default defineComponent({
 .header-logout-btn:hover {
 	opacity: 0.8;
 	cursor: pointer;
+}
+
+/*=============================
+.btn-trigger
+=============================*/
+.btn-trigger {
+	position: relative;
+	width: 44px;
+	height: 40px;
+	cursor: pointer;
+	margin-top: 10px;
+}
+.btn-trigger span {
+	position: absolute;
+	left: 0;
+	width: 100%;
+	height: 4px;
+	background-color: #222;
+	border-radius: 4px;
+}
+.btn-trigger,
+.btn-trigger span {
+	display: inline-block;
+	transition: all 0.5s;
+	box-sizing: border-box;
+}
+.btn-trigger span:nth-of-type(1) {
+	top: 0;
+}
+.btn-trigger span:nth-of-type(2) {
+	top: 18px;
+}
+.btn-trigger span:nth-of-type(3) {
+	bottom: 0;
+}
+
+/*=============================
+.animation
+=============================*/
+#btn.active span:nth-of-type(1) {
+	-webkit-transform: translateY(18px) rotate(-45deg);
+	transform: translateY(18px) rotate(-45deg);
+}
+#btn.active span:nth-of-type(2) {
+	left: 50%;
+	opacity: 0;
+	-webkit-animation: active-btn-bar02 0.8s forwards;
+	animation: active-btn-bar02 0.8s forwards;
+}
+@-webkit-keyframes active-btn-bar02 {
+	100% {
+		height: 0;
+	}
+}
+@keyframes active-btn-bar02 {
+	100% {
+		height: 0;
+	}
+}
+#btn.active span:nth-of-type(3) {
+	-webkit-transform: translateY(-18px) rotate(45deg);
+	transform: translateY(-18px) rotate(45deg);
 }
 </style>

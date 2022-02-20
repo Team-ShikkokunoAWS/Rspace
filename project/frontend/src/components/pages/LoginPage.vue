@@ -7,7 +7,7 @@
 		<!-- エラーメッセージ表示 -->
 		<ErrorList :errorMessages="state.errorMessages" />
 
-		<MainCard color="#fff" height="50vh">
+		<MainCard color="#fff" height="50vh" width="600px">
 			<div>
 				<InputForm
 					v-model="state.username"
@@ -63,6 +63,7 @@ import InputForm from '@/components/parts/InputForm.vue';
 import CButton from '@/components/parts/CButton.vue';
 import MainCard from '@/components/parts/MainCard.vue';
 import { MessageManager, Messages } from '@/constants/MessageManager';
+import { useAuth } from '@/hooks/useAuth';
 
 interface State {
 	username: string;
@@ -89,6 +90,8 @@ export default defineComponent({
 		const store = useStore();
 		// VueRouter
 		const router = useRouter();
+		// 認証関連の切り出したロジック
+		const { login, guestLogin } = useAuth();
 
 		// 画面初期表示時の処理
 		onMounted(() => {
@@ -98,17 +101,14 @@ export default defineComponent({
 		// ログインボタン押下時処理
 		const onclickLogin = (event: MouseEvent) => {
 			event.preventDefault();
-
 			// エラーメッセージ初期化
 			state.errorMessages = [];
-
 			// ユーザー名の必須チェック
 			if (!state.username) {
 				state.errorMessages.push(
 					MessageManager(Messages.MSG_001, 'ユーザー名')
 				);
 			}
-
 			// パスワードの必須チェック
 			if (!state.password) {
 				state.errorMessages.push(
@@ -117,49 +117,14 @@ export default defineComponent({
 			}
 			// エラー発生時、処理中断
 			if (state.errorMessages.length > 0) return;
-
-			// ログイン処理のAPI操作
-
-			// 必須チェックでエラーがない場合、仮で成功メッセージ
-			alert('ログイン成功');
+			// ログイン処理
+			login(state.username, state.password, store, router);
 		};
 
 		// ゲストログインボタン押下時処理
 		const onclickGuestLogin = (event: MouseEvent) => {
 			event.preventDefault();
-			store.dispatch('login', {
-				uid: 'test-1234-user-5678-abcd-9012-gues-tuse',
-				name: 'ゲストユーザー',
-				isLogined: true,
-			});
-			// ローディング表示
-			store.dispatch('setLoading', {
-				isShow: true,
-			});
-			// 2秒後、ローディングを解除
-			setTimeout(() => {
-				store.dispatch('setLoading', {
-					isShow: false,
-				});
-			}, 2000);
-			setTimeout(() => {
-				// Homeに遷移
-				router.push('/');
-				// 遷移後、トーストメッセージ表示
-				store.dispatch('setToastShow', {
-					message: MessageManager(Messages.MSG_004, ['ログイン']),
-					toastType: 'success',
-					isShow: true,
-				});
-				// トーストを2秒表示し、消す
-				setTimeout(() => {
-					store.dispatch('setToastShow', {
-						message: '',
-						toastType: '',
-						isShow: false,
-					});
-				}, 2000);
-			}, 2000);
+			guestLogin(store, router);
 		};
 
 		// 新規登録ボタン押下時処理

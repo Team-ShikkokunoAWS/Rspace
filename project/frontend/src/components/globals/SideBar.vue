@@ -1,16 +1,15 @@
 <template>
-	<div v-show="sidebar.isShow" class="sidebar-wrapper flex">
-		<div class="sidebar-container">
+	<div v-show="sidebar.isShow" class="overlay" @click="onclickOverLay">
+		<div class="sidebar-container fadeUp">
 			<div class="menu-title">
 				<h2>Menu</h2>
 			</div>
 			<div v-for="item in items" :key="item.id" class="menu-list">
-				<span @click="onclickMenuItem($event, item)">
+				<span class="border" @click="onclickMenuItem($event, item)">
 					{{ item.name }}
 				</span>
 			</div>
 		</div>
-		<div class="overlay" @click="onclickOverLay"></div>
 	</div>
 </template>
 
@@ -27,19 +26,11 @@ export default defineComponent({
 		// VueRouter
 		const router = useRouter();
 		const sidebar = computed(() => store.state.sidebar);
-		let items = [];
-		if (computed(() => store.state.user.isLogined)) {
-			items = [
-				{ id: 1, name: 'チャット', path: '/rooms' },
-				{ id: 2, name: 'ゲーム1', path: '/game1' },
-				{ id: 3, name: 'ゲーム2', path: '/game2' },
-			];
-		} else {
-			items = [
-				{ id: 1, name: '新規登録', path: '/signup' },
-				{ id: 2, name: 'ログイン', path: '/login' },
-			];
-		}
+		const items = [
+			{ id: 1, name: 'チャット', path: '/rooms' },
+			{ id: 2, name: 'ゲーム1', path: '/game1' },
+			{ id: 3, name: 'ゲーム2', path: '/game2' },
+		];
 		// メニューのアイテム押下時の処理
 		const onclickMenuItem = (
 			event: MouseEvent,
@@ -70,21 +61,16 @@ export default defineComponent({
 	--menu-item-height: 120px;
 }
 
-.sidebar-wrapper {
-	height: 100vh;
-	width: 100%;
-	position: absolute;
-}
-
 .flex {
 	display: flex;
 }
 
 .overlay {
 	width: 100%;
-	height: 100%;
+	height: 100vh;
 	background-color: rgba(0, 0, 0, 0.8);
 	z-index: 9999;
+	position: absolute;
 }
 
 .sidebar-container {
@@ -112,5 +98,28 @@ export default defineComponent({
 }
 .menu-list span:hover {
 	cursor: pointer;
+}
+
+.border:hover {
+	border-bottom: 3px solid;
+}
+
+.fadeUp {
+	animation-name: fadeUpAnime;
+	animation-duration: 0.6s;
+	animation-fill-mode: forwards;
+	opacity: 0;
+}
+
+@keyframes fadeUpAnime {
+	from {
+		opacity: 0;
+		transform: translateX(-300px);
+	}
+
+	to {
+		opacity: 1;
+		transform: translateX(0);
+	}
 }
 </style>

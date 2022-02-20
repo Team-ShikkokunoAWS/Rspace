@@ -7,7 +7,7 @@
 		<!-- エラーメッセージ表示 -->
 		<ErrorList :errorMessages="state.errorMessages" />
 
-		<MainCard color="#fff" height="50vh">
+		<MainCard color="#fff" height="50vh" width="600px">
 			<div>
 				<InputForm
 					v-model="state.username"
@@ -44,7 +44,7 @@
 			</div>
 
 			<CButton
-				name="ログイン"
+				name="新規登録"
 				width="400px"
 				colorType="teal"
 				@click="onclickSignUp($event)"
@@ -62,11 +62,13 @@
 <script lang="ts">
 import { defineComponent, reactive, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+import { useStore } from '@/store';
 import ErrorList from '@/components/parts/ErrorList.vue';
 import InputForm from '@/components/parts/InputForm.vue';
 import CButton from '@/components/parts/CButton.vue';
 import MainCard from '@/components/parts/MainCard.vue';
 import { MessageManager, Messages } from '@/constants/MessageManager';
+import { useAuth } from '@/hooks/useAuth';
 
 interface State {
 	username: string;
@@ -90,8 +92,12 @@ export default defineComponent({
 			passwordConfirm: '',
 			errorMessages: [],
 		});
+		// storeを取得する
+		const store = useStore();
 		// VueRouter
 		const router = useRouter();
+		// 認証関連
+		const { signUp } = useAuth();
 
 		// 画面初期表示時の処理
 		onMounted(() => {
@@ -99,7 +105,7 @@ export default defineComponent({
 		});
 
 		// 新規登録ボタン押下時の処理
-		const onclickSignUp = (event: MouseEvent) => {
+		const onclickSignUp = async (event: MouseEvent) => {
 			event.preventDefault();
 
 			// エラーメッセージオブジェクトの初期化
@@ -129,10 +135,8 @@ export default defineComponent({
 			// エラー発生時、処理中断
 			if (state.errorMessages.length > 0) return;
 
-			// TODO: ローディング表示
-			// TODO: API処理(defaultで最後にローディング非表示)
-			// TODO: storeへログインでdispatch
-			// TODO: HOMEへ遷移
+			// 新規登録処理
+			signUp(state.username, state.password, store, router);
 		};
 
 		// 新規登録ボタン押下時処理

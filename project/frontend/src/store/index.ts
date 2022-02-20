@@ -35,7 +35,7 @@ export const store = createStore<State>({
 	state: {
 		// ユーザーの状態
 		user: {
-			uuid: '',
+			uid: '',
 			name: '',
 			isLogined: false,
 		},
@@ -84,13 +84,13 @@ export const store = createStore<State>({
 	mutations: {
 		// ユーザー情報を追加（ログイン状態に）する
 		login(state, { user }) {
-			state.user.uuid = user.uuid;
+			state.user.uid = user.uid;
 			state.user.name = user.name;
 			state.user.isLogined = user.isLogined;
 		},
 		// ログアウト状態にする
 		logout(state) {
-			state.user.uuid = '';
+			state.user.uid = '';
 			state.user.name = '';
 			state.user.isLogined = false;
 		},

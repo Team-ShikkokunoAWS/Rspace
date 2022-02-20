@@ -47,13 +47,17 @@ export default defineComponent({
 
 <style scoped>
 .toast-container {
-	width: 100%;
+	width: 80%;
 	height: 120px;
 	background-color: var(
 		--toast-background-color
 	); /** toastTypeの値によって変化させる */
-	position: absolute; /** 浮いているように見える */
+	position: absolute; /* 浮いているように見える */
 	z-index: 9999;
+	border-radius: 100px;
+	left: 0;
+	right: 0;
+	margin: 30px auto;
 }
 .toast-message {
 	color: var(--toast-message-color); /** toastTypeの値によって変化させる */

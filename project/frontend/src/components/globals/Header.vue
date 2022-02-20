@@ -3,7 +3,13 @@
 		<div class="header-title">
 			<h1 class="header-title">RSpace</h1>
 			<!-- ハンバーガーメニュー -->
-			<div class="btn-trigger" id="btn" @click="onclickMenu" :class="active">
+			<div
+				v-show="userInfo.name"
+				class="btn-trigger"
+				id="btn"
+				@click="onclickMenu"
+				:class="active"
+			>
 				<span></span>
 				<span></span>
 				<span></span>
@@ -68,7 +74,7 @@ export default defineComponent({
 <style scoped>
 .header-container {
 	width: 100%;
-	height: 120px;
+	min-height: 80px;
 	border-bottom: 1.5px solid #333;
 	display: flex;
 	box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);

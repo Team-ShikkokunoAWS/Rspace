@@ -128,7 +128,7 @@ export default defineComponent({
 		const onclickGuestLogin = (event: MouseEvent) => {
 			event.preventDefault();
 			store.dispatch('login', {
-				uuid: 'test-1234-user-5678-abcd-9012-gues-tuse',
+				uid: 'test-1234-user-5678-abcd-9012-gues-tuse',
 				name: 'ゲストユーザー',
 				isLogined: true,
 			});

@@ -1,5 +1,6 @@
 export type User = {
-	uid: string;
+	uid?: string;
 	name: string;
-	isLogined: boolean;
+	password?: string;
+	isLogined?: boolean;
 };

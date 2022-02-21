@@ -31,33 +31,33 @@ export const useAuth = () => {
 		axios
 			.post('v1/users', { user })
 			.then((response) => {
-				store.dispatch('login', {
-					uid: response.data.user.uid,
-					name: response.data.user.name,
-					isLogined: true,
-				});
+				// ローディングを1秒表示後、ログイン処理を実行
 				setTimeout(() => {
-					router.push('/');
+					store.dispatch('login', {
+						uid: response.data.user.uid,
+						name: response.data.user.name,
+						isLogined: true,
+					});
 					store.dispatch('setLoading', {
 						isShow: false,
 					});
-				}, 1000);
-				// 遷移後、トーストメッセージ表示
-				setTimeout(() => {
+					// home画面へ遷移
+					router.push('/');
+					// 遷移後、トーストメッセージ表示
 					store.dispatch('setToastShow', {
 						message: MessageManager(Messages.MSG_004, ['ログイン']),
 						toastType: 'success',
 						isShow: true,
 					});
+					// トーストを2秒表示し、消す
+					setTimeout(() => {
+						store.dispatch('setToastShow', {
+							message: '',
+							toastType: '',
+							isShow: false,
+						});
+					}, 2000);
 				}, 1000);
-				// トーストを2秒表示し、消す
-				setTimeout(() => {
-					store.dispatch('setToastShow', {
-						message: '',
-						toastType: '',
-						isShow: false,
-					});
-				}, 2000);
 			})
 			.catch((err) => {
 				// ローディング削除
@@ -105,43 +105,43 @@ export const useAuth = () => {
 		axios
 			.post('v1/auth', { user })
 			.then((response) => {
-				store.dispatch('login', {
-					uid: response.data.user.uid,
-					name: response.data.user.name,
-					isLogined: true,
-				});
+				// ローディングを1秒表示後、ログイン処理を実行
 				setTimeout(() => {
-					router.push('/');
+					store.dispatch('login', {
+						uid: response.data.user.uid,
+						name: response.data.user.name,
+						isLogined: true,
+					});
 					store.dispatch('setLoading', {
 						isShow: false,
 					});
-				}, 1000);
-				// 遷移後、トーストメッセージ表示
-				setTimeout(() => {
+					// home画面へ遷移
+					router.push('/');
+					// 遷移後、トーストメッセージ表示
 					store.dispatch('setToastShow', {
 						message: MessageManager(Messages.MSG_004, ['ログイン']),
 						toastType: 'success',
 						isShow: true,
 					});
+					// トーストを2秒表示し、消す
+					setTimeout(() => {
+						store.dispatch('setToastShow', {
+							message: '',
+							toastType: '',
+							isShow: false,
+						});
+					}, 2000);
 				}, 1000);
-				// トーストを2秒表示し、消す
-				setTimeout(() => {
-					store.dispatch('setToastShow', {
-						message: '',
-						toastType: '',
-						isShow: false,
-					});
-				}, 2000);
 			})
 			.catch((err) => {
-				// ローディング削除
+				console.error(err.response);
+				// ローディングを1秒表示し、エラー処理を行う
 				setTimeout(() => {
+					// ローディング削除
 					store.dispatch('setLoading', {
 						isShow: false,
 					});
-				}, 2000);
-				console.error(err.response);
-				setTimeout(() => {
+					// バックエンドからのエラーがname_errorの場合
 					if (err.response.data.error === 'name_error') {
 						store.dispatch('setToastShow', {
 							message: 'ユーザーが存在しません',

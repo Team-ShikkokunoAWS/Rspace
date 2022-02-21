@@ -126,9 +126,19 @@ export default defineComponent({
 			}
 
 			// 確認用パスワードの必須チェック
-			if (!state.password) {
+			if (!state.passwordConfirm) {
 				state.errorMessages.push(
 					MessageManager(Messages.MSG_001, '確認用パスワード')
+				);
+			}
+
+			// パスワード＆確認パスワードの一致確認
+			if (state.password !== state.passwordConfirm) {
+				state.errorMessages.push(
+					MessageManager(
+						Messages.MSG_000,
+						'パスワードと確認用パスワードが一致していません'
+					)
 				);
 			}
 

@@ -5,6 +5,7 @@ import SignUpPage from '@/components/pages/SignUpPage.vue';
 import ChatIndexPage from '@/components/pages/ChatIndexPage.vue';
 import Game1Page from '@/components/pages/Game1Page.vue';
 import Game2Page from '@/components/pages/Game2Page.vue';
+import NotFoundPage from '@/components/pages/NotFoundPage.vue';
 import { store } from '@/store';
 
 // ルーティングパスと表示内容を配列として設定
@@ -80,6 +81,11 @@ const routes = [
 				next();
 			}
 		},
+	},
+	{
+		path: '/:catchAll(.*)',
+		name: 'NotFoundPage',
+		component: NotFoundPage,
 	},
 ];
 

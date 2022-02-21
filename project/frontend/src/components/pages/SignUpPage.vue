@@ -178,14 +178,4 @@ export default defineComponent({
 .signup-title {
 	margin-top: 20px;
 }
-
-/* カード */
-.signup-card {
-	width: 80%;
-	height: 60vh;
-	border: 1px solid #333;
-	margin: 30px auto;
-	box-shadow: 4px 4px gray;
-	padding-top: 60px;
-}
 </style>

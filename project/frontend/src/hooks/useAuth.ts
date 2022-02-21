@@ -167,23 +167,20 @@ export const useAuth = () => {
 	 * @param router Vue-Router
 	 */
 	const guestLogin = (store: any, router: any) => {
-		store.dispatch('login', {
-			uid: 'test-1234-user-5678-abcd-9012-gues-tuse',
-			name: 'ゲストユーザー',
-			isLogined: true,
-		});
 		// ローディング表示
 		store.dispatch('setLoading', {
 			isShow: true,
 		});
-		// 2秒後、ローディングを解除
+		// 2秒後、ログイン処理＆ローディングを解除
 		setTimeout(() => {
+			store.dispatch('login', {
+				uid: 'test-1234-user-5678-abcd-9012-gues-tuse',
+				name: 'ゲストユーザー',
+				isLogined: true,
+			});
 			store.dispatch('setLoading', {
 				isShow: false,
 			});
-		}, 2000);
-		setTimeout(() => {
-			// Homeに遷移
 			router.push('/');
 			// 遷移後、トーストメッセージ表示
 			store.dispatch('setToastShow', {
@@ -199,7 +196,7 @@ export const useAuth = () => {
 					isShow: false,
 				});
 			}, 2000);
-		}, 2000);
+		}, 1000);
 	};
 
 	// useAuth()の持つ処理

@@ -91,7 +91,7 @@ export default defineComponent({
 		// VueRouter
 		const router = useRouter();
 		// 認証関連の切り出したロジック
-		const { login, guestLogin } = useAuth();
+		const { doAuth, guestLogin } = useAuth();
 
 		// 画面初期表示時の処理
 		onMounted(() => {
@@ -118,7 +118,7 @@ export default defineComponent({
 			// エラー発生時、処理中断
 			if (state.errorMessages.length > 0) return;
 			// ログイン処理
-			login(state.username, state.password, store, router);
+			doAuth(state.username, state.password, store, router, 'login');
 		};
 
 		// ゲストログインボタン押下時処理

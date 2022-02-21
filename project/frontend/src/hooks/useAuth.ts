@@ -7,17 +7,18 @@ import { MessageManager, Messages } from '@/constants/MessageManager';
  */
 export const useAuth = () => {
 	/**
-	 * 新規登録ボタン押下時の処理
+	 * 新規登録 or ログインボタン押下時の処理
 	 * @param username string
 	 * @param password string
 	 * @param store any Store Vuex
 	 * @param router any Vue-Router
 	 */
-	const signUp = (
+	const doAuth = (
 		username: string,
 		password: string,
 		store: any,
-		router: any
+		router: any,
+		type: 'login' | 'signup'
 	) => {
 		// ローディング表示
 		store.dispatch('setLoading', {
@@ -28,82 +29,10 @@ export const useAuth = () => {
 			name: username,
 			password: password,
 		};
+		const url: string =
+			type === 'login' ? 'v1/auth' : type === 'signup' ? 'v1/users' : '';
 		axios
-			.post('v1/users', { user })
-			.then((response) => {
-				// ローディングを1秒表示後、ログイン処理を実行
-				setTimeout(() => {
-					store.dispatch('login', {
-						uid: response.data.user.uid,
-						name: response.data.user.name,
-						isLogined: true,
-					});
-					store.dispatch('setLoading', {
-						isShow: false,
-					});
-					// home画面へ遷移
-					router.push('/');
-					// 遷移後、トーストメッセージ表示
-					store.dispatch('setToastShow', {
-						message: MessageManager(Messages.MSG_004, ['ログイン']),
-						toastType: 'success',
-						isShow: true,
-					});
-					// トーストを2秒表示し、消す
-					setTimeout(() => {
-						store.dispatch('setToastShow', {
-							message: '',
-							toastType: '',
-							isShow: false,
-						});
-					}, 2000);
-				}, 1000);
-			})
-			.catch((err) => {
-				// ローディング削除
-				setTimeout(() => {
-					store.dispatch('setLoading', {
-						isShow: false,
-					});
-				}, 2000);
-				console.error(err.response);
-				setTimeout(() => {
-					// トーストを2秒表示し、消す
-					setTimeout(() => {
-						store.dispatch('setToastShow', {
-							message: '',
-							toastType: '',
-							isShow: false,
-						});
-					}, 2000);
-				}, 1000);
-			});
-	};
-
-	/**
-	 * ログインボタン押下時の処理
-	 * @param username string
-	 * @param password string
-	 * @param store any Store Vuex
-	 * @param router any Vue-Router
-	 */
-	const login = (
-		username: string,
-		password: string,
-		store: any,
-		router: any
-	) => {
-		// ローディング表示
-		store.dispatch('setLoading', {
-			isShow: true,
-		});
-		// ログイン処理のAPI操作
-		const user = {
-			name: username,
-			password: password,
-		};
-		axios
-			.post('v1/auth', { user })
+			.post(url, { user })
 			.then((response) => {
 				// ローディングを1秒表示後、ログイン処理を実行
 				setTimeout(() => {
@@ -201,8 +130,7 @@ export const useAuth = () => {
 
 	// useAuth()の持つ処理
 	return {
-		signUp,
-		login,
+		doAuth,
 		guestLogin,
 	};
 };

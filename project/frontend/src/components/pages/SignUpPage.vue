@@ -97,7 +97,7 @@ export default defineComponent({
 		// VueRouter
 		const router = useRouter();
 		// 認証関連
-		const { signUp } = useAuth();
+		const { doAuth } = useAuth();
 
 		// 画面初期表示時の処理
 		onMounted(() => {
@@ -146,7 +146,7 @@ export default defineComponent({
 			if (state.errorMessages.length > 0) return;
 
 			// 新規登録処理
-			signUp(state.username, state.password, store, router);
+			doAuth(state.username, state.password, store, router, 'signup');
 		};
 
 		// 新規登録ボタン押下時処理

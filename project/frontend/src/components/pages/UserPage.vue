@@ -13,6 +13,20 @@ export default defineComponent({
 	setup() {
 		return {};
 	},
+	// MyPageへの遷移前にユーザー情報のvalidation
+	beforeRouteEnter(to, from, next) {
+		// ルーティングのuidを取得
+		const params = to.params;
+		const uid = params.uid;
+		console.log(uid);
+		// 試験的にログインuidと一致しなければHomePageへリダイレクトさせるようにする
+		if (uid === '76b535fb855ad64430e794afaa4c3272') {
+			next();
+		} else {
+			next('/');
+		}
+		console.log(to, from, next);
+	},
 }); // export default defineComponent
 </script>
 

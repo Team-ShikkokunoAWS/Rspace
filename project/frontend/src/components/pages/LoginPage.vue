@@ -55,15 +55,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, onMounted } from 'vue';
+import { defineComponent, reactive } from 'vue';
 import { useStore } from '@/store';
 import { useRouter } from 'vue-router';
 import ErrorList from '@/components/parts/ErrorList.vue';
 import InputForm from '@/components/parts/InputForm.vue';
 import CButton from '@/components/parts/CButton.vue';
 import MainCard from '@/components/parts/MainCard.vue';
-import { MessageManager, Messages } from '@/constants/MessageManager';
 import { useAuth } from '@/hooks/useAuth';
+import { useValidate } from '@/hooks/useValidate';
 
 interface State {
 	username: string;
@@ -92,31 +92,19 @@ export default defineComponent({
 		const router = useRouter();
 		// 認証関連の切り出したロジック
 		const { doAuth, guestLogin } = useAuth();
-
-		// 画面初期表示時の処理
-		onMounted(() => {
-			focusForm();
-		});
+		// バリデーション関連
+		const { loginValidate } = useValidate();
 
 		// ログインボタン押下時処理
 		const onclickLogin = (event: MouseEvent) => {
 			event.preventDefault();
 			// エラーメッセージ初期化
 			state.errorMessages = [];
-			// ユーザー名の必須チェック
-			if (!state.username) {
-				state.errorMessages.push(
-					MessageManager(Messages.MSG_001, 'ユーザー名')
-				);
-			}
-			// パスワードの必須チェック
-			if (!state.password) {
-				state.errorMessages.push(
-					MessageManager(Messages.MSG_001, 'パスワード')
-				);
-			}
+			// バリデーション
+			state.errorMessages = loginValidate(state.username, state.password);
 			// エラー発生時、処理中断
 			if (state.errorMessages.length > 0) return;
+
 			// ログイン処理
 			doAuth(state.username, state.password, store, router, 'login');
 		};
@@ -131,12 +119,6 @@ export default defineComponent({
 		const onclickSignUpLink = (event: MouseEvent) => {
 			event.preventDefault();
 			router.push('/signup');
-		};
-
-		// フォームにフォーカスを当てる
-		const focusForm = () => {
-			const form = document.getElementById('username');
-			form?.focus();
 		};
 
 		return {

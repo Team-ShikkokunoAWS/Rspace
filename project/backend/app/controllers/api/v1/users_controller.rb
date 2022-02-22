@@ -8,10 +8,10 @@ class Api::V1::UsersController < ApplicationController
       if user[:password] == encryption_password(user_params[:password])
         render status: 200, json: {status: 'SUCCESS', user: user}
       else
-        render status: 400, json: {status: 'ERROR', error: 'password_error'}
+        render status: 400, json: {status: 'ERROR', error_detail: 'password_error'}
       end
     else
-      render status: 400, json: {status: 'ERROR', error: 'name_error'}
+      render status: 400, json: {status: 'ERROR', error_detail: 'name_error'}
     end
   end
 
@@ -20,13 +20,17 @@ class Api::V1::UsersController < ApplicationController
 
   def create
     user = user_params
+    if User.find_by(name: user[:name])
+      render status: 400, json: {status: 'ERROR', error_detail: 'already_regist'} and return
+    end
+
     user[:uid] = create_uid
     user[:password] = encryption_password(user[:password])
     user = User.new(user)
     if user.save
       render status: 200, json: {status: 'SUCCESS', user: user}
     else
-      render status: 400, json: {status: 'ERROR', error: user.errors}
+      render status: 400, json: {status: 'ERROR', error_detail: user.errors}
     end
   end
 

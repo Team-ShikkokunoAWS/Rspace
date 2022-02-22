@@ -5,6 +5,8 @@ import SignUpPage from '@/components/pages/SignUpPage.vue';
 import ChatIndexPage from '@/components/pages/ChatIndexPage.vue';
 import Game1Page from '@/components/pages/Game1Page.vue';
 import Game2Page from '@/components/pages/Game2Page.vue';
+import MyPage from '@/components/pages/MyPage.vue';
+import NotFoundPage from '@/components/pages/NotFoundPage.vue';
 import { store } from '@/store';
 
 // ルーティングパスと表示内容を配列として設定
@@ -18,6 +20,18 @@ const routes = [
 				next();
 			} else {
 				next('/login');
+			}
+		},
+	},
+	{
+		path: '/user/:uid',
+		name: 'myPage',
+		component: MyPage,
+		beforeEnter: (_to: any, _from: any, next: any) => {
+			if (store.state.user.isLogined) {
+				next();
+			} else {
+				next('/');
 			}
 		},
 	},
@@ -80,6 +94,11 @@ const routes = [
 				next();
 			}
 		},
+	},
+	{
+		path: '/:catchAll(.*)',
+		name: 'NotFoundPage',
+		component: NotFoundPage,
 	},
 ];
 

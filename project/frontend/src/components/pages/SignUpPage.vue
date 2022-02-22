@@ -97,7 +97,7 @@ export default defineComponent({
 		// VueRouter
 		const router = useRouter();
 		// 認証関連
-		const { signUp } = useAuth();
+		const { doAuth } = useAuth();
 
 		// 画面初期表示時の処理
 		onMounted(() => {
@@ -126,9 +126,19 @@ export default defineComponent({
 			}
 
 			// 確認用パスワードの必須チェック
-			if (!state.password) {
+			if (!state.passwordConfirm) {
 				state.errorMessages.push(
 					MessageManager(Messages.MSG_001, '確認用パスワード')
+				);
+			}
+
+			// パスワード＆確認パスワードの一致確認
+			if (state.password !== state.passwordConfirm) {
+				state.errorMessages.push(
+					MessageManager(
+						Messages.MSG_000,
+						'パスワードと確認用パスワードが一致していません'
+					)
 				);
 			}
 
@@ -136,7 +146,7 @@ export default defineComponent({
 			if (state.errorMessages.length > 0) return;
 
 			// 新規登録処理
-			signUp(state.username, state.password, store, router);
+			doAuth(state.username, state.password, store, router, 'signup');
 		};
 
 		// 新規登録ボタン押下時処理
@@ -167,15 +177,5 @@ export default defineComponent({
 
 .signup-title {
 	margin-top: 20px;
-}
-
-/* カード */
-.signup-card {
-	width: 80%;
-	height: 60vh;
-	border: 1px solid #333;
-	margin: 30px auto;
-	box-shadow: 4px 4px gray;
-	padding-top: 60px;
 }
 </style>

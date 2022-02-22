@@ -5,7 +5,7 @@ import SignUpPage from '@/components/pages/SignUpPage.vue';
 import ChatIndexPage from '@/components/pages/ChatIndexPage.vue';
 import Game1Page from '@/components/pages/Game1Page.vue';
 import Game2Page from '@/components/pages/Game2Page.vue';
-import MyPage from '@/components/pages/MyPage.vue';
+import UserPage from '@/components/pages/UserPage.vue';
 import NotFoundPage from '@/components/pages/NotFoundPage.vue';
 import { store } from '@/store';
 
@@ -25,8 +25,8 @@ const routes = [
 	},
 	{
 		path: '/user/:uid',
-		name: 'myPage',
-		component: MyPage,
+		name: 'UserPage',
+		component: UserPage,
 		beforeEnter: (_to: any, _from: any, next: any) => {
 			if (store.state.user.isLogined) {
 				next();

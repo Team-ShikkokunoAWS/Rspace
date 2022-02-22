@@ -60,15 +60,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, onMounted } from 'vue';
+import { defineComponent, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from '@/store';
 import ErrorList from '@/components/parts/ErrorList.vue';
 import InputForm from '@/components/parts/InputForm.vue';
 import CButton from '@/components/parts/CButton.vue';
 import MainCard from '@/components/parts/MainCard.vue';
-import { MessageManager, Messages } from '@/constants/MessageManager';
 import { useAuth } from '@/hooks/useAuth';
+import { useValidate } from '@/hooks/useValidate';
 
 interface State {
 	username: string;
@@ -98,50 +98,20 @@ export default defineComponent({
 		const router = useRouter();
 		// 認証関連
 		const { doAuth } = useAuth();
-
-		// 画面初期表示時の処理
-		onMounted(() => {
-			focusForm();
-		});
+		// バリデーション関連
+		const { signUpValidate } = useValidate();
 
 		// 新規登録ボタン押下時の処理
 		const onclickSignUp = async (event: MouseEvent) => {
 			event.preventDefault();
-
 			// エラーメッセージオブジェクトの初期化
 			state.errorMessages = [];
-
-			// 必須チェック
-			if (!state.username) {
-				state.errorMessages.push(
-					MessageManager(Messages.MSG_001, 'ユーザー名')
-				);
-			}
-
-			// パスワードの必須チェック
-			if (!state.password) {
-				state.errorMessages.push(
-					MessageManager(Messages.MSG_001, 'パスワード')
-				);
-			}
-
-			// 確認用パスワードの必須チェック
-			if (!state.passwordConfirm) {
-				state.errorMessages.push(
-					MessageManager(Messages.MSG_001, '確認用パスワード')
-				);
-			}
-
-			// パスワード＆確認パスワードの一致確認
-			if (state.password !== state.passwordConfirm) {
-				state.errorMessages.push(
-					MessageManager(
-						Messages.MSG_000,
-						'パスワードと確認用パスワードが一致していません'
-					)
-				);
-			}
-
+			// バリデーション
+			state.errorMessages = signUpValidate(
+				state.username,
+				state.password,
+				state.passwordConfirm
+			);
 			// エラー発生時、処理中断
 			if (state.errorMessages.length > 0) return;
 
@@ -153,12 +123,6 @@ export default defineComponent({
 		const onclickLoginLink = (event: MouseEvent) => {
 			event.preventDefault();
 			router.push('/login');
-		};
-
-		// フォームにフォーカスを当てる
-		const focusForm = () => {
-			const form = document.getElementById('username');
-			form?.focus();
 		};
 
 		return {

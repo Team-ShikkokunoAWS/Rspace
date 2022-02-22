@@ -4,6 +4,8 @@ export namespace Messages {
 	export const MSG_002 = '{0}の入力は半角英数字、記号のみです';
 	export const MSG_003 = '{0}の入力は{1}文字以内です';
 	export const MSG_004 = '{0}しました';
+	export const MSG_005 = '{0}を確認してください';
+	export const MSG_006 = '{0}は{1}できません';
 }
 
 export const MessageManager = (

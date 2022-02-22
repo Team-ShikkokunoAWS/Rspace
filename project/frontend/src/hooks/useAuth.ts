@@ -70,22 +70,37 @@ export const useAuth = () => {
 					store.dispatch('setLoading', {
 						isShow: false,
 					});
-					// バックエンドからのエラーがname_errorの場合
-					if (err.response.data.error === 'name_error') {
-						store.dispatch('setToastShow', {
-							message: 'ユーザーが存在しません',
-							toastType: 'danger',
-							isShow: true,
-						});
-						// トーストを2秒表示し、消す
-						setTimeout(() => {
-							store.dispatch('setToastShow', {
-								message: '',
-								toastType: '',
-								isShow: false,
-							});
-						}, 2000);
+					let errorMessage = '';
+					switch (err.response.data.error_detail) {
+						case 'name_error':
+							errorMessage = MessageManager(Messages.MSG_005, 'ユーザー名');
+							break;
+						case 'password_error':
+							errorMessage = MessageManager(Messages.MSG_005, 'パスワード');
+							break;
+						case 'already_regist':
+							errorMessage = MessageManager(Messages.MSG_006, [
+								'該当のユーザー名',
+								'利用',
+							]);
+							break;
+						default:
+							errorMessage = 'システムエラー';
+							break;
 					}
+					store.dispatch('setToastShow', {
+						message: errorMessage,
+						toastType: 'danger',
+						isShow: true,
+					});
+					// トーストを2秒表示し、消す
+					setTimeout(() => {
+						store.dispatch('setToastShow', {
+							message: '',
+							toastType: '',
+							isShow: false,
+						});
+					}, 2000);
 				}, 1000);
 			});
 	};

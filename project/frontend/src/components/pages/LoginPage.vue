@@ -31,14 +31,16 @@
 					width="400px"
 				/>
 			</div>
-
 			<CButton
+				style="margin-bottom: 5px"
 				name="ログイン"
 				width="400px"
 				colorType="teal"
+				:disabled="!state.username || !state.password"
 				@click="onclickLogin($event)"
 			/>
 			<CButton
+				style="margin-bottom: 5px"
 				name="ゲストログイン"
 				width="400px"
 				colorType="teal"
@@ -97,6 +99,7 @@ export default defineComponent({
 
 		// ログインボタン押下時処理
 		const onclickLogin = (event: MouseEvent) => {
+			console.log(state.username, state.password);
 			event.preventDefault();
 			// エラーメッセージ初期化
 			state.errorMessages = [];

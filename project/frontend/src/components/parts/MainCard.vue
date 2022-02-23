@@ -52,5 +52,6 @@ export default defineComponent({
 	margin: 30px auto;
 	box-shadow: 4px 4px gray;
 	padding-top: 60px;
+	overflow-y: auto;
 }
 </style>

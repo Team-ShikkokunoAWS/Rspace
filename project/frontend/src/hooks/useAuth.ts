@@ -70,8 +70,8 @@ export const useAuth = () => {
 					store.dispatch('setLoading', {
 						isShow: false,
 					});
-					let errorMessage = '';
-					switch (err.response.data.error_detail) {
+					let errorMessage: string = '';
+					switch (err.response && err.response.data.error_detail) {
 						case 'name_error':
 							errorMessage = MessageManager(Messages.MSG_005, 'ユーザー名');
 							break;
@@ -84,9 +84,10 @@ export const useAuth = () => {
 								'利用',
 							]);
 							break;
-						default:
-							errorMessage = 'システムエラー';
-							break;
+					}
+					// どのエラーにもならなかった場合、システムエラーとして出力する
+					if (!errorMessage) {
+						errorMessage = MessageManager(Messages.SYS_ERROR);
 					}
 					store.dispatch('setToastShow', {
 						message: errorMessage,

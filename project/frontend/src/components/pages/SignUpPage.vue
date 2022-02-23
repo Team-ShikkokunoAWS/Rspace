@@ -44,9 +44,11 @@
 			</div>
 
 			<CButton
+				style="margin-bottom: 5px"
 				name="新規登録"
 				width="400px"
 				colorType="teal"
+				:disabled="!state.username || !state.password || !state.passwordConfirm"
 				@click="onclickSignUp($event)"
 			/>
 			<CButton

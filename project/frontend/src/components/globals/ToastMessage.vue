@@ -35,6 +35,14 @@ export default defineComponent({
 						: store.state.toast.toastType === 'danger'
 						? '#eee'
 						: '',
+				'--toast-border-color':
+					store.state.toast.toastType === 'success'
+						? '#008080'
+						: store.state.toast.toastType === 'warning'
+						? '#b8860b'
+						: store.state.toast.toastType === 'danger'
+						? '#b22222'
+						: '#000',
 			};
 		});
 		return {
@@ -58,6 +66,7 @@ export default defineComponent({
 	left: 0;
 	right: 0;
 	margin: 30px auto;
+	border: 4px solid var(--toast-border-color);
 }
 .toast-message {
 	color: var(--toast-message-color); /** toastTypeの値によって変化させる */

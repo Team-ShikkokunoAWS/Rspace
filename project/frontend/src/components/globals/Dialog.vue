@@ -135,8 +135,7 @@ export default defineComponent({
 
 .dialog-cancel-btn {
 	width: 48%;
-	background-color: #dc3545;
-	border: 3px solid #dc3545;
+	background-color: #999;
 	text-align: center;
 	line-height: 80px;
 	border-radius: 12px;

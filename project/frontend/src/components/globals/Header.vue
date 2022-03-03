@@ -1,7 +1,7 @@
 <template>
 	<div class="header-container">
 		<div class="header-title">
-			<h1 class="header-title">RSpace</h1>
+			<h1 class="header-title"><span @click="onclickHome">RSpace</span></h1>
 			<!-- ハンバーガーメニュー -->
 			<div
 				v-show="userInfo.name"
@@ -17,16 +17,16 @@
 			<!-- ハンバーガーメニュー -->
 		</div>
 		<div class="header-user-info" v-if="userInfo.name">
-			<div>
-				<p>{{ userInfo.name }}</p>
-			</div>
-			<div>
-				<fa-icon
-					icon="arrow-right-from-bracket"
-					class="header-logout-btn"
-					@click="onclickLogout($event)"
-				/>
-			</div>
+			<!-- <div> -->
+			<p @click="onclickUserName">{{ userInfo.name }}</p>
+			<!-- </div> -->
+			<!-- <div> -->
+			<fa-icon
+				icon="arrow-right-from-bracket"
+				class="header-logout-btn"
+				@click="onclickLogout($event)"
+			/>
+			<!-- </div> -->
 		</div>
 	</div>
 </template>
@@ -34,6 +34,7 @@
 <script lang="ts">
 import { defineComponent, computed } from 'vue';
 import { useStore } from '@/store';
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
 	name: 'Header',
@@ -43,6 +44,8 @@ export default defineComponent({
 		const store = useStore();
 		const userInfo = computed(() => store.state.user);
 		const active = computed(() => store.state.sidebar.active);
+
+		const router = useRouter();
 
 		// ログアウトボタン押下時の処理
 		const onclickLogout = (event: MouseEvent) => {
@@ -55,16 +58,29 @@ export default defineComponent({
 			});
 		};
 
+		// ハンバーガーメニュー押下時の処理
 		const onclickMenu = () => {
 			const btn = document.getElementById('btn');
 			btn?.classList.toggle('active');
 			store.dispatch('setSideBar', { active: 'active', isShow: true });
 		};
 
+		// タイトル押下時の処理
+		const onclickHome = () => {
+			router.push('/');
+		};
+
+		// ヘッダーユーザー名押下時の処理
+		const onclickUserName = () => {
+			router.push(`/user/${userInfo.value.uid}`);
+		};
+
 		return {
 			userInfo,
 			onclickLogout,
 			onclickMenu,
+			onclickHome,
+			onclickUserName,
 			active,
 		};
 	},
@@ -74,7 +90,7 @@ export default defineComponent({
 <style scoped>
 .header-container {
 	width: 100%;
-	min-height: 80px;
+	min-height: 120px;
 	border-bottom: 1.5px solid #333;
 	display: flex;
 	box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
@@ -89,11 +105,30 @@ export default defineComponent({
 	margin: 0;
 }
 
+.header-title h1:hover {
+	cursor: pointer;
+	opacity: 0.6;
+}
+
 .header-user-info {
 	margin-left: auto;
-	margin-right: 50px;
-	margin-top: 20px;
+	margin-right: 16px;
+	margin-top: 60px;
 	display: flex;
+	height: 50px;
+	line-height: 60px;
+}
+
+.header-user-info p {
+	margin: 0;
+	font-size: 24px;
+	font-weight: bold;
+	margin-right: 8px;
+}
+
+.header-user-info p:hover {
+	cursor: pointer;
+	opacity: 0.6;
 }
 
 .header-logout-btn {
@@ -102,13 +137,13 @@ export default defineComponent({
 	margin-top: 8px;
 	margin-left: 10px;
 	background-color: #ddd;
-	padding: 8px;
+	padding: 12px;
 	border-radius: 12px;
 }
 
 .header-logout-btn:hover {
-	opacity: 0.8;
 	cursor: pointer;
+	color: #aaa;
 }
 
 /*=============================
@@ -119,7 +154,10 @@ export default defineComponent({
 	width: 44px;
 	height: 40px;
 	cursor: pointer;
-	margin-top: 10px;
+	margin-top: 16px;
+}
+.btn-trigger:hover {
+	opacity: 0.6;
 }
 .btn-trigger span {
 	position: absolute;

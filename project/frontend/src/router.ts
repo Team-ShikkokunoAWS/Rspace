@@ -3,6 +3,7 @@ import HomePage from '@/components/pages/HomePage.vue';
 import LoginPage from '@/components/pages/LoginPage.vue';
 import SignUpPage from '@/components/pages/SignUpPage.vue';
 import ChatIndexPage from '@/components/pages/ChatIndexPage.vue';
+import ChatRoomPage from '@/components/pages/ChatRoomPage.vue';
 import Game1Page from '@/components/pages/Game1Page.vue';
 import Game2Page from '@/components/pages/Game2Page.vue';
 import UserPage from '@/components/pages/UserPage.vue';
@@ -39,6 +40,18 @@ const routes = [
 		path: '/rooms',
 		name: 'ChatIndexPage',
 		component: ChatIndexPage,
+		beforeEnter: (_to: any, _from: any, next: any) => {
+			if (store.state.user.isLogined) {
+				next();
+			} else {
+				next('/login');
+			}
+		},
+	},
+	{
+		path: '/rooms/:room_id',
+		name: 'ChatRoomPage',
+		component: ChatRoomPage,
 		beforeEnter: (_to: any, _from: any, next: any) => {
 			if (store.state.user.isLogined) {
 				next();

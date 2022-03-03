@@ -20,7 +20,9 @@ export default defineComponent({
 		const uid = params.uid;
 		console.log(uid);
 		// 試験的にログインuidと一致しなければHomePageへリダイレクトさせるようにする
-		if (uid === '76b535fb855ad64430e794afaa4c3272') {
+		// if (uid === '76b535fb855ad64430e794afaa4c3272') {
+		// ゲストログインのみ遷移できる状態
+		if (uid === 'test-1234-user-5678-abcd-9012-gues-tuse') {
 			next();
 		} else {
 			next('/');

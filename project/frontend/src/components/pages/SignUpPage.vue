@@ -7,7 +7,7 @@
 		<!-- エラーメッセージ表示 -->
 		<ErrorList :errorMessages="state.errorMessages" />
 
-		<MainCard color="#fff" height="50vh" width="600px">
+		<MainCard color="#fff" height="400px" width="600px">
 			<div>
 				<InputForm
 					v-model="state.username"

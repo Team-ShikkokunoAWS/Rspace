@@ -8,7 +8,7 @@
 		<ErrorList :errorMessages="state.errorMessages" />
 
 		<MainCard color="#fff" height="400px" width="600px">
-			<div>
+			<div class="username-form">
 				<InputForm
 					v-model="state.username"
 					ctlName="username"
@@ -141,5 +141,9 @@ export default defineComponent({
 
 .login-title {
 	margin-top: 20px;
+}
+
+.username-form {
+	margin-top: 30px;
 }
 </style>

@@ -12,6 +12,9 @@
 					class="user-icon-img"
 					:src="require(`@/assets/${item.iconImage}`)"
 				/>
+				<div class="user-name">
+					{{ item.username }}
+				</div>
 			</div>
 		</div>
 		<div class="message-wrapper">
@@ -38,21 +41,21 @@ export default defineComponent({
 			{
 				iconImage: 'img.jpg',
 				uid: 'test-test-test-test-1',
-				name: 'John',
+				username: 'John',
 				message: 'hello good night!!',
 				timestamp: '2022-03-03 21:54',
 			},
 			{
 				iconImage: 'img.jpg',
 				uid: 'test-test-test-test-2',
-				name: 'Mary',
+				username: 'Mary',
 				message: 'lets talk with me??',
 				timestamp: '2022-03-02 20:32',
 			},
 			{
 				iconImage: 'img.jpg',
 				uid: 'test-test-test-test-3',
-				name: 'Mickel',
+				username: 'あいうえおあいうえおあいうえおあいうえおあいうえお',
 				message:
 					'lorem ipsum dolor sit am lorem ipsum dolor sit am lorem ipsum dolor sit',
 				timestamp: '2022-03-01 18:44',
@@ -71,20 +74,27 @@ export default defineComponent({
 	padding: 12px;
 	display: flex;
 	position: relative;
+	box-shadow: none;
+	border-radius: 12px;
 }
 
 .user-icon {
-	width: 80px;
-	height: 80px;
+	width: 180px;
+	height: 120px;
 }
-
 .user-icon-img {
-	position: absolute;
-	top: 24px;
-	left: 32px;
+	display: block;
+	margin: 0 auto;
 	width: 80px;
 	height: 80px;
 	border-radius: 50%;
+}
+.user-name {
+	text-align: center;
+	margin-top: 12px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
 }
 
 .message-wrapper {
@@ -94,10 +104,9 @@ export default defineComponent({
 	background-color: #fff;
 	height: 80px;
 	position: absolute;
-	left: 180px;
+	left: 210px;
 	top: 24px;
 }
-
 .message-bar {
 	width: 560px;
 	height: 40px;
@@ -105,7 +114,6 @@ export default defineComponent({
 	white-space: nowrap;
 	overflow: hidden;
 }
-
 .message-time {
 	position: absolute;
 	bottom: 10px;

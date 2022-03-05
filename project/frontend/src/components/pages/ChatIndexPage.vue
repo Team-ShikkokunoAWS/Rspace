@@ -5,6 +5,7 @@
 		class="chat-room-card"
 		v-for="item in items"
 		:key="item.uid"
+		@click="onclickChatRoom(item.roomId)"
 	>
 		<div class="chatIndex-user-wrapper">
 			<div class="user-icon">
@@ -29,6 +30,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import MainCard from '@/components/parts/MainCard.vue';
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
 	name: 'ChatIndexPage',
@@ -39,21 +41,21 @@ export default defineComponent({
 		// 描写用モックデータ
 		const items = [
 			{
-				iconImage: 'img.jpg',
+				roomId: '1',
 				uid: 'test-test-test-test-1',
 				username: 'John',
 				message: 'hello good night!!',
 				timestamp: '2022-03-03 21:54',
 			},
 			{
-				iconImage: 'img.jpg',
+				roomId: '2',
 				uid: 'test-test-test-test-2',
 				username: 'Mary',
 				message: 'lets talk with me??',
 				timestamp: '2022-03-02 20:32',
 			},
 			{
-				iconImage: 'img.jpg',
+				roomId: '3',
 				uid: 'test-test-test-test-3',
 				username: 'あいうえおあいうえおあいうえおあいうえおあいうえお',
 				message:
@@ -62,8 +64,17 @@ export default defineComponent({
 			},
 		];
 
+		// VueRouter
+		const router = useRouter();
+
+		// 各チャットルーム押下時の処理
+		const onclickChatRoom = (roomId: string) => {
+			router.push(`/rooms/${roomId}`);
+		};
+
 		return {
 			items,
+			onclickChatRoom,
 		};
 	},
 }); // export default defineComponent
@@ -76,6 +87,10 @@ export default defineComponent({
 	position: relative;
 	box-shadow: none;
 	border-radius: 12px;
+}
+.chat-room-card:hover {
+	opacity: 0.8;
+	cursor: pointer;
 }
 
 .user-icon {

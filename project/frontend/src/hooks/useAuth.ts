@@ -40,6 +40,14 @@ export const useAuth = () => {
 						uid: response.data.user.uid,
 						name: response.data.user.name,
 						isLogined: true,
+						// ユーザーアイコンを設定。レスポンスにない場合は、空白文字を設定
+						iconImage: response.data.user.iconImage
+							? response.data.user.iconImage
+							: '',
+						// ユーザー背景を設定。レスポンスにない場合は、空白文字を設定
+						backImage: response.data.user.backImage
+							? response.data.user.backImage
+							: '',
 					});
 					store.dispatch('setLoading', {
 						isShow: false,
@@ -122,6 +130,9 @@ export const useAuth = () => {
 				uid: 'test-1234-user-5678-abcd-9012-gues-tuse',
 				name: 'ゲストユーザー',
 				isLogined: true,
+				// ゲストユーザーのアイコンはno_image.jpgを設定するため、空白文字をセット
+				iconImage: '',
+				backImage: '',
 			});
 			store.dispatch('setLoading', {
 				isShow: false,

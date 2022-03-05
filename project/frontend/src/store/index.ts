@@ -40,6 +40,8 @@ export const store = createStore<State>({
 			uid: '',
 			name: '',
 			isLogined: false,
+			iconImage: '',
+			backImage: '',
 		},
 		// メッセージトーストの状態
 		toast: {
@@ -98,12 +100,16 @@ export const store = createStore<State>({
 			state.user.uid = user.uid;
 			state.user.name = user.name;
 			state.user.isLogined = user.isLogined;
+			state.user.iconImage = user.iconImage;
+			state.user.backImage = user.backImage;
 		},
 		// ログアウト状態にする
 		logout(state) {
 			state.user.uid = '';
 			state.user.name = '';
 			state.user.isLogined = false;
+			state.user.iconImage = '';
+			state.user.backImage = '';
 		},
 		// メッセージトーストの表示・非表示を切り替える
 		setToastShow(state, { toast }) {

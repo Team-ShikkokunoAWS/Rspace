@@ -16,17 +16,19 @@
 			</div>
 			<!-- ハンバーガーメニュー -->
 		</div>
-		<div class="header-user-info" v-if="userInfo.name">
-			<!-- <div> -->
-			<p @click="onclickUserName">{{ userInfo.name }}</p>
-			<!-- </div> -->
-			<!-- <div> -->
-			<fa-icon
-				icon="arrow-right-from-bracket"
-				class="header-logout-btn"
-				@click="onclickLogout($event)"
-			/>
-			<!-- </div> -->
+		<!-- ユーザー情報, ログアウトボタン -->
+		<div class="header-user-info flex" v-if="userInfo.name">
+			<div class="name-and-icon flex" @click="onclickUserName">
+				<p>{{ userInfo.name }}</p>
+				<UserIcon :backgroundImage="userInfo.iconImage" class="user-icon" />
+			</div>
+			<div>
+				<fa-icon
+					icon="arrow-right-from-bracket"
+					class="header-logout-btn"
+					@click="onclickLogout($event)"
+				/>
+			</div>
 		</div>
 	</div>
 </template>
@@ -35,10 +37,13 @@
 import { defineComponent, computed } from 'vue';
 import { useStore } from '@/store';
 import { useRouter } from 'vue-router';
+import UserIcon from '@/components/parts/UserIcon.vue';
 
 export default defineComponent({
 	name: 'Header',
-	components: {},
+	components: {
+		UserIcon,
+	},
 	setup() {
 		// storeを取得する
 		const store = useStore();
@@ -88,13 +93,17 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.flex {
+	display: flex;
+}
+
 .header-container {
 	width: 100%;
 	min-height: 120px;
 	border-bottom: 1.5px solid #333;
-	display: flex;
 	box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
 	z-index: 1;
+	position: relative;
 }
 
 .header-title {
@@ -111,12 +120,9 @@ export default defineComponent({
 }
 
 .header-user-info {
-	margin-left: auto;
-	margin-right: 16px;
-	margin-top: 60px;
-	display: flex;
-	height: 50px;
-	line-height: 60px;
+	position: absolute;
+	right: 0;
+	bottom: 10px;
 }
 
 .header-user-info p {
@@ -126,7 +132,12 @@ export default defineComponent({
 	margin-right: 8px;
 }
 
-.header-user-info p:hover {
+.name-and-icon {
+	height: 80px;
+	line-height: 80px;
+}
+
+.name-and-icon:hover {
 	cursor: pointer;
 	opacity: 0.6;
 }
@@ -134,13 +145,12 @@ export default defineComponent({
 .header-logout-btn {
 	font-size: 25px;
 	line-height: 20px;
-	margin-top: 8px;
+	margin-top: 28px;
 	margin-left: 10px;
 	background-color: #ddd;
 	padding: 12px;
 	border-radius: 12px;
 }
-
 .header-logout-btn:hover {
 	cursor: pointer;
 	color: #aaa;

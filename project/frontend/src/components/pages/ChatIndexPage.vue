@@ -5,12 +5,14 @@
 		class="chat-room-card"
 		v-for="item in items"
 		:key="item.uid"
+		@click="onclickChatRoom(item.roomId)"
 	>
 		<div class="chatIndex-user-wrapper">
 			<div class="user-icon">
-				<img
-					class="user-icon-img"
-					:src="require(`@/assets/${item.iconImage}`)"
+				<UserIcon
+					width="80px"
+					height="80px"
+					:backgroundImage="item.iconImage"
 				/>
 				<div class="user-name">
 					{{ item.username }}
@@ -29,16 +31,20 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import MainCard from '@/components/parts/MainCard.vue';
+import UserIcon from '@/components/parts/UserIcon.vue';
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
 	name: 'ChatIndexPage',
 	components: {
 		MainCard,
+		UserIcon,
 	},
 	setup() {
 		// 描写用モックデータ
 		const items = [
 			{
+				roomId: '1',
 				iconImage: 'img.jpg',
 				uid: 'test-test-test-test-1',
 				username: 'John',
@@ -46,14 +52,17 @@ export default defineComponent({
 				timestamp: '2022-03-03 21:54',
 			},
 			{
+				roomId: '2',
 				iconImage: 'img.jpg',
 				uid: 'test-test-test-test-2',
 				username: 'Mary',
 				message: 'lets talk with me??',
 				timestamp: '2022-03-02 20:32',
 			},
+			// 未設定（空白）でno_image画像になるかの検証データ
 			{
-				iconImage: 'img.jpg',
+				roomId: '3',
+				iconImage: '',
 				uid: 'test-test-test-test-3',
 				username: 'あいうえおあいうえおあいうえおあいうえおあいうえお',
 				message:
@@ -62,8 +71,17 @@ export default defineComponent({
 			},
 		];
 
+		// VueRouter
+		const router = useRouter();
+
+		// 各チャットルーム押下時の処理
+		const onclickChatRoom = (roomId: string) => {
+			router.push(`/rooms/${roomId}`);
+		};
+
 		return {
 			items,
+			onclickChatRoom,
 		};
 	},
 }); // export default defineComponent
@@ -76,6 +94,10 @@ export default defineComponent({
 	position: relative;
 	box-shadow: none;
 	border-radius: 12px;
+}
+.chat-room-card:hover {
+	opacity: 0.6;
+	cursor: pointer;
 }
 
 .user-icon {

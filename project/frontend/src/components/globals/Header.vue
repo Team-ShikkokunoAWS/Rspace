@@ -20,7 +20,11 @@
 		<div class="header-user-info flex" v-if="userInfo.name">
 			<div class="name-and-icon flex" @click="onclickUserName">
 				<p>{{ userInfo.name }}</p>
-				<UserIcon :backgroundImage="userInfo.iconImage" class="user-icon" />
+				<UserIcon
+					width="60px"
+					height="60px"
+					:backgroundImage="userInfo.iconImage"
+				/>
 			</div>
 			<div>
 				<fa-icon
@@ -121,8 +125,8 @@ export default defineComponent({
 
 .header-user-info {
 	position: absolute;
-	right: 0;
-	bottom: 10px;
+	right: 16px;
+	bottom: 5px;
 }
 
 .header-user-info p {
@@ -133,8 +137,8 @@ export default defineComponent({
 }
 
 .name-and-icon {
-	height: 80px;
-	line-height: 80px;
+	height: 60px;
+	line-height: 60px;
 }
 
 .name-and-icon:hover {

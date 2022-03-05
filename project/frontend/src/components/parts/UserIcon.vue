@@ -1,24 +1,8 @@
 <template>
 	<div v-show="userInfo.isLogined">
 		<!-- ユーザーのアイコン画像が設定されている場合、設定画像パスでアイコンを表示 -->
-		<div
-			v-if="
-				userInfo.iconImage !== '' &&
-				userInfo.iconImage !== null &&
-				userInfo.iconImage !== undefined
-			"
-		>
+		<div>
 			<div class="user-icon user-image" :style="styles"></div>
-		</div>
-		<!-- ユーザーのアイコン画像が未設定の場合、no_image.jpgでアイコンを表示 -->
-		<div
-			v-if="
-				userInfo.iconImage === '' ||
-				userInfo.iconImage === null ||
-				userInfo.iconImage === undefined
-			"
-		>
-			<div class="user-icon no-image" :style="styles"></div>
 		</div>
 	</div>
 </template>
@@ -40,24 +24,28 @@ export default defineComponent({
 		},
 		backgroundImage: {
 			type: String,
-			default: 'url(../../../static/no_image.jpg)',
+			default: 'no_image.jpg',
 		},
 	},
 	setup(props) {
 		// storeを取得する
 		const store = useStore();
 		const userInfo = computed(() => store.state.user);
+
 		// CSS
 		const styles = computed(() => {
 			return {
 				'--width': `${props.width}`,
 				'--height': `${props.height}`,
-				'--background-image': `${props.backgroundImage}`,
+				'--backgroundImage': props.backgroundImage
+					? `url(${props.backgroundImage})` // 設定画像がある場合はそのパスを用いる
+					: 'url(no_image.jpg)', // 設定画像がない場合はno_imageを表示
 			};
 		});
 		return {
 			userInfo,
 			styles,
+			props,
 		};
 	},
 }); // export default defineComponent
@@ -68,16 +56,14 @@ export default defineComponent({
 	width: var(--width);
 	height: var(--height);
 	border-radius: 50%;
-	background-size: contain;
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center;
+	border: 1px solid #87cefa;
+	background-color: #ddd;
 }
 
-/* ユーザーアイコンが設定されている場合 */
 .user-image {
-	background-image: var(--background-image);
-}
-
-/* ユーザーアイコン未設定状態 */
-.no-image {
-	background-image: url('../../../static/no_image.jpg');
+	background-image: var(--backgroundImage);
 }
 </style>

@@ -4,9 +4,11 @@
 			:id="props.ctlName"
 			:maxlength="props.maxlength"
 			:style="styles"
+			:value="modelValue"
+			@input="$emit('update:modelValue', $event.target.value)"
 		></textarea>
 		<span class="highlight"></span>
-		<fa-icon class="send-btn" icon="paper-plane" />
+		<fa-icon class="send-btn" icon="paper-plane" @click="handleSubmit" />
 	</div>
 </template>
 
@@ -46,7 +48,7 @@ export default defineComponent({
 			},
 		},
 	},
-	setup(props) {
+	setup(props, context) {
 		// 呼び出し元でのsyleの設定を適用する
 		const styles = computed(() => {
 			return {
@@ -60,9 +62,15 @@ export default defineComponent({
 				form?.focus();
 			}
 		});
+
+		// 送信ボタン押下時の処理(親にイベントを通知する)
+		const handleSubmit = () => {
+			context.emit('onclickSubmit');
+		};
 		return {
 			props,
 			styles,
+			handleSubmit,
 		};
 	},
 }); // export default defineComponent
@@ -89,6 +97,7 @@ textarea {
 	overflow-y: scroll;
 	-ms-overflow-style: none;
 	scrollbar-width: none;
+	color: #eee; /** テキストエリア入力フォームの文字色を白にする */
 }
 textarea::-webkit-scrollbar {
 	/* Chrome, Safari 対応 */

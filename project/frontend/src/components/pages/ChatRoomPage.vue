@@ -182,7 +182,8 @@ export default defineComponent({
 /* フォーム入力欄 */
 .form-field-wrapper {
 	width: 100%;
-	height: 80px;
+	/* height: 80px; heigth:80だと謎の余白がフォーム下に出たので様子見で108pxに設定*/
+	height: 108px;
 	position: relative;
 	background-color: #8491c3;
 	background-color: #415566;

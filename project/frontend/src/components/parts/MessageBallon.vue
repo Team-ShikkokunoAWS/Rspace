@@ -48,6 +48,11 @@ export default defineComponent({
 			type: String,
 			default: '',
 		},
+		// メッセージの一意になるid(message_id)
+		messageId: {
+			type: String,
+			default: '',
+		},
 		// 吹き出しの横幅(デフォルト値：300px)
 		width: {
 			type: String,
@@ -91,6 +96,8 @@ export default defineComponent({
 	color: #ccc;
 	border-radius: 16px;
 	position: relative;
+	margin-top: 10px;
+	margin-bottom: 10px;
 }
 
 /*---------------------

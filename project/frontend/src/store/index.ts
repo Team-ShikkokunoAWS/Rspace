@@ -7,6 +7,7 @@ import { Loading } from '@/types/loading';
 import { SideBar } from '@/types/SideBar';
 import createPersistedState from 'vuex-persistedstate';
 import { VueCookieNext } from 'vue-cookie-next';
+import { user, toast, dialog, loading, sidebar } from './modules';
 
 // storeの型設定
 export interface State {
@@ -34,105 +35,12 @@ export const store = createStore<State>({
 			},
 		}),
 	],
-	state: {
-		// ユーザーの状態
-		user: {
-			uid: '',
-			name: '',
-			isLogined: false,
-			iconImage: '',
-			backImage: '',
-		},
-		// メッセージトーストの状態
-		toast: {
-			message: '',
-			toastType: '',
-			isShow: false,
-		},
-		// 確認ダイアログの状態
-		dialog: {
-			title: '',
-			message: '',
-			dialogType: '',
-			isShow: false,
-		},
-		// ローディングの状態
-		loading: {
-			isShow: false,
-		},
-		// サイドバーの状態
-		sidebar: {
-			active: '',
-			isShow: false,
-		},
-	},
-	// 変更のためのmutationsにコミット
-	actions: {
-		// ユーザー情報を追加（ログイン状態に）するためのコミット
-		login({ commit, state }, user: User) {
-			commit('login', { user: user });
-		},
-		// ユーザー情報をログアウト状態にするためのコミット
-		logout({ commit, state }) {
-			commit('logout');
-		},
-		// メッセージトーストの表示・非表示切り替え
-		setToastShow({ commit, state }, toast: Toast) {
-			commit('setToastShow', { toast: toast });
-		},
-		// 確認ダイアログの表示・非表示切り替え
-		setDialog({ commit, state }, dialog: Dialog) {
-			commit('setDialog', { dialog: dialog });
-		},
-		// ローディングの表示・非表示切り替え
-		setLoading({ commit, state }, loading: Loading) {
-			commit('setLoading', { loading: loading });
-		},
-		// サイドバーの表示・非表示切り替え
-		setSideBar({ commit, state }, sidebar: SideBar) {
-			commit('setSideBar', { sidebar: sidebar });
-		},
-	},
-	// storeの状態を変更するためのmutation
-	mutations: {
-		// ユーザー情報を追加（ログイン状態に）する
-		login(state, { user }) {
-			state.user.uid = user.uid;
-			state.user.name = user.name;
-			state.user.isLogined = user.isLogined;
-			state.user.iconImage = user.iconImage;
-			state.user.backImage = user.backImage;
-		},
-		// ログアウト状態にする
-		logout(state) {
-			state.user.uid = '';
-			state.user.name = '';
-			state.user.isLogined = false;
-			state.user.iconImage = '';
-			state.user.backImage = '';
-		},
-		// メッセージトーストの表示・非表示を切り替える
-		setToastShow(state, { toast }) {
-			state.toast.message = toast.message;
-			state.toast.toastType = toast.toastType;
-			state.toast.isShow = toast.isShow;
-		},
-		// 確認ダイアログの表示・非表示を切り替える
-		setDialog(state, { dialog }) {
-			state.dialog.title = dialog.title;
-			state.dialog.message = dialog.message;
-			state.dialog.dialogType = dialog.dialogType;
-			state.dialog.isShow = dialog.isShow;
-		},
-		// ローディングの表示・非表示切り替え
-		setLoading(state, { loading }) {
-			state.loading.isShow = loading.isShow;
-		},
-		// サイドバーの表示・非表示切り替え
-		setSideBar(state, { sidebar }) {
-			state.sidebar.active = sidebar.active;
-			state.sidebar.isShow = sidebar.isShow;
-		},
+	modules: {
+		user,
+		toast,
+		dialog,
+		loading,
+		sidebar,
 	},
 });
 

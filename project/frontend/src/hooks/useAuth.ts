@@ -120,6 +120,7 @@ export const useAuth = () => {
 	 * @param router Vue-Router
 	 */
 	const guestLogin = (store: any, router: any) => {
+		console.log(store);
 		// ローディング表示
 		store.dispatch('setLoading', {
 			isShow: true,

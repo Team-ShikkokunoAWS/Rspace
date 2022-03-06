@@ -7,6 +7,7 @@ import { Loading } from '@/types/loading';
 import { SideBar } from '@/types/SideBar';
 import createPersistedState from 'vuex-persistedstate';
 import { VueCookieNext } from 'vue-cookie-next';
+// store/module/index.tsにて集約した各moduleをまとめてimport
 import { user, toast, dialog, loading, sidebar } from './modules';
 
 // storeの型設定

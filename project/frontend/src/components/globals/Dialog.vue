@@ -39,21 +39,21 @@ export default defineComponent({
         // ログアウト時の処理
         case "logout":
           // 遷移後、トーストの表示
-          store.dispatch("setToastShow", {
+          store.dispatch("toast/setToastShow", {
             message: MessageManager(Messages.MSG_004, ["ログアウト"]),
             toastType: "danger",
             isShow: true,
           });
           // トーストを2秒表示し、消す
           setTimeout(() => {
-            store.dispatch("setToastShow", {
+            store.dispatch("toast/setToastShow", {
               message: "",
               toastType: "",
               isShow: false,
             });
           }, 2000);
           // ログアウト処理
-          store.dispatch("logout");
+          store.dispatch("user/logout");
           router.push("/login");
           break;
       }
@@ -61,7 +61,7 @@ export default defineComponent({
 
     // キャンセル・オーバーレイ押下時にダイアログを消す
     const onclickCancel = () => {
-      store.dispatch("setDialog", {
+      store.dispatch("dialog/setDialog", {
         title: "",
         message: "",
         isShow: false,

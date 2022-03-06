@@ -21,7 +21,7 @@ export const useAuth = () => {
 		type: 'login' | 'signup'
 	) => {
 		// ローディング表示
-		store.dispatch('setLoading', {
+		store.dispatch('loading/setLoading', {
 			isShow: true,
 		});
 		// ログイン処理のAPI操作
@@ -36,7 +36,7 @@ export const useAuth = () => {
 			.then((response) => {
 				// ローディングを1秒表示後、ログイン処理を実行
 				setTimeout(() => {
-					store.dispatch('login', {
+					store.dispatch('user/login', {
 						uid: response.data.user.uid,
 						name: response.data.user.name,
 						isLogined: true,
@@ -49,20 +49,20 @@ export const useAuth = () => {
 							? response.data.user.backImage
 							: '',
 					});
-					store.dispatch('setLoading', {
+					store.dispatch('loading/setLoading', {
 						isShow: false,
 					});
 					// home画面へ遷移
 					router.push('/');
 					// 遷移後、トーストメッセージ表示
-					store.dispatch('setToastShow', {
+					store.dispatch('toast/setToastShow', {
 						message: MessageManager(Messages.MSG_004, ['ログイン']),
 						toastType: 'success',
 						isShow: true,
 					});
 					// トーストを2秒表示し、消す
 					setTimeout(() => {
-						store.dispatch('setToastShow', {
+						store.dispatch('toast/setToastShow', {
 							message: '',
 							toastType: '',
 							isShow: false,
@@ -75,7 +75,7 @@ export const useAuth = () => {
 				// ローディングを1秒表示し、エラー処理を行う
 				setTimeout(() => {
 					// ローディング削除
-					store.dispatch('setLoading', {
+					store.dispatch('loading/setLoading', {
 						isShow: false,
 					});
 					let errorMessage: string = '';
@@ -97,14 +97,14 @@ export const useAuth = () => {
 					if (!errorMessage) {
 						errorMessage = MessageManager(Messages.SYS_ERROR);
 					}
-					store.dispatch('setToastShow', {
+					store.dispatch('toast/setToastShow', {
 						message: errorMessage,
 						toastType: 'danger',
 						isShow: true,
 					});
 					// トーストを2秒表示し、消す
 					setTimeout(() => {
-						store.dispatch('setToastShow', {
+						store.dispatch('toast/setToastShow', {
 							message: '',
 							toastType: '',
 							isShow: false,
@@ -122,12 +122,12 @@ export const useAuth = () => {
 	const guestLogin = (store: any, router: any) => {
 		console.log(store);
 		// ローディング表示
-		store.dispatch('setLoading', {
+		store.dispatch('loading/setLoading', {
 			isShow: true,
 		});
 		// 2秒後、ログイン処理＆ローディングを解除
 		setTimeout(() => {
-			store.dispatch('login', {
+			store.dispatch('user/login', {
 				uid: 'test-1234-user-5678-abcd-9012-gues-tuse',
 				name: 'ゲストユーザー',
 				isLogined: true,
@@ -135,19 +135,22 @@ export const useAuth = () => {
 				iconImage: '',
 				backImage: '',
 			});
-			store.dispatch('setLoading', {
+			store.dispatch('loading/setLoading', {
 				isShow: false,
 			});
 			router.push('/');
+			console.log('遷移');
+			console.log(store);
+			console.log(store.state);
 			// 遷移後、トーストメッセージ表示
-			store.dispatch('setToastShow', {
+			store.dispatch('toast/setToastShow', {
 				message: MessageManager(Messages.MSG_004, ['ログイン']),
 				toastType: 'success',
 				isShow: true,
 			});
 			// トーストを2秒表示し、消す
 			setTimeout(() => {
-				store.dispatch('setToastShow', {
+				store.dispatch('toast/setToastShow', {
 					message: '',
 					toastType: '',
 					isShow: false,

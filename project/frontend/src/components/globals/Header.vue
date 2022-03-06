@@ -103,7 +103,7 @@ export default defineComponent({
 
 .header-container {
 	width: 100%;
-	min-height: 120px;
+	height: 120px;
 	border-bottom: 1.5px solid #333;
 	box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
 	z-index: 1;

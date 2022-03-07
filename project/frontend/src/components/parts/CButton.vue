@@ -1,7 +1,5 @@
 <template>
-	<div class="btn" :style="styles">
-		<button>{{ props.name }}</button>
-	</div>
+	<button :style="styles" :disabled="props.disabled">{{ props.name }}</button>
 </template>
 
 <script lang="ts">
@@ -29,6 +27,11 @@ export default defineComponent({
 			type: String,
 			default: '300px',
 		},
+		// disabled
+		disabled: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	setup(props) {
 		const styles = computed(() => {
@@ -51,11 +54,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.btn {
-	width: var(--width);
-	margin: 5px auto;
-}
-.btn button {
+button {
 	padding: 8px;
 	background: var(--color);
 	color: #eee;
@@ -64,11 +63,15 @@ export default defineComponent({
 	border-radius: 8px;
 	width: var(--width);
 }
-.btn button:hover {
+button:hover {
 	cursor: pointer;
 	opacity: 0.8;
 }
-.btn button:active {
+button:active {
 	width: var(calc(--width - 1%));
+}
+button:disabled {
+	background: #999;
+	pointer-events: none; /** hoverやクリック、cursorなどの全てのマウスイベントを無効にする */
 }
 </style>

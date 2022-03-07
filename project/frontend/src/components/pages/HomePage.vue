@@ -1,32 +1,30 @@
 <template>
-	<h1>HomePage</h1>
-	<button @click="onClickLink($event)">{{ loginUser.uid }}</button>
+	<div class="home-title">
+		<h2>Home</h2>
+	</div>
+
+	<MainCard color="#fff" height="60vh" width="900px"> 
+		
+	</MainCard>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { useRouter } from 'vue-router';
-import { useStore } from '@/store';
+import MainCard from '@/components/parts/MainCard.vue';
 
 export default defineComponent({
 	name: 'HomePage',
-	components: {},
+	components: {
+		MainCard,
+	},
 	setup() {
-		const store = useStore();
-		const router = useRouter();
-		const loginUser = store.state.user;
-		const onClickLink = (event: MouseEvent) => {
-			event.preventDefault();
-			// UserPageへ遷移する（動的なuidでのルーティング）試験的にログインしているユーザー情報で遷移
-			router.push({ name: 'UserPage', params: { uid: loginUser.uid } });
-			// router.push(`/user/${loginUser.uid}`); こっちでも可能
-		};
-		return {
-			onClickLink,
-			loginUser,
-		};
+		return {};
 	},
 }); // export default defineComponent
 </script>
 
-<style scoped></style>
+<style scoped>
+.home-title {
+	text-align: center;
+}
+</style>

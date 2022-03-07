@@ -19,18 +19,6 @@ export const useValidate = () => {
 		passwordConfirm: string
 	): Array<string> => {
 		const errorMessages: Array<string> = [];
-		// 必須チェック
-		if (!username) {
-			errorMessages.push(MessageManager(Messages.MSG_001, 'ユーザー名'));
-		}
-		// パスワードの必須チェック
-		if (!password) {
-			errorMessages.push(MessageManager(Messages.MSG_001, 'パスワード'));
-		}
-		// 確認用パスワードの必須チェック
-		if (!passwordConfirm) {
-			errorMessages.push(MessageManager(Messages.MSG_001, '確認用パスワード'));
-		}
 		// パスワード文字数チェック
 		if (password && password.length < 8) {
 			errorMessages.push(MessageManager(Messages.MSG_007, ['パスワード', '8']));
@@ -76,14 +64,6 @@ export const useValidate = () => {
 	 */
 	const loginValidate = (username: string, password: string) => {
 		const errorMessages: Array<string> = [];
-		// 必須チェック
-		if (!username) {
-			errorMessages.push(MessageManager(Messages.MSG_001, 'ユーザー名'));
-		}
-		// パスワードの必須チェック
-		if (!password) {
-			errorMessages.push(MessageManager(Messages.MSG_001, 'パスワード'));
-		}
 		// パスワード文字数チェック
 		if (password && password.length < 8) {
 			errorMessages.push(MessageManager(Messages.MSG_007, ['パスワード', '8']));

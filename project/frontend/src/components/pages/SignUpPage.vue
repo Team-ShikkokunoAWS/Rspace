@@ -7,8 +7,8 @@
 		<!-- エラーメッセージ表示 -->
 		<ErrorList :errorMessages="state.errorMessages" />
 
-		<MainCard color="#fff" height="50vh" width="600px">
-			<div>
+		<MainCard color="#fff" height="400px" width="600px">
+			<div class="username-form">
 				<InputForm
 					v-model="state.username"
 					ctlName="username"
@@ -44,9 +44,11 @@
 			</div>
 
 			<CButton
+				style="margin-bottom: 5px"
 				name="新規登録"
 				width="400px"
 				colorType="teal"
+				:disabled="!state.username || !state.password || !state.passwordConfirm"
 				@click="onclickSignUp($event)"
 			/>
 			<CButton
@@ -141,5 +143,9 @@ export default defineComponent({
 
 .signup-title {
 	margin-top: 20px;
+}
+
+.username-form {
+	margin-top: 30px;
 }
 </style>

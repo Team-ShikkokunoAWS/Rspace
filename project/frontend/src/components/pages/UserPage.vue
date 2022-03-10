@@ -63,12 +63,11 @@ export default defineComponent({
 		// VueRouter
 		const router = useRouter();
 
-		// mockData
+		// mockData(ゲストユーザーでログイン状態は編集ページリンクが出る)
 		const user = {
-			uid: 'test-test-test-1',
-			name: 'test1',
-			description:
-				'lorem ipsum dolor sit amet lorem ipsum dolor sit lorem ipsum dolor lorem ipsum dolor lorem ipsum dolor ¥r¥n lorem ipsum dolor sit amet lorem ipsum dolor sit lorem ipsum dolor lorem ipsum dolor lorem ipsum dolor ¥r¥n lorem ipsum dolor sit amet lorem ipsum dolor sit lorem ipsum dolor lorem ipsum dolor lorem ipsum dolor ¥r¥n',
+			uid: 'test-1234-user-5678-abcd-9012-gues-tuse',
+			name: 'ゲストユーザー',
+			description: '自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。',
 			iconImage: 'img.jpg',
 			backImage: 'backImg.jpg',
 		};

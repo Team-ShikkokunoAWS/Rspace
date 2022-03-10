@@ -107,9 +107,10 @@
 						name="保存する"
 						width="400px"
 						colorType="teal"
-						:disabled="isDisabled"
+						:disabled="disabledBtnFlg"
 						@click="onclickEditBtn"
 					/>
+					<!-- :disabled="isDisabled()" -->
 				</div>
 			</MainCard>
 		</div>
@@ -174,7 +175,24 @@ export default defineComponent({
 		};
 
 		// 保存するボタン押下時の処理
-		const onclickEditBtn = () => {};
+		const onclickEditBtn = () => {
+			alert('編集内容を保存する処理実行');
+		};
+
+		// 保存ボタンのDisabled判定
+		const disabledBtnFlg = computed(() => {
+			/**
+			 * ユーザー名に入力がある状態 AND
+			 * 読み込み時のユーザー名と入力値のユーザー名が一致している場合 OR パスワード3種のうちどれにも入力がない場合、非活性
+			 */
+			if (
+				(state.username && user.name !== state.username) ||
+				(state.currentPassword && state.newPassword && state.newPasswordConfirm)
+			) {
+				return false;
+			}
+			return true;
+		});
 
 		return {
 			user,
@@ -182,6 +200,7 @@ export default defineComponent({
 			state,
 			onclickEditBtn,
 			showImageEditModal,
+			disabledBtnFlg,
 		};
 	},
 }); // export default defineComponent

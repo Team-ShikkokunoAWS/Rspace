@@ -99,7 +99,6 @@ export default defineComponent({
 
 		// ログインボタン押下時処理
 		const onclickLogin = (event: MouseEvent) => {
-			console.log(state.username, state.password);
 			event.preventDefault();
 			// エラーメッセージ初期化
 			state.errorMessages = [];

@@ -7,6 +7,8 @@ import ChatRoomPage from '@/components/pages/ChatRoomPage.vue';
 import Game1Page from '@/components/pages/Game1Page.vue';
 import Game2Page from '@/components/pages/Game2Page.vue';
 import UserPage from '@/components/pages/UserPage.vue';
+import UserEditPage from '@/components/pages/UserEditPage.vue';
+import UserIndexPage from '@/components/pages/UserIndexPage.vue';
 import NotFoundPage from '@/components/pages/NotFoundPage.vue';
 import { store } from '@/store';
 
@@ -24,6 +26,20 @@ const routes = [
 			}
 		},
 	},
+	// ユーザー一覧ページ
+	{
+		path: '/users',
+		name: 'UserIndexPage',
+		component: UserIndexPage,
+		beforeEnter: (_to: any, _from: any, next: any) => {
+			if (store.state.user.isLogined) {
+				next();
+			} else {
+				next('/');
+			}
+		},
+	},
+	// 各ユーザーマイページ
 	{
 		path: '/user/:uid',
 		name: 'UserPage',
@@ -36,6 +52,20 @@ const routes = [
 			}
 		},
 	},
+	// ユーザー情報編集ページ
+	{
+		path: '/user/:uid/edit',
+		name: 'UserEditPage',
+		component: UserEditPage,
+		beforeEnter: (_to: any, _from: any, next: any) => {
+			if (store.state.user.isLogined) {
+				next();
+			} else {
+				next('/');
+			}
+		},
+	},
+	// チャット一覧ページ
 	{
 		path: '/rooms',
 		name: 'ChatIndexPage',
@@ -48,6 +78,7 @@ const routes = [
 			}
 		},
 	},
+	// チャットページ
 	{
 		path: '/rooms/:room_id',
 		name: 'ChatRoomPage',
@@ -60,6 +91,7 @@ const routes = [
 			}
 		},
 	},
+	// Game1ページ
 	{
 		path: '/game1',
 		name: 'Game1',
@@ -72,6 +104,7 @@ const routes = [
 			}
 		},
 	},
+	// Game2ページ
 	{
 		path: '/game2',
 		name: 'Game2',
@@ -84,6 +117,7 @@ const routes = [
 			}
 		},
 	},
+	// ログインページ
 	{
 		path: '/login',
 		name: 'LoginPage',
@@ -96,6 +130,7 @@ const routes = [
 			}
 		},
 	},
+	// 新規登録ページ
 	{
 		path: '/signup',
 		name: 'SignUpPage',
@@ -108,6 +143,7 @@ const routes = [
 			}
 		},
 	},
+	// 404ページ
 	{
 		path: '/:catchAll(.*)',
 		name: 'NotFoundPage',

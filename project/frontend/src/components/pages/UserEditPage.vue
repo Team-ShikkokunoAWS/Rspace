@@ -1,11 +1,7 @@
 <template>
 	<div class="user-page-container">
 		<!-- 背景・ユーザーアイコン -->
-		<div
-			class="background-image-wrapper"
-			:style="styles"
-			@click="onclickBackgroundImage"
-		>
+		<div class="background-image-wrapper" :style="styles">
 			<!-- 背景。ユーザーアイコン編集モーダル呼び出しボタン -->
 			<fa-icon
 				icon="pen-to-square"
@@ -27,13 +23,11 @@
 					width="240px"
 					height="240px"
 					:backgroundImage="user.iconImage"
-					@click.stop="onclickIconImage"
 				/>
 			</div>
 		</div>
 		<!-- エラーメッセージ -->
 		<ErrorList :errorMessages="state.errorMessages" class="user-edit-center" />
-		<!-- ユーザー名・プロフィール欄(プロフィールは未定) -->
 		<div class="user-info-detail">
 			<MainCard
 				class="user-detail-card"
@@ -106,12 +100,14 @@
 								: false
 						"
 					/>
+					<!-- TODO: プロフィール欄 -->
 				</div>
 				<div class="user-edit-page-link">
 					<CButton
 						name="保存する"
 						width="400px"
 						colorType="teal"
+						:disabled="isDisabled"
 						@click="onclickEditBtn"
 					/>
 				</div>
@@ -148,10 +144,10 @@ export default defineComponent({
 	setup() {
 		// mockData
 		const user = {
-			uid: 'test-test-test-1',
-			name: 'test1',
+			uid: 'test-1234-user-5678-abcd-9012-gues-tuse',
+			name: 'ゲストユーザー',
 			description:
-				'lorem ipsum dolor sit amet lorem ipsum dolor sit lorem ipsum dolor lorem ipsum dolor lorem ipsum dolor ¥r¥n lorem ipsum dolor sit amet lorem ipsum dolor sit lorem ipsum dolor lorem ipsum dolor lorem ipsum dolor ¥r¥n lorem ipsum dolor sit amet lorem ipsum dolor sit lorem ipsum dolor lorem ipsum dolor lorem ipsum dolor ¥r¥n',
+				'自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。',
 			iconImage: 'img.jpg',
 			backImage: 'backImg.jpg',
 		};

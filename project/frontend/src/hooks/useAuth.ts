@@ -120,7 +120,6 @@ export const useAuth = () => {
 	 * @param router Vue-Router
 	 */
 	const guestLogin = (store: any, router: any) => {
-		console.log(store);
 		// ローディング表示
 		store.dispatch('loading/setLoading', {
 			isShow: true,
@@ -139,9 +138,6 @@ export const useAuth = () => {
 				isShow: false,
 			});
 			router.push('/');
-			console.log('遷移');
-			console.log(store);
-			console.log(store.state);
 			// 遷移後、トーストメッセージ表示
 			store.dispatch('toast/setToastShow', {
 				message: MessageManager(Messages.MSG_004, ['ログイン']),

@@ -28,7 +28,7 @@
 					{{ user.description }}
 				</div>
 				<!-- 編集ページ遷移ボタン -->
-				<div class="user-edit-page-link" v-if="currentUser.uid !== user.uid">
+				<div class="user-edit-page-link" v-if="currentUser.uid === user.uid">
 					<CButton
 						name="編集"
 						width="400px"
@@ -63,12 +63,11 @@ export default defineComponent({
 		// VueRouter
 		const router = useRouter();
 
-		// mockData
+		// mockData(ゲストユーザーでログイン状態は編集ページリンクが出る)
 		const user = {
-			uid: 'test-test-test-1',
-			name: 'test1',
-			description:
-				'lorem ipsum dolor sit amet lorem ipsum dolor sit lorem ipsum dolor lorem ipsum dolor lorem ipsum dolor ¥r¥n lorem ipsum dolor sit amet lorem ipsum dolor sit lorem ipsum dolor lorem ipsum dolor lorem ipsum dolor ¥r¥n lorem ipsum dolor sit amet lorem ipsum dolor sit lorem ipsum dolor lorem ipsum dolor lorem ipsum dolor ¥r¥n',
+			uid: 'test-1234-user-5678-abcd-9012-gues-tuse',
+			name: 'ゲストユーザー',
+			description: '自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。',
 			iconImage: 'img.jpg',
 			backImage: 'backImg.jpg',
 		};
@@ -82,7 +81,6 @@ export default defineComponent({
 
 		// ユーザー編集ページへのリンク押下時の処理
 		const onclickEditPage = (uid: string) => {
-			alert(`/user/${uid}/edit`);
 			router.push(`/user/${uid}/edit`);
 		};
 

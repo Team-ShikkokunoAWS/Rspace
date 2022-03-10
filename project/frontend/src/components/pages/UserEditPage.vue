@@ -1,11 +1,7 @@
 <template>
 	<div class="user-page-container">
 		<!-- 背景・ユーザーアイコン -->
-		<div
-			class="background-image-wrapper"
-			:style="styles"
-			@click="onclickBackgroundImage"
-		>
+		<div class="background-image-wrapper" :style="styles">
 			<!-- 背景。ユーザーアイコン編集モーダル呼び出しボタン -->
 			<fa-icon
 				icon="pen-to-square"
@@ -27,13 +23,11 @@
 					width="240px"
 					height="240px"
 					:backgroundImage="user.iconImage"
-					@click.stop="onclickIconImage"
 				/>
 			</div>
 		</div>
 		<!-- エラーメッセージ -->
 		<ErrorList :errorMessages="state.errorMessages" class="user-edit-center" />
-		<!-- ユーザー名・プロフィール欄(プロフィールは未定) -->
 		<div class="user-info-detail">
 			<MainCard
 				class="user-detail-card"
@@ -63,7 +57,11 @@
 						maxlength="20"
 						width="400px"
 						:required="
-							state.newPassword || state.newPasswordConfirm ? true : false
+							state.currentPassword ||
+							state.newPassword ||
+							state.newPasswordConfirm
+								? true
+								: false
 						"
 					/>
 				</div>
@@ -77,7 +75,11 @@
 						maxlength="20"
 						width="400px"
 						:required="
-							state.currentPassword || state.newPasswordConfirm ? true : false
+							state.currentPassword ||
+							state.newPassword ||
+							state.newPasswordConfirm
+								? true
+								: false
 						"
 					/>
 				</div>
@@ -91,17 +93,24 @@
 						maxlength="20"
 						width="400px"
 						:required="
-							state.currentPassword || state.newPassword ? true : false
+							state.currentPassword ||
+							state.newPassword ||
+							state.newPasswordConfirm
+								? true
+								: false
 						"
 					/>
+					<!-- TODO: プロフィール欄 -->
 				</div>
 				<div class="user-edit-page-link">
 					<CButton
 						name="保存する"
 						width="400px"
 						colorType="teal"
+						:disabled="disabledBtnFlg"
 						@click="onclickEditBtn"
 					/>
+					<!-- :disabled="isDisabled()" -->
 				</div>
 			</MainCard>
 		</div>
@@ -136,10 +145,10 @@ export default defineComponent({
 	setup() {
 		// mockData
 		const user = {
-			uid: 'test-test-test-1',
-			name: 'test1',
+			uid: 'test-1234-user-5678-abcd-9012-gues-tuse',
+			name: 'ゲストユーザー',
 			description:
-				'lorem ipsum dolor sit amet lorem ipsum dolor sit lorem ipsum dolor lorem ipsum dolor lorem ipsum dolor ¥r¥n lorem ipsum dolor sit amet lorem ipsum dolor sit lorem ipsum dolor lorem ipsum dolor lorem ipsum dolor ¥r¥n lorem ipsum dolor sit amet lorem ipsum dolor sit lorem ipsum dolor lorem ipsum dolor lorem ipsum dolor ¥r¥n',
+				'自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。',
 			iconImage: 'img.jpg',
 			backImage: 'backImg.jpg',
 		};
@@ -166,7 +175,24 @@ export default defineComponent({
 		};
 
 		// 保存するボタン押下時の処理
-		const onclickEditBtn = () => {};
+		const onclickEditBtn = () => {
+			alert('編集内容を保存する処理実行');
+		};
+
+		// 保存ボタンのDisabled判定
+		const disabledBtnFlg = computed(() => {
+			/**
+			 * ユーザー名に入力がある状態 AND
+			 * 読み込み時のユーザー名と入力値のユーザー名が一致している場合 OR パスワード3種のうちどれにも入力がない場合、非活性
+			 */
+			if (
+				(state.username && user.name !== state.username) ||
+				(state.currentPassword && state.newPassword && state.newPasswordConfirm)
+			) {
+				return false;
+			}
+			return true;
+		});
 
 		return {
 			user,
@@ -174,6 +200,7 @@ export default defineComponent({
 			state,
 			onclickEditBtn,
 			showImageEditModal,
+			disabledBtnFlg,
 		};
 	},
 }); // export default defineComponent

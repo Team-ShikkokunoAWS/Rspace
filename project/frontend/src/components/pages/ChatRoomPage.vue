@@ -25,7 +25,7 @@
 			focus="true"
 			width="100%"
 			height="60px"
-			@onclickSubmit="onclickSendMessage"
+			@onclickSubmit="sendMessage"
 		/>
 	</div>
 </template>
@@ -157,7 +157,7 @@ export default defineComponent({
 		const iconImage = currentUser.value.iconImage;
 
 		// 送信ボタン押下時の処理
-		const onclickSendMessage = () => {
+		const sendMessage = () => {
 			// message未入力時は送信しない
 			if (!state.message) return;
 

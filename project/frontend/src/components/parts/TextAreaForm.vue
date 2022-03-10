@@ -6,6 +6,7 @@
 			:style="styles"
 			:value="modelValue"
 			@input="$emit('update:modelValue', $event.target.value)"
+			@keydown.enter.meta="handleKeyDownEnter"
 		></textarea>
 		<span class="highlight"></span>
 		<fa-icon class="send-btn" icon="paper-plane" @click="handleSubmit" />
@@ -67,9 +68,19 @@ export default defineComponent({
 		const handleSubmit = () => {
 			context.emit('onclickSubmit');
 		};
+
+		// EnterKeyのみ押下した際のイベント
+		const handleKeyDownEnter = (e: KeyboardEvent) => {
+			// ctlKeyもしくはcommandKeyとEnterKeyを同時に押した場合、送信する
+			if (e.ctrlKey || e.metaKey) {
+				context.emit('onclickSubmit');
+			}
+		};
+
 		return {
 			props,
 			styles,
+			handleKeyDownEnter,
 			handleSubmit,
 		};
 	},

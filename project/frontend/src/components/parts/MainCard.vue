@@ -49,7 +49,6 @@ export default defineComponent({
 	background-color: var(--background-color);
 	height: var(--height);
 	border: 1px solid #333;
-	margin: 30px auto;
 	box-shadow: 4px 4px gray;
 	overflow-y: auto;
 }

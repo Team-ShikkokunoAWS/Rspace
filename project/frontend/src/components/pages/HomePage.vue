@@ -3,8 +3,7 @@
 		<h2>Home</h2>
 	</div>
 
-	<MainCard color="#fff" height="60vh" width="900px"> 
-		
+	<MainCard class="home-card" color="#fff" height="60vh" width="900px">
 	</MainCard>
 </template>
 
@@ -26,5 +25,9 @@ export default defineComponent({
 <style scoped>
 .home-title {
 	text-align: center;
+}
+
+.home-card {
+	margin: 30px auto;
 }
 </style>

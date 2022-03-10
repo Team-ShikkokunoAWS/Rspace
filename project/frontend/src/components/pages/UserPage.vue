@@ -28,7 +28,7 @@
 					{{ user.description }}
 				</div>
 				<!-- 編集ページ遷移ボタン -->
-				<div class="user-edit-page-link" v-if="currentUser.uid !== user.uid">
+				<div class="user-edit-page-link" v-if="currentUser.uid === user.uid">
 					<CButton
 						name="編集"
 						width="400px"
@@ -82,7 +82,6 @@ export default defineComponent({
 
 		// ユーザー編集ページへのリンク押下時の処理
 		const onclickEditPage = (uid: string) => {
-			alert(`/user/${uid}/edit`);
 			router.push(`/user/${uid}/edit`);
 		};
 

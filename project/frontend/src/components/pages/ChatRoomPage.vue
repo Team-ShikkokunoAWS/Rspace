@@ -8,6 +8,7 @@
 	<div id="message-field-wrapper">
 		<div v-for="item in state.items" :key="item.message_id">
 			<MessageBallon
+				class="messageBallon"
 				:messageId="item.message_id"
 				:message="item.message"
 				:uid="item.uid"
@@ -17,7 +18,7 @@
 		</div>
 	</div>
 	<!-- メッセージ入力フォームおよび送信ボタンフォーム -->
-	<div class="form-field-wrapper">
+	<div id="textareaForm" class="form-field-wrapper">
 		<TextAreaForm
 			v-model="state.message"
 			class="message-form"
@@ -31,7 +32,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed } from 'vue';
+import { defineComponent, reactive, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from '@/store';
 import TextAreaForm from '@/components/parts/TextAreaForm.vue';
@@ -156,6 +157,12 @@ export default defineComponent({
 		const uid = currentUser.value.uid;
 		const iconImage = currentUser.value.iconImage;
 
+		// 画面表示時の処理
+		onMounted(() => {
+			// メッセージ表示領域の最下部を表示する = 最新メッセージを表示する
+			moveLatestMessage();
+		});
+
 		// 送信ボタン押下時の処理
 		const sendMessage = () => {
 			// message未入力時は送信しない
@@ -180,10 +187,10 @@ export default defineComponent({
 				message: state.message,
 				created_at: String(formatedDate),
 			};
-			console.log(newMessage);
 			state.items.push(newMessage);
 			// messageテキストエリアをクリアにする
 			state.message = '';
+			// 最新のメッセージを表示する
 			moveLatestMessage();
 		};
 
@@ -192,15 +199,19 @@ export default defineComponent({
 			router.push('/rooms');
 		};
 
+		// メッセージ表示領域の最下部へ遷移させる
 		const moveLatestMessage = () => {
-			document.getElementById('message-field-wrapper')?.scrollTo(0, 0);
-			console.log(document.getElementById('message-field-wrapper'));
+			setTimeout(() => {
+				const messageFiled = document.getElementById('message-field-wrapper');
+				const height = messageFiled?.scrollHeight;
+				messageFiled?.scroll(0, Number(height));
+			});
 		};
 
 		return {
 			state,
 			items,
-			onclickSendMessage,
+			sendMessage,
 			onclickBack,
 		};
 	},
@@ -236,7 +247,7 @@ export default defineComponent({
 	scrollbar-width: none;
 	box-sizing: border-box; /** paddingではみ出る要素を抑える */
 }
-.message-field-wrapper::-webkit-scrollbar {
+#message-field-wrapper::-webkit-scrollbar {
 	/* Chrome, Safari 対応 */
 	display: none;
 }

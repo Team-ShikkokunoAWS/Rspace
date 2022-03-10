@@ -92,7 +92,6 @@ export default defineComponent({
 	padding: 12px;
 	display: flex;
 	position: relative;
-	box-shadow: none;
 	border-radius: 12px;
 	margin: 30px auto;
 }

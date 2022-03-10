@@ -27,4 +27,8 @@ export default defineComponent({
 .home-title {
 	text-align: center;
 }
+
+.home-card {
+	margin: 30px auto;
+}
 </style>

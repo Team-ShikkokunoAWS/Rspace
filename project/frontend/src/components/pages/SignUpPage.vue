@@ -145,6 +145,10 @@ export default defineComponent({
 	margin-top: 20px;
 }
 
+.signup-card {
+	margin: 30px auto;
+}
+
 .username-form {
 	margin-top: 30px;
 }

@@ -94,6 +94,7 @@ export default defineComponent({
 	position: relative;
 	box-shadow: none;
 	border-radius: 12px;
+	margin: 30px auto;
 }
 .chat-room-card:hover {
 	opacity: 0.6;

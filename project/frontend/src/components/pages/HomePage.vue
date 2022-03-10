@@ -3,8 +3,7 @@
 		<h2>Home</h2>
 	</div>
 
-	<MainCard color="#fff" height="60vh" width="900px"> 
-		
+	<MainCard class="home-card" color="#fff" height="60vh" width="900px">
 	</MainCard>
 </template>
 

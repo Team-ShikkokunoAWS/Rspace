@@ -63,7 +63,11 @@
 						maxlength="20"
 						width="400px"
 						:required="
-							state.newPassword || state.newPasswordConfirm ? true : false
+							state.currentPassword ||
+							state.newPassword ||
+							state.newPasswordConfirm
+								? true
+								: false
 						"
 					/>
 				</div>
@@ -77,7 +81,11 @@
 						maxlength="20"
 						width="400px"
 						:required="
-							state.currentPassword || state.newPasswordConfirm ? true : false
+							state.currentPassword ||
+							state.newPassword ||
+							state.newPasswordConfirm
+								? true
+								: false
 						"
 					/>
 				</div>
@@ -91,7 +99,11 @@
 						maxlength="20"
 						width="400px"
 						:required="
-							state.currentPassword || state.newPassword ? true : false
+							state.currentPassword ||
+							state.newPassword ||
+							state.newPasswordConfirm
+								? true
+								: false
 						"
 					/>
 				</div>

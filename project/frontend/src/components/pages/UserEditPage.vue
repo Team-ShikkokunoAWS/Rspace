@@ -108,6 +108,14 @@
 						width="400px"
 						colorType="teal"
 						:disabled="disabledBtnFlg"
+						:disabled="
+							(state.username && user.name !== state.username) ||
+							(state.currentPassword &&
+								state.newPassword &&
+								state.newPasswordConfirm)
+								? false
+								: true
+						"
 						@click="onclickEditBtn"
 					/>
 					<!-- :disabled="isDisabled()" -->

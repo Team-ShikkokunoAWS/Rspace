@@ -107,10 +107,16 @@
 						name="保存する"
 						width="400px"
 						colorType="teal"
-						:disabled="disabledBtnFlg"
+						:disabled="
+							(state.username && user.name !== state.username) ||
+							(state.currentPassword &&
+								state.newPassword &&
+								state.newPasswordConfirm)
+								? false
+								: true
+						"
 						@click="onclickEditBtn"
 					/>
-					<!-- :disabled="isDisabled()" -->
 				</div>
 			</MainCard>
 		</div>
@@ -119,6 +125,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, reactive } from 'vue';
+import { useValidate } from '@/hooks/useValidate';
 import ErrorList from '@/components/parts/ErrorList.vue';
 import InputForm from '@/components/parts/InputForm.vue';
 import UserIcon from '@/components/parts/UserIcon.vue';
@@ -168,6 +175,9 @@ export default defineComponent({
 			errorMessages: [],
 		});
 
+		// バリデーション関連
+		const { updateUserValidate } = useValidate();
+
 		// 画像関連編集モーダル呼び出しボタン押下時の処理
 		const showImageEditModal = () => {
 			const target = document.getElementById('imageEditModal');
@@ -176,23 +186,17 @@ export default defineComponent({
 
 		// 保存するボタン押下時の処理
 		const onclickEditBtn = () => {
-			alert('編集内容を保存する処理実行');
+			// alert('編集内容を保存する処理実行');
+			state.errorMessages = [];
+			// バリデーション
+			state.errorMessages = updateUserValidate(
+				state.username,
+				state.currentPassword,
+				state.newPassword,
+				state.newPasswordConfirm
+			);
+			// 処理
 		};
-
-		// 保存ボタンのDisabled判定
-		const disabledBtnFlg = computed(() => {
-			/**
-			 * ユーザー名に入力がある状態 AND
-			 * 読み込み時のユーザー名と入力値のユーザー名が一致している場合 OR パスワード3種のうちどれにも入力がない場合、非活性
-			 */
-			if (
-				(state.username && user.name !== state.username) ||
-				(state.currentPassword && state.newPassword && state.newPasswordConfirm)
-			) {
-				return false;
-			}
-			return true;
-		});
 
 		return {
 			user,
@@ -200,7 +204,6 @@ export default defineComponent({
 			state,
 			onclickEditBtn,
 			showImageEditModal,
-			disabledBtnFlg,
 		};
 	},
 }); // export default defineComponent

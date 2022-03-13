@@ -52,8 +52,8 @@ export const useAuth = () => {
 					store.dispatch('loading/setLoading', {
 						isShow: false,
 					});
-					// home画面へ遷移
-					router.push('/');
+					// ユーザー一覧画面へ遷移
+					router.push('/users');
 					// 遷移後、トーストメッセージ表示
 					store.dispatch('toast/setToastShow', {
 						message: MessageManager(Messages.MSG_004, ['ログイン']),
@@ -120,7 +120,6 @@ export const useAuth = () => {
 	 * @param router Vue-Router
 	 */
 	const guestLogin = (store: any, router: any) => {
-		console.log(store);
 		// ローディング表示
 		store.dispatch('loading/setLoading', {
 			isShow: true,
@@ -138,10 +137,8 @@ export const useAuth = () => {
 			store.dispatch('loading/setLoading', {
 				isShow: false,
 			});
-			router.push('/');
-			console.log('遷移');
-			console.log(store);
-			console.log(store.state);
+			// ユーザー一覧画面へ遷移
+			router.push('/users');
 			// 遷移後、トーストメッセージ表示
 			store.dispatch('toast/setToastShow', {
 				message: MessageManager(Messages.MSG_004, ['ログイン']),

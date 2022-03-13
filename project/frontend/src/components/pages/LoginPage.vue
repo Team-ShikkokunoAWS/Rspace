@@ -7,13 +7,13 @@
 		<!-- エラーメッセージ表示 -->
 		<ErrorList :errorMessages="state.errorMessages" />
 
-		<MainCard color="#fff" height="400px" width="600px">
+		<MainCard color="#fff" height="400px" width="600px" class="login-card">
 			<div class="username-form">
 				<InputForm
 					v-model="state.username"
 					ctlName="username"
 					labelName="userName"
-					required="true"
+					:required="true"
 					type="text"
 					maxlength="20"
 					focus="true"
@@ -25,7 +25,7 @@
 					v-model="state.password"
 					ctlName="password"
 					labelName="password"
-					required="true"
+					:required="true"
 					type="password"
 					maxlength="20"
 					width="400px"
@@ -99,7 +99,6 @@ export default defineComponent({
 
 		// ログインボタン押下時処理
 		const onclickLogin = (event: MouseEvent) => {
-			console.log(state.username, state.password);
 			event.preventDefault();
 			// エラーメッセージ初期化
 			state.errorMessages = [];
@@ -141,6 +140,10 @@ export default defineComponent({
 
 .login-title {
 	margin-top: 20px;
+}
+
+.login-card {
+	margin: 30px auto;
 }
 
 .username-form {

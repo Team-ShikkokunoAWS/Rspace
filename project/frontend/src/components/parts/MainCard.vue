@@ -49,8 +49,14 @@ export default defineComponent({
 	background-color: var(--background-color);
 	height: var(--height);
 	border: 1px solid #333;
-	margin: 30px auto;
-	box-shadow: 4px 4px gray;
-	overflow-y: auto;
+	box-shadow: 0px 8px 16px -2px rgba(10, 10, 10, 0.1),
+		0px 0px 8px 4px rgba(13, 13, 13, 0.14);
+	overflow-y: scroll;
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+}
+
+.main-card::-webkit-scrollbar {
+	display: none;
 }
 </style>

@@ -1,31 +1,33 @@
 <template>
-	<MainCard
-		width="800px"
-		height="120px"
-		class="chat-room-card"
-		v-for="item in items"
-		:key="item.uid"
-		@click="onclickChatRoom(item.roomId)"
-	>
-		<div class="chatIndex-user-wrapper">
-			<div class="user-icon">
-				<UserIcon
-					width="80px"
-					height="80px"
-					:backgroundImage="item.iconImage"
-				/>
-				<div class="user-name">
-					{{ item.username }}
+	<div class="chat--index-page-container">
+		<MainCard
+			width="800px"
+			height="120px"
+			class="chat-room-card"
+			v-for="item in items"
+			:key="item.uid"
+			@click="onclickChatRoom(item.roomId)"
+		>
+			<div class="chatIndex-user-wrapper">
+				<div class="user-icon">
+					<UserIcon
+						width="80px"
+						height="80px"
+						:backgroundImage="item.iconImage"
+					/>
+					<div class="user-name">
+						{{ item.username }}
+					</div>
 				</div>
 			</div>
-		</div>
-		<div class="message-wrapper">
-			<div class="message-bar">
-				{{ item.message }}
+			<div class="message-wrapper">
+				<div class="message-bar">
+					{{ item.message }}
+				</div>
+				<div class="message-time">{{ item.timestamp }}</div>
 			</div>
-			<div class="message-time">{{ item.timestamp }}</div>
-		</div>
-	</MainCard>
+		</MainCard>
+	</div>
 </template>
 
 <script lang="ts">
@@ -88,12 +90,19 @@ export default defineComponent({
 </script>
 
 <style scoped>
+/*---------------------
+	チャット一覧ページwrapper
+ ----------------------*/
+.chat--index-page-container {
+	padding-bottom: 30px;
+}
+
 .chat-room-card {
 	padding: 12px;
 	display: flex;
 	position: relative;
-	box-shadow: none;
 	border-radius: 12px;
+	margin: 30px auto;
 }
 .chat-room-card:hover {
 	opacity: 0.6;

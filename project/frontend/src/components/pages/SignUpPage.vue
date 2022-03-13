@@ -7,13 +7,13 @@
 		<!-- エラーメッセージ表示 -->
 		<ErrorList :errorMessages="state.errorMessages" />
 
-		<MainCard color="#fff" height="400px" width="600px">
+		<MainCard color="#fff" height="400px" width="600px" class="signup-card">
 			<div class="username-form">
 				<InputForm
 					v-model="state.username"
 					ctlName="username"
 					labelName="userName"
-					required="true"
+					:required="true"
 					type="text"
 					maxlength="20"
 					focus="true"
@@ -25,7 +25,7 @@
 					v-model="state.password"
 					ctlName="password"
 					labelName="password"
-					required="true"
+					:required="true"
 					type="password"
 					maxlength="20"
 					width="400px"
@@ -36,7 +36,7 @@
 					v-model="state.passwordConfirm"
 					ctlName="passwordConfirm"
 					labelName="passwordConfirm"
-					required="true"
+					:required="true"
 					type="password"
 					maxlength="20"
 					width="400px"
@@ -143,6 +143,10 @@ export default defineComponent({
 
 .signup-title {
 	margin-top: 20px;
+}
+
+.signup-card {
+	margin: 30px auto;
 }
 
 .username-form {

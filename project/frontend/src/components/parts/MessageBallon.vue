@@ -90,7 +90,7 @@ export default defineComponent({
  ----------------------*/
 .message-ballon-wrapper {
 	width: var(--width);
-	height: var(--height);
+	min-height: var(--height);
 	border: 1px solid #333;
 	padding: 10px;
 	color: #ccc;
@@ -98,6 +98,8 @@ export default defineComponent({
 	position: relative;
 	margin-top: 10px;
 	margin-bottom: 10px;
+	overflow-wrap: break-word;
+	white-space: pre-line;
 }
 
 /*---------------------

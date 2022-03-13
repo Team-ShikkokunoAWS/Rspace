@@ -1,7 +1,7 @@
 <template>
 	<div class="container" :style="styles">
 		<div class="group">
-			<span v-if="props.required === 'true'" style="color: red">*</span>
+			<span v-if="props.required" style="color: red">*</span>
 			<input
 				:id="props.ctlName"
 				:maxlength="props.maxlength"
@@ -38,10 +38,7 @@ export default defineComponent({
 		},
 		// 呼び出し元でrequired="true"で必須アスタリスク表示
 		required: {
-			type: String,
-			validator: (value: string) => {
-				return ['true'].includes(value);
-			},
+			type: Boolean,
 		},
 		// inputのtypeオプション text, password, searchのみ許容
 		type: {

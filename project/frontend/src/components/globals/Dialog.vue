@@ -57,6 +57,8 @@ export default defineComponent({
 					router.push('/login');
 					break;
 			}
+			// ダイアログ削除処理呼び出し
+			onclickCancel();
 		};
 
 		// キャンセル・オーバーレイ押下時にダイアログを消す

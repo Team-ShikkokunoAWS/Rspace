@@ -99,6 +99,7 @@ export default defineComponent({
 	margin-top: 10px;
 	margin-bottom: 10px;
 	overflow-wrap: break-word;
+	white-space: pre-line;
 }
 
 /*---------------------

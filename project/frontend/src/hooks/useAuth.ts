@@ -52,8 +52,8 @@ export const useAuth = () => {
 					store.dispatch('loading/setLoading', {
 						isShow: false,
 					});
-					// home画面へ遷移
-					router.push('/');
+					// ユーザー一覧画面へ遷移
+					router.push('/users');
 					// 遷移後、トーストメッセージ表示
 					store.dispatch('toast/setToastShow', {
 						message: MessageManager(Messages.MSG_004, ['ログイン']),
@@ -137,7 +137,8 @@ export const useAuth = () => {
 			store.dispatch('loading/setLoading', {
 				isShow: false,
 			});
-			router.push('/');
+			// ユーザー一覧画面へ遷移
+			router.push('/users');
 			// 遷移後、トーストメッセージ表示
 			store.dispatch('toast/setToastShow', {
 				message: MessageManager(Messages.MSG_004, ['ログイン']),

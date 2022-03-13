@@ -5,10 +5,18 @@ import { Toast } from '@/types/toast';
 import { Dialog } from '@/types/dialog';
 import { Loading } from '@/types/loading';
 import { SideBar } from '@/types/SideBar';
+import { BackImageModal } from '@/types/BackImageModal';
 import createPersistedState from 'vuex-persistedstate';
 import { VueCookieNext } from 'vue-cookie-next';
 // store/module/index.tsにて集約した各moduleをまとめてimport
-import { user, toast, dialog, loading, sidebar } from './modules';
+import {
+	user,
+	toast,
+	dialog,
+	loading,
+	sidebar,
+	backImageModal,
+} from './modules';
 
 // storeの型設定
 export interface State {
@@ -17,6 +25,7 @@ export interface State {
 	dialog: Dialog;
 	loading: Loading;
 	sidebar: SideBar;
+	backImageModal: BackImageModal;
 }
 
 // InjectionKeyの設定
@@ -42,6 +51,7 @@ export const store = createStore<State>({
 		dialog,
 		loading,
 		sidebar,
+		backImageModal,
 	},
 });
 

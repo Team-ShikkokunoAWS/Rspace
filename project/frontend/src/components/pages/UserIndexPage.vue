@@ -1,37 +1,39 @@
 <template>
-	<div class="user-index-title">
-		<h2>ユーザー</h2>
-	</div>
-
-	<MainCard
-		class="users-card"
-		color="#fff"
-		height="120px"
-		width="640px"
-		v-for="user in users"
-		:key="user.uid"
-		@click="onclickUserCard(user.uid)"
-	>
-		<div class="uesr-info">
-			<div class="user-icon">
-				<UserIcon
-					width="80px"
-					height="80px"
-					:backgroundImage="user.iconImage"
-				/>
-			</div>
-			<div class="user-name">
-				{{ user.name }}
-			</div>
-			<div class="user-message">
-				<fa-icon
-					class="direct-message-btn"
-					icon="square-envelope"
-					@click.stop="onclickMessageRoom(user.uid)"
-				/>
-			</div>
+	<div class="user--index-page-container">
+		<div class="user-index-title">
+			<h2>ユーザー一覧</h2>
 		</div>
-	</MainCard>
+
+		<MainCard
+			class="users-card"
+			color="#fff"
+			height="120px"
+			width="640px"
+			v-for="user in users"
+			:key="user.uid"
+			@click="onclickUserCard(user.uid)"
+		>
+			<div class="uesr-info">
+				<div class="user-icon">
+					<UserIcon
+						width="80px"
+						height="80px"
+						:backgroundImage="user.iconImage"
+					/>
+				</div>
+				<div class="user-name">
+					{{ user.name }}
+				</div>
+				<div class="user-message">
+					<fa-icon
+						class="direct-message-btn"
+						icon="square-envelope"
+						@click.stop="onclickMessageRoom(user.uid)"
+					/>
+				</div>
+			</div>
+		</MainCard>
+	</div>
 </template>
 
 <script lang="ts">
@@ -111,6 +113,13 @@ export default defineComponent({
 </script>
 
 <style scoped>
+/*---------------------
+	ユーザー一覧ページwrapper
+ ----------------------*/
+.user--index-page-container {
+	padding-bottom: 30px;
+}
+
 /*---------------------
 	ユーザー一覧タイトル
  ----------------------*/

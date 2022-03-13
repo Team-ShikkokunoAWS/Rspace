@@ -11,10 +11,14 @@
 			<!-- 背景・ユーザーアイコン編集選択肢リスト -->
 			<div id="imageEditModal" class="image-edit-modal">
 				<div class="modal-list">
-					<span class="edit-back">背景画像を編集する</span>
+					<span class="edit-back" @click="onclickEditBackImage()"
+						>背景画像を編集する</span
+					>
 				</div>
 				<div class="modal-list">
-					<span class="edit-icon">アイコン画像を編集する</span>
+					<span class="edit-icon" @click="onclickEditIconImage()"
+						>アイコン画像を編集する</span
+					>
 				</div>
 			</div>
 			<div class="user-info">
@@ -126,6 +130,7 @@
 <script lang="ts">
 import { defineComponent, computed, reactive } from 'vue';
 import { useValidate } from '@/hooks/useValidate';
+import { useStore } from '@/store';
 import ErrorList from '@/components/parts/ErrorList.vue';
 import InputForm from '@/components/parts/InputForm.vue';
 import UserIcon from '@/components/parts/UserIcon.vue';
@@ -163,9 +168,12 @@ export default defineComponent({
 		// CSS
 		const styles = computed(() => {
 			return {
-				'--backgroundImage': `url(${user.backImage})`,
+				'--backgroundImage': `url(${store.state.user.backImage})`,
 			};
 		});
+
+		// 状態管理
+		const store = useStore();
 
 		const state = reactive<State>({
 			username: user.name,
@@ -184,9 +192,26 @@ export default defineComponent({
 			target?.classList.toggle('active');
 		};
 
+		// 背景画像編集リンク押下時の処理
+		const onclickEditBackImage = () => {
+			store.dispatch('backImageModal/setBackImageModal', {
+				isShow: true,
+			});
+			// モーダルメニューの削除
+			const target = document.getElementById('imageEditModal');
+			target?.classList.remove('active');
+		};
+
+		// アイコン画像編集リンク押下時の処理
+		const onclickEditIconImage = () => {
+			alert('アイコン編集');
+			// モーダルメニューの削除
+			const target = document.getElementById('imageEditModal');
+			target?.classList.remove('active');
+		};
+
 		// 保存するボタン押下時の処理
 		const onclickEditBtn = () => {
-			// alert('編集内容を保存する処理実行');
 			state.errorMessages = [];
 			// バリデーション
 			state.errorMessages = updateUserValidate(
@@ -202,14 +227,22 @@ export default defineComponent({
 			user,
 			styles,
 			state,
-			onclickEditBtn,
 			showImageEditModal,
+			onclickEditBackImage,
+			onclickEditIconImage,
+			onclickEditBtn,
 		};
 	},
 }); // export default defineComponent
 </script>
 
 <style scoped>
+/*---------------------
+	ユーザーページwrapper
+ ----------------------*/
+.user-page-container {
+	padding-bottom: 30px;
+}
 /*---------------------
 	ユーザーアイコン・ユーザー背景表示領域部分
  ----------------------*/
@@ -273,6 +306,7 @@ export default defineComponent({
 .modal-list span:hover {
 	opacity: 0.6;
 	border-bottom: 1px solid #666;
+	cursor: pointer;
 }
 /* 画像関連編集選択肢モーダルの表示クラス */
 .active {

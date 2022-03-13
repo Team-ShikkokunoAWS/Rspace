@@ -76,7 +76,7 @@ export default defineComponent({
 
 		// タイトル押下時の処理
 		const onclickHome = () => {
-			router.push('/');
+			router.push('/users');
 		};
 
 		// ヘッダーユーザー名押下時の処理
@@ -108,6 +108,8 @@ export default defineComponent({
 	box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
 	z-index: 1;
 	position: relative;
+	background-color: #212a33;
+	color: #ddd;
 }
 
 .header-title {
@@ -154,6 +156,7 @@ export default defineComponent({
 	background-color: #ddd;
 	padding: 12px;
 	border-radius: 12px;
+	background-color: #333;
 }
 .header-logout-btn:hover {
 	cursor: pointer;
@@ -178,8 +181,9 @@ export default defineComponent({
 	left: 0;
 	width: 100%;
 	height: 4px;
-	background-color: #222;
+	/* background-color: #222; */
 	border-radius: 4px;
+	background-color: #ddd;
 }
 .btn-trigger,
 .btn-trigger span {

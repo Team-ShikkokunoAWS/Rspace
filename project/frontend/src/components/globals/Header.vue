@@ -76,7 +76,7 @@ export default defineComponent({
 
 		// タイトル押下時の処理
 		const onclickHome = () => {
-			router.push('/');
+			router.push('/users');
 		};
 
 		// ヘッダーユーザー名押下時の処理

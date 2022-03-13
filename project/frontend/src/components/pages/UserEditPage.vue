@@ -211,6 +211,12 @@ export default defineComponent({
 
 <style scoped>
 /*---------------------
+	ユーザーページwrapper
+ ----------------------*/
+.user-page-container {
+	padding-bottom: 30px;
+}
+/*---------------------
 	ユーザーアイコン・ユーザー背景表示領域部分
  ----------------------*/
 /* ユーザー背景 */

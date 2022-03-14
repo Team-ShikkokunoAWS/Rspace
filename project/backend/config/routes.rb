@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   namespace 'api' do
     namespace 'v1' do
       post 'auth' => 'users#auth'
+      post 'all-users' => 'users#all_users'
       resources :users
     end
   end

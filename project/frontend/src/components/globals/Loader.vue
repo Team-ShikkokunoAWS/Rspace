@@ -1,18 +1,22 @@
 <template>
-	<div v-show="loading.isShow" class="overlay">
+	<Overlay v-show="loading.isShow" class="overlay">
 		<div class="loading-container">
 			<div class="loading"></div>
 			<div id="loading-text">loading</div>
 		</div>
-	</div>
+	</Overlay>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { useStore } from '@/store';
+import Overlay from '@/components/parts/Overlay.vue';
 
 export default defineComponent({
 	name: 'Loader',
+	components: {
+		Overlay,
+	},
 	setup() {
 		// 状態管理
 		const store = useStore();
@@ -26,15 +30,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-/* 画面全体を黒くするオーバーレイ */
-.overlay {
-	position: absolute;
-	width: 100%;
-	height: 100%;
-	background-color: rgba(0, 0, 0, 0.8);
-	z-index: 9999;
-}
-
 /** BEGIN CSS **/
 @keyframes rotate-loading {
 	0% {

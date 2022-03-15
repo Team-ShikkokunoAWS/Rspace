@@ -1,10 +1,20 @@
 <template>
-	<div v-show="modal.isShow" class="overlay" @click.self="onclickCancel()">
+	<Overlay v-show="modal.isShow" class="overlay" @click.self="onclickCancel()">
 		<div class="modal-wrapper">
 			<!-- プレビューゾーン -->
-			<div id="preview" class="image-preview-zone"></div>
-			<!-- 画像のドラッグ＆ドロップゾーン -->
+			<!-- id="dragZone" -->
 			<div
+				id="preview"
+				class="image-preview-zone"
+				@dragenter="dragEnter()"
+				@dragleave="dragLeave()"
+				@dragover.prevent
+				@drop.prevent="dropFile($event)"
+			>
+				ファイルアップロード
+			</div>
+			<!-- 画像のドラッグ＆ドロップゾーン -->
+			<!-- <div
 				id="dragZone"
 				class="drag-and-drop-zone"
 				@dragenter="dragEnter()"
@@ -13,18 +23,19 @@
 				@drop.prevent="dropFile($event)"
 			>
 				ファイルアップロード
-			</div>
+			</div> -->
 			<div class="submit-zone">
 				<div class="cancel-btn" @click="onclickCancel()">キャンセル</div>
 				<div class="ok-btn" @click="onclickOk()">OK</div>
 			</div>
 		</div>
-	</div>
+	</Overlay>
 </template>
 
 <script lang="ts">
 import { defineComponent, reactive } from 'vue';
 import { useStore } from '@/store';
+import Overlay from '@/components/parts/Overlay.vue';
 
 interface State {
 	files: any[];
@@ -33,6 +44,9 @@ interface State {
 
 export default defineComponent({
 	name: 'BackImageModal',
+	components: {
+		Overlay,
+	},
 	setup() {
 		// 状態管理
 		const store = useStore();
@@ -48,7 +62,7 @@ export default defineComponent({
     ----------------------*/
 		const dragEnter = () => {
 			// 枠線の色を変更するクラスを付与
-			const target = document.getElementById('dragZone');
+			const target = document.getElementById('preview');
 			target?.classList.add('enter');
 		};
 
@@ -57,7 +71,7 @@ export default defineComponent({
     ----------------------*/
 		const dragLeave = () => {
 			// 枠線の色を変更するクラスを削除
-			const target = document.getElementById('dragZone');
+			const target = document.getElementById('preview');
 			target?.classList.remove('enter');
 		};
 
@@ -66,7 +80,7 @@ export default defineComponent({
     ----------------------*/
 		const dropFile = (event: any) => {
 			// 枠線の色を変更するクラスを削除
-			const target = document.getElementById('dragZone');
+			const target = document.getElementById('preview');
 			target?.classList.remove('enter');
 
 			// ファイル情報の読み取り
@@ -102,6 +116,8 @@ export default defineComponent({
 			const preview = document.getElementById('preview');
 			if (preview !== null && preview !== undefined) {
 				preview.style.backgroundImage = `url(${objectURL})`;
+				// プレビューゾーンの文字を削除
+				preview.innerText = '';
 			} else {
 				// エラー
 				store.dispatch('toast/setToastShow', {
@@ -160,52 +176,34 @@ export default defineComponent({
 
 <style scoped>
 /*---------------------
-	オーバーレイ
-----------------------*/
-.overlay {
-	position: absolute;
-	width: 100%;
-	height: 100%;
-	background-color: rgba(0, 0, 0, 0.4);
-	z-index: 9999;
-}
-
-/*---------------------
 	モーダル全体
 ----------------------*/
 .modal-wrapper {
 	width: 90%;
-	height: 700px;
+	height: 500px;
 	background-color: #eee;
-	margin: 20vh auto;
+	margin: 50px auto;
 	box-shadow: 0px 8px 16px -2px rgba(10, 10, 10, 0.1),
 		0px 0px 8px 6px rgba(13, 13, 13, 0.4);
 	box-sizing: border-box;
 }
 
 /*---------------------
-	プレビュー
+	プレビュー&ドラッグ&ドロップ
 ----------------------*/
 .image-preview-zone {
 	width: 100%;
-	height: 400px; /** ユーザー編集ページの背景画像と高さを合わせている */
+	height: 400px;
 	background-size: cover;
 	background-repeat: no-repeat;
 	background-position: center;
 	object-fit: contain;
-}
 
-/*---------------------
-  ドラッグ&ドロップ
-----------------------*/
-.drag-and-drop-zone {
-	width: 100%;
-	height: 200px;
+	line-height: 400px;
 	font-weight: bold;
 	font-size: 36px;
 	color: #777;
 	text-align: center;
-	line-height: 200px;
 	border: 10px solid #777;
 	box-sizing: border-box;
 }

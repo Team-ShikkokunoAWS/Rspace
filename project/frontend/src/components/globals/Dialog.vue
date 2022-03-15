@@ -1,5 +1,5 @@
 <template>
-	<div v-show="dialog.isShow" class="overlay" @click.self="onclickCancel()">
+	<Overlay v-show="dialog.isShow" @click.self="onclickCancel()">
 		<div class="dialog-wrapper grid">
 			<div class="dialog-title">
 				<h2>{{ dialog.title }}</h2>
@@ -14,7 +14,7 @@
 				<div class="dialog-ok-btn" @click="onclickOk()">OK</div>
 			</div>
 		</div>
-	</div>
+	</Overlay>
 </template>
 
 <script lang="ts">
@@ -22,9 +22,13 @@ import { defineComponent } from 'vue';
 import { useStore } from '@/store';
 import { useRouter } from 'vue-router';
 import { MessageManager, Messages } from '@/constants/MessageManager';
+import Overlay from '@/components/parts/Overlay.vue';
 
 export default defineComponent({
 	name: 'Dialog',
+	components: {
+		Overlay,
+	},
 	setup() {
 		// ルーティング
 		const router = useRouter();
@@ -80,15 +84,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-/* 画面全体を黒くするオーバーレイ */
-.overlay {
-	position: absolute;
-	width: 100%;
-	height: 100%;
-	background-color: rgba(0, 0, 0, 0.4);
-	z-index: 9999;
-}
-
 .grid {
 	display: grid;
 	grid-template-rows: 50px 150px 100px;

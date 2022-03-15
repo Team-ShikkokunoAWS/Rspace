@@ -37,11 +37,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue';
+import { defineComponent, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from '@/store';
 import MainCard from '@/components/parts/MainCard.vue';
 import UserIcon from '@/components/parts/UserIcon.vue';
+import axios from '@/plugins/axios';
 
 export default defineComponent({
 	name: 'UserIndexPage',
@@ -78,6 +79,20 @@ export default defineComponent({
 				iconImage: 'img.jpg',
 			},
 		];
+
+		/*=============================
+		画面初期表示時の処理
+		=============================*/
+		onMounted(() => {
+			axios
+				.get('v1/users/all_users')
+				.then((response) => {
+					console.log(response);
+				})
+				.catch((error) => {
+					console.log(error);
+				});
+		});
 
 		// VueRouter
 		const router = useRouter();

@@ -85,7 +85,7 @@ export default defineComponent({
 		=============================*/
 		onMounted(() => {
 			axios
-				.get('v1/users/all_users')
+				.post('v1/all-users')
 				.then((response) => {
 					console.log(response);
 				})

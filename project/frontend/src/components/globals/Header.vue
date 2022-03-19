@@ -81,7 +81,7 @@ export default defineComponent({
 
 		// ヘッダーユーザー名押下時の処理
 		const onclickUserName = () => {
-			router.push(`/user/${userInfo.value.uid}`);
+			router.push(`/users/${userInfo.value.uid}`);
 		};
 
 		return {

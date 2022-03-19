@@ -82,7 +82,7 @@ export default defineComponent({
 
 		// ユーザー編集ページへのリンク押下時の処理
 		const onclickEditPage = (uid: string) => {
-			router.push(`/user/${uid}/edit`);
+			router.push(`/users/${uid}/edit`);
 		};
 
 		return {

@@ -5,4 +5,5 @@ export type User = {
 	isLogined?: boolean;
 	iconImage?: string;
 	backImage?: string;
+	nextStart?: number;
 };

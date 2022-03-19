@@ -37,7 +37,7 @@ class Api::V1::UsersController < ApplicationController
             users = users_response(all_users, get_start, all_users.count)
           end
 
-          render status: 200, json: {status: 'SUCCESS', user: users}
+          render status: 200, json: {status: 'SUCCESS', users: users}
         end
       else
         if all_users.count <= ALL_USERS_LIMIT
@@ -48,7 +48,7 @@ class Api::V1::UsersController < ApplicationController
           # 実際の件数に合わせるために、1を加算
           users['next_start'] = ALL_USERS_LIMIT + 1
         end
-        render status: 200, json: {status: 'SUCCESS', user: users}
+        render status: 200, json: {status: 'SUCCESS', users: users}
       end
     else
       render status: 400, json: {status: 'ERROR', error_detail: 'error'}

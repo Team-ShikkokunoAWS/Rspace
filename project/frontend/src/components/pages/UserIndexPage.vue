@@ -102,9 +102,10 @@ export default defineComponent({
 
 		// ユーザーカード押下時の遷移
 		const onclickUserCard = (uid: string) => {
-			// router.push(`/user/${uid}`);
+			// router.push(`/users/${uid}`);
 			console.log(uid);
-			router.push(`/user/test-1234-user-5678-abcd-9012-gues-tuse`); // TODO:(fixme)ユーザーページがゲストユーザーしか遷移できない状態なので合わせている
+			// router.push(`/users/${uid}`);
+			router.push(`/users/test-1234-user-5678-abcd-9012-gues-tuse`); // TODO:(fixme)ユーザーページがゲストユーザーしか遷移できない状態なので合わせている
 		};
 
 		// DMリンク押下時の処理

@@ -41,7 +41,7 @@ const routes = [
 	},
 	// 各ユーザーマイページ
 	{
-		path: '/user/:uid',
+		path: '/users/:uid',
 		name: 'UserPage',
 		component: UserPage,
 		beforeEnter: (_to: any, _from: any, next: any) => {
@@ -54,7 +54,7 @@ const routes = [
 	},
 	// ユーザー情報編集ページ
 	{
-		path: '/user/:uid/edit',
+		path: '/users/:uid/edit',
 		name: 'UserEditPage',
 		component: UserEditPage,
 		beforeEnter: (_to: any, _from: any, next: any) => {

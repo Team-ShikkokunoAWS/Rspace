@@ -100,12 +100,15 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def users_response(all_users, start, stop)
-    users = Hash.new()
+    users = Array.new()
+    user = Hash.new()
+    
 
     all_users = all_users[start...stop]
 
     for i in (0...stop-start) do
-      users[i] = {'uid' => all_users[i]['uid'], 'name' => all_users[i]['name']}
+      user = {'uid' => all_users[i]['uid'], 'name' => all_users[i]['name']}
+      users.push(user)
     end
 
     return users

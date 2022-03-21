@@ -20,7 +20,6 @@ export default defineComponent({
 	オーバーレイ
 ----------------------*/
 #overlay {
-	/* position: absolute; */
 	width: 100%;
 	background-color: rgba(0, 0, 0, 0.4);
 	z-index: 9999;

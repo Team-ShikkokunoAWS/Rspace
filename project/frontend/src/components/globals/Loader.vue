@@ -228,14 +228,14 @@ export default defineComponent({
 }
 .loading-container,
 .loading {
-	height: 100px;
+	height: 300px;
 	position: relative;
-	width: 100px;
+	width: 300px;
 	border-radius: 100%;
 }
 
 .loading-container {
-	margin: 40px auto;
+	margin: 100px auto;
 }
 
 .loading {
@@ -270,14 +270,14 @@ export default defineComponent({
 	animation: loading-text-opacity 2s linear 0s infinite normal;
 	color: #ffffff;
 	font-family: 'Helvetica Neue, ' Helvetica ', ' 'arial';
-	font-size: 10px;
+	font-size: 40px;
 	font-weight: bold;
-	margin-top: 45px;
+	margin-top: 120px;
 	opacity: 0;
 	position: absolute;
 	text-align: center;
 	text-transform: uppercase;
 	top: 0;
-	width: 100px;
+	width: 300px;
 }
 </style>

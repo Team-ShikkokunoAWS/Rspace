@@ -67,9 +67,19 @@ export default defineComponent({
 		画面初期表示時の処理
 		=============================*/
 		onMounted(() => {
+			window.addEventListener('scroll', onScroll);
+			// ローディングの表示
+			store.dispatch('loading/setLoading', {
+				isShow: true,
+			});
+			// 送信用データを格納(空のユーザー情報とnext_startの初期値0)
+			const data: { next_start: number } = {
+				next_start: 0,
+			};
 			axios
-				.post('v1/all-users')
+				.post('v1/all-users', data)
 				.then((response) => {
+					// 取得したユーザーを表示
 					state.users = response.data.users;
 				})
 				.catch((error) => {
@@ -87,8 +97,71 @@ export default defineComponent({
 							isShow: false,
 						});
 					}, 2000);
+				})
+				.finally(() => {
+					setTimeout(() => {
+						// ローディングの削除
+						store.dispatch('loading/setLoading', {
+							isShow: false,
+						});
+					}, 1000);
 				});
 		});
+
+		/*=============================
+		画面スクロール時の処理
+		=============================*/
+		const onScroll = () => {
+			const element = document.scrollingElement;
+			if (element) {
+				const scrollHeight = element.scrollHeight; // スクロール可能部分の画面の高さ
+				const windowHeight = element.clientHeight; // 表示画面windowの高さ
+				const bottom = scrollHeight - windowHeight; // スクロール最下部 = スクロール可能領域 - 表示windowの高さ
+				const scrollY = element.scrollTop; // 現在のスクロールした画面の高さ
+
+				// 画面の底までスクロールされた場合、ユーザーの取得処理を行う
+				if (scrollY === bottom) {
+					// ローディングの表示
+					store.dispatch('loading/setLoading', {
+						isShow: true,
+					});
+					// 送信用データを格納(空のユーザー情報とnext_startの初期値0)
+					const data: { next_start: number } = {
+						next_start: state.users.length,
+					};
+					axios
+						.post('v1/all-users', data)
+						.then((response) => {
+							// 取得したユーザーを表示
+							state.users = [...state.users, ...response.data.users];
+						})
+						.catch((error) => {
+							console.log(error);
+							store.dispatch('toast/setToastShow', {
+								message: MessageManager(Messages.SYS_ERROR),
+								toastType: 'danger',
+								isShow: true,
+							});
+							// トーストを2秒表示し、消す
+							setTimeout(() => {
+								store.dispatch('toast/setToastShow', {
+									message: '',
+									toastType: '',
+									isShow: false,
+								});
+							}, 2000);
+						})
+						.finally(() => {
+							setTimeout(() => {
+								// ローディングの削除
+								store.dispatch('loading/setLoading', {
+									isShow: false,
+								});
+							}, 1000);
+						});
+				}
+			}
+		};
 
 		// VueRouter
 		const router = useRouter();
@@ -118,6 +191,7 @@ export default defineComponent({
 			state,
 			onclickUserCard,
 			onclickMessageRoom,
+			onScroll,
 		};
 	},
 }); // export default defineComponent

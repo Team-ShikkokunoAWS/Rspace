@@ -118,6 +118,7 @@ export default defineComponent({
 
 .header-title h1 {
 	margin: 0;
+	width: 0px;
 }
 
 .header-title h1:hover {

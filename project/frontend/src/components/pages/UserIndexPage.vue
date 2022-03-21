@@ -39,7 +39,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed, onMounted } from 'vue';
+import {
+	defineComponent,
+	reactive,
+	computed,
+	onMounted,
+	onUnmounted,
+} from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from '@/store';
 import { User } from '@/types/user';
@@ -59,6 +65,11 @@ export default defineComponent({
 		UserIcon,
 	},
 	setup() {
+		// VueRouter
+		const router = useRouter();
+		// storeを取得する
+		const store = useStore();
+		const userInfo = computed(() => store.state.user);
 		const state = reactive<State>({
 			users: [] as User[],
 		});
@@ -163,12 +174,6 @@ export default defineComponent({
 			}
 		};
 
-		// VueRouter
-		const router = useRouter();
-		// storeを取得する
-		const store = useStore();
-		const userInfo = computed(() => store.state.user);
-
 		// ユーザーカード押下時の遷移
 		const onclickUserCard = (uid: string) => {
 			// router.push(`/users/${uid}`);
@@ -186,6 +191,11 @@ export default defineComponent({
 			// 3. 2-1 or 2-2の処理を行い、バックエンドから送られてきたroom_idを元に遷移する  router.push(`/rooms/${response.data.room_id}`);
 			router.push(`/rooms/1`);
 		};
+
+		/*=============================
+		ページを離れる前の処理
+		=============================*/
+		onUnmounted(() => window.removeEventListener('scroll', onScroll));
 
 		return {
 			state,

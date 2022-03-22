@@ -3,7 +3,7 @@
 		<div class="modal-wrapper">
 			<!-- プレビューゾーン -->
 			<div
-				id="preview"
+				id="backPreview"
 				class="image-preview-zone"
 				@dragenter="dragEnter()"
 				@dragleave="dragLeave()"
@@ -50,7 +50,7 @@ export default defineComponent({
     ----------------------*/
 		const dragEnter = () => {
 			// 枠線の色を変更するクラスを付与
-			const target = document.getElementById('preview');
+			const target = document.getElementById('backPreview');
 			target?.classList.add('enter');
 		};
 
@@ -59,7 +59,7 @@ export default defineComponent({
     ----------------------*/
 		const dragLeave = () => {
 			// 枠線の色を変更するクラスを削除
-			const target = document.getElementById('preview');
+			const target = document.getElementById('backPreview');
 			target?.classList.remove('enter');
 		};
 
@@ -68,7 +68,7 @@ export default defineComponent({
     ----------------------*/
 		const dropFile = (event: any) => {
 			// 枠線の色を変更するクラスを削除
-			const target = document.getElementById('preview');
+			const target = document.getElementById('backPreview');
 			target?.classList.remove('enter');
 
 			// ファイル情報の読み取り
@@ -101,7 +101,7 @@ export default defineComponent({
 			const objectURL = window.URL.createObjectURL(state.files[0]);
 			state.objectURL = objectURL;
 			// previewする要素を取得
-			const preview = document.getElementById('preview');
+			const preview = document.getElementById('backPreview');
 			if (preview !== null && preview !== undefined) {
 				preview.style.backgroundImage = `url(${objectURL})`;
 				// プレビューゾーンの文字を削除
@@ -140,7 +140,7 @@ export default defineComponent({
 
 		// オーバーレイ or キャンセルボタンクリック時の処理
 		const onclickCancel = () => {
-			const preview = document.getElementById('preview');
+			const preview = document.getElementById('backPreview');
 			if (preview !== null && preview !== undefined) {
 				preview.style.backgroundImage = '';
 				// ドラッグ＆ドロップ時に削除したinnerTextを再度追加

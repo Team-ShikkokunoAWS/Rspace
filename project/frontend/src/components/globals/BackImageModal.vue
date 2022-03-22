@@ -2,7 +2,6 @@
 	<Overlay v-show="modal.isShow" class="overlay" @click.self="onclickCancel()">
 		<div class="modal-wrapper">
 			<!-- プレビューゾーン -->
-			<!-- id="dragZone" -->
 			<div
 				id="preview"
 				class="image-preview-zone"
@@ -13,17 +12,6 @@
 			>
 				ファイルアップロード
 			</div>
-			<!-- 画像のドラッグ＆ドロップゾーン -->
-			<!-- <div
-				id="dragZone"
-				class="drag-and-drop-zone"
-				@dragenter="dragEnter()"
-				@dragleave="dragLeave()"
-				@dragover.prevent
-				@drop.prevent="dropFile($event)"
-			>
-				ファイルアップロード
-			</div> -->
 			<div class="submit-zone">
 				<div class="cancel-btn" @click="onclickCancel()">キャンセル</div>
 				<div class="ok-btn" @click="onclickOk()">OK</div>
@@ -155,6 +143,8 @@ export default defineComponent({
 			const preview = document.getElementById('preview');
 			if (preview !== null && preview !== undefined) {
 				preview.style.backgroundImage = '';
+				// ドラッグ＆ドロップ時に削除したinnerTextを再度追加
+				preview.innerText = 'ファイルアップロード';
 			}
 			// モーダルを閉じる
 			store.dispatch('backImageModal/setBackImageModal', {

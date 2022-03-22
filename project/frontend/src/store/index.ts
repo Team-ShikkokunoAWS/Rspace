@@ -6,6 +6,7 @@ import { Dialog } from '@/types/dialog';
 import { Loading } from '@/types/loading';
 import { SideBar } from '@/types/SideBar';
 import { BackImageModal } from '@/types/BackImageModal';
+import { IconImageModal } from '@/types/IconImageModal';
 import createPersistedState from 'vuex-persistedstate';
 import { VueCookieNext } from 'vue-cookie-next';
 // store/module/index.tsにて集約した各moduleをまとめてimport
@@ -16,6 +17,7 @@ import {
 	loading,
 	sidebar,
 	backImageModal,
+	iconImageModal,
 } from './modules';
 
 // storeの型設定
@@ -26,6 +28,7 @@ export interface State {
 	loading: Loading;
 	sidebar: SideBar;
 	backImageModal: BackImageModal;
+	iconImageModal: IconImageModal;
 }
 
 // InjectionKeyの設定
@@ -52,6 +55,7 @@ export const store = createStore<State>({
 		loading,
 		sidebar,
 		backImageModal,
+		iconImageModal,
 	},
 });
 

@@ -2,8 +2,8 @@
 	<Overlay v-show="modal.isShow" class="overlay" @click.self="onclickCancel()">
 		<div class="modal-wrapper">
 			<!-- プレビューゾーン -->
-			<!-- <div
-				id="preview"
+			<div
+				id="iconPreview"
 				class="image-preview-zone"
 				@dragenter="dragEnter()"
 				@dragleave="dragLeave()"
@@ -11,16 +11,16 @@
 				@drop.prevent="dropFile($event)"
 			>
 				ファイルアップロード
-			</div> -->
-			<div
-				id="preview"
+			</div>
+			<!-- <div
+				id="iconPreview"
 				class="image-preview-zone"
 				@dragenter="dragEnter()"
 				@dragleave="dragLeave()"
 				@dragover.prevent
 				@drop.prevent="dropFile($event)"
-			>
-				<!-- <div v-if="state.objectURL"> -->
+			> -->
+			<div v-if="state.objectURL !== ''">
 				<vue-cropper
 					ref="cropper"
 					:guides="true"
@@ -78,7 +78,7 @@ export default defineComponent({
     ----------------------*/
 		const dragEnter = () => {
 			// 枠線の色を変更するクラスを付与
-			const target = document.getElementById('preview');
+			const target = document.getElementById('iconPreview');
 			target?.classList.add('enter');
 		};
 
@@ -87,7 +87,7 @@ export default defineComponent({
     ----------------------*/
 		const dragLeave = () => {
 			// 枠線の色を変更するクラスを削除
-			const target = document.getElementById('preview');
+			const target = document.getElementById('iconPreview');
 			target?.classList.remove('enter');
 		};
 
@@ -96,7 +96,7 @@ export default defineComponent({
     ----------------------*/
 		const dropFile = (event: any) => {
 			// 枠線の色を変更するクラスを削除
-			const target = document.getElementById('preview');
+			const target = document.getElementById('iconPreview');
 			target?.classList.remove('enter');
 
 			// ファイル情報の読み取り
@@ -129,7 +129,7 @@ export default defineComponent({
 			const objectURL = window.URL.createObjectURL(state.files[0]);
 			state.objectURL = objectURL;
 			// previewする要素を取得
-			const preview = document.getElementById('preview');
+			const preview = document.getElementById('iconPreview');
 			if (preview) {
 				preview.style.backgroundImage = `url(${objectURL})`;
 				// プレビューゾーンの文字を削除
@@ -168,7 +168,7 @@ export default defineComponent({
 
 		// オーバーレイ or キャンセルボタンクリック時の処理
 		const onclickCancel = () => {
-			const preview = document.getElementById('preview');
+			const preview = document.getElementById('iconPreview');
 			if (preview !== null && preview !== undefined) {
 				preview.style.backgroundImage = '';
 				// ドラッグ＆ドロップ時に削除したinnerTextを再度追加
@@ -181,6 +181,7 @@ export default defineComponent({
 		};
 
 		return {
+			state,
 			dragEnter,
 			dragLeave,
 			dropFile,

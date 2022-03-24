@@ -100,6 +100,9 @@ export default defineComponent({
 			// ローカルURLを作成
 			const objectURL = window.URL.createObjectURL(state.files[0]);
 			state.objectURL = objectURL;
+			// 画像をBase64形式に変換
+			const base64 = encodeBase64(state.files[0]);
+			console.log(base64);
 			// previewする要素を取得
 			const preview = document.getElementById('backPreview');
 			if (preview !== null && preview !== undefined) {
@@ -122,6 +125,16 @@ export default defineComponent({
 					});
 				}, 2000);
 			}
+		};
+
+		const encodeBase64 = async (file: File) => {
+			const reader = new FileReader();
+			reader.readAsDataURL(file);
+			return await new Promise((resolve) => {
+				reader.onload = (e: any) => {
+					resolve(e.target.result);
+				};
+			});
 		};
 
 		// OKボタン押下時の処理

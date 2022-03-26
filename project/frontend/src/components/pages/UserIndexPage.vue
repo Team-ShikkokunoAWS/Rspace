@@ -4,45 +4,59 @@
 			<h2>ユーザー一覧</h2>
 		</div>
 
-		<MainCard
-			class="users-card"
-			color="#fff"
-			height="120px"
-			width="640px"
-			v-for="user in users"
-			:key="user.uid"
-			@click="onclickUserCard(user.uid)"
-		>
-			<div class="uesr-info">
-				<div class="user-icon">
-					<UserIcon
-						width="80px"
-						height="80px"
-						:backgroundImage="user.iconImage"
-					/>
+		<div v-if="state.users.length > 0">
+			<MainCard
+				class="users-card"
+				color="#fff"
+				height="120px"
+				width="640px"
+				v-for="user in state.users"
+				:key="user.uid"
+				@click="onclickUserCard(user.uid)"
+			>
+				<div class="uesr-info">
+					<div class="user-icon">
+						<UserIcon
+							width="80px"
+							height="80px"
+							:backgroundImage="user.iconImage"
+						/>
+					</div>
+					<div class="user-name">
+						{{ user.name }}
+					</div>
+					<div class="user-message">
+						<fa-icon
+							class="direct-message-btn"
+							icon="square-envelope"
+							@click.stop="onclickMessageRoom(user.uid)"
+						/>
+					</div>
 				</div>
-				<div class="user-name">
-					{{ user.name }}
-				</div>
-				<div class="user-message">
-					<fa-icon
-						class="direct-message-btn"
-						icon="square-envelope"
-						@click.stop="onclickMessageRoom(user.uid)"
-					/>
-				</div>
-			</div>
-		</MainCard>
+			</MainCard>
+		</div>
 	</div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, onMounted } from 'vue';
+import {
+	defineComponent,
+	reactive,
+	computed,
+	onMounted,
+	onUnmounted,
+} from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from '@/store';
+import { User } from '@/types/user';
+import { MessageManager, Messages } from '@/constants/MessageManager';
 import MainCard from '@/components/parts/MainCard.vue';
 import UserIcon from '@/components/parts/UserIcon.vue';
 import axios from '@/plugins/axios';
+
+interface State {
+	users: Array<User>;
+}
 
 export default defineComponent({
 	name: 'UserIndexPage',
@@ -51,60 +65,119 @@ export default defineComponent({
 		UserIcon,
 	},
 	setup() {
-		// mockData
-		const users = [
-			{
-				uid: 'test-test-test-1',
-				name: 'test1',
-				iconImage: 'img.jpg',
-			},
-			{
-				uid: 'test-test-test-2',
-				name: 'test2',
-				iconImage: 'img.jpg',
-			},
-			{
-				uid: 'test-test-test-3',
-				name: 'test3',
-				iconImage: 'img.jpg',
-			},
-			{
-				uid: 'test-test-test-4',
-				name: 'test4',
-				iconImage: 'img.jpg',
-			},
-			{
-				uid: 'test-test-test-5',
-				name: 'lorem ipsum dolor sit am lorem ipsum dolor sit',
-				iconImage: 'img.jpg',
-			},
-		];
-
-		/*=============================
-		画面初期表示時の処理
-		=============================*/
-		onMounted(() => {
-			axios
-				.post('v1/all-users')
-				.then((response) => {
-					console.log(response);
-				})
-				.catch((error) => {
-					console.log(error);
-				});
-		});
-
 		// VueRouter
 		const router = useRouter();
 		// storeを取得する
 		const store = useStore();
 		const userInfo = computed(() => store.state.user);
+		const state = reactive<State>({
+			users: [] as User[],
+		});
+
+		/*=============================
+		画面初期表示時の処理
+		=============================*/
+		onMounted(() => {
+			window.addEventListener('scroll', onScroll);
+			// ローディングの表示
+			store.dispatch('loading/setLoading', {
+				isShow: true,
+			});
+			// 送信用データを格納(空のユーザー情報とnext_startの初期値0)
+			const data: { next_start: number } = {
+				next_start: 0,
+			};
+			axios
+				.post('v1/all-users', data)
+				.then((response) => {
+					// 取得したユーザーを表示
+					state.users = response.data.users;
+				})
+				.catch((error) => {
+					console.log(error);
+					store.dispatch('toast/setToastShow', {
+						message: MessageManager(Messages.SYS_ERROR),
+						toastType: 'danger',
+						isShow: true,
+					});
+					// トーストを2秒表示し、消す
+					setTimeout(() => {
+						store.dispatch('toast/setToastShow', {
+							message: '',
+							toastType: '',
+							isShow: false,
+						});
+					}, 2000);
+				})
+				.finally(() => {
+					setTimeout(() => {
+						// ローディングの削除
+						store.dispatch('loading/setLoading', {
+							isShow: false,
+						});
+					}, 1000);
+				});
+		});
+
+		/*=============================
+		画面スクロール時の処理
+		=============================*/
+		const onScroll = () => {
+			const element = document.scrollingElement;
+			if (element) {
+				const scrollHeight = element.scrollHeight; // スクロール可能部分の画面の高さ
+				const windowHeight = element.clientHeight; // 表示画面windowの高さ
+				const bottom = scrollHeight - windowHeight; // スクロール最下部 = スクロール可能領域 - 表示windowの高さ
+				const scrollY = element.scrollTop; // 現在のスクロールした画面の高さ
+
+				// 画面の底までスクロールされた場合、ユーザーの取得処理を行う
+				if (scrollY === bottom) {
+					// ローディングの表示
+					store.dispatch('loading/setLoading', {
+						isShow: true,
+					});
+					// 送信用データを格納(空のユーザー情報とnext_startの初期値0)
+					const data: { next_start: number } = {
+						next_start: state.users.length,
+					};
+					axios
+						.post('v1/all-users', data)
+						.then((response) => {
+							// 取得したユーザーを表示
+							state.users = [...state.users, ...response.data.users];
+						})
+						.catch((error) => {
+							console.log(error);
+							store.dispatch('toast/setToastShow', {
+								message: MessageManager(Messages.SYS_ERROR),
+								toastType: 'danger',
+								isShow: true,
+							});
+							// トーストを2秒表示し、消す
+							setTimeout(() => {
+								store.dispatch('toast/setToastShow', {
+									message: '',
+									toastType: '',
+									isShow: false,
+								});
+							}, 2000);
+						})
+						.finally(() => {
+							setTimeout(() => {
+								// ローディングの削除
+								store.dispatch('loading/setLoading', {
+									isShow: false,
+								});
+							}, 1000);
+						});
+				}
+			}
+		};
 
 		// ユーザーカード押下時の遷移
 		const onclickUserCard = (uid: string) => {
 			// router.push(`/users/${uid}`);
 			console.log(uid);
-			// router.push(`/users/${uid}`);
 			router.push(`/users/test-1234-user-5678-abcd-9012-gues-tuse`); // TODO:(fixme)ユーザーページがゲストユーザーしか遷移できない状態なので合わせている
 		};
 
@@ -119,10 +192,16 @@ export default defineComponent({
 			router.push(`/rooms/1`);
 		};
 
+		/*=============================
+		ページを離れる前の処理
+		=============================*/
+		onUnmounted(() => window.removeEventListener('scroll', onScroll));
+
 		return {
-			users,
+			state,
 			onclickUserCard,
 			onclickMessageRoom,
+			onScroll,
 		};
 	},
 }); // export default defineComponent

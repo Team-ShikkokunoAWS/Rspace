@@ -101,36 +101,44 @@ export default defineComponent({
 			const objectURL = window.URL.createObjectURL(state.files[0]);
 			state.objectURL = objectURL;
 			// 画像をBase64形式に変換
-			const base64 = encodeBase64(state.files[0]);
-			console.log(base64);
-			// previewする要素を取得
-			const preview = document.getElementById('backPreview');
-			if (preview !== null && preview !== undefined) {
-				preview.style.backgroundImage = `url(${objectURL})`;
-				// プレビューゾーンの文字を削除
-				preview.innerText = '';
-			} else {
-				// エラー
-				store.dispatch('toast/setToastShow', {
-					message: '画像の読み込みができませんでした。再度お試しください',
-					toastType: 'danger',
-					isShow: true,
-				});
-				// トーストを2秒表示し、消す
-				setTimeout(() => {
+			encodeBase64(state.files[0]).then((value: any) => {
+				console.log(value);
+				// この処理内部でしかbase64でエンコードした変数は生きれない模様
+
+				// previewする要素を取得
+				const preview = document.getElementById('backPreview');
+				if (preview !== null && preview !== undefined) {
+					preview.style.backgroundImage = `url(${objectURL})`;
+					// プレビューゾーンの文字を削除
+					preview.innerText = '';
+				} else {
+					// エラー
 					store.dispatch('toast/setToastShow', {
-						message: '',
-						toastType: '',
-						isShow: false,
+						message: '画像の読み込みができませんでした。再度お試しください',
+						toastType: 'danger',
+						isShow: true,
 					});
-				}, 2000);
-			}
+					// トーストを2秒表示し、消す
+					setTimeout(() => {
+						store.dispatch('toast/setToastShow', {
+							message: '',
+							toastType: '',
+							isShow: false,
+						});
+					}, 2000);
+				}
+			});
 		};
 
-		const encodeBase64 = async (file: File) => {
+		/**
+		 * 画像ファイルをBase64形式へのエンコード処理
+		 * @param file: Fileオブジェクト
+		 * @return Promise<string>
+		 **/
+		const encodeBase64 = (file: File): Promise<string> => {
 			const reader = new FileReader();
 			reader.readAsDataURL(file);
-			return await new Promise((resolve) => {
+			return new Promise((resolve) => {
 				reader.onload = (e: any) => {
 					resolve(e.target.result);
 				};

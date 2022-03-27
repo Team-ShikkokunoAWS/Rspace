@@ -85,6 +85,22 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def update
+    update_user = update_user_params
+    user = User.find_by(uid: update_user[:uid])
+
+    if user
+      if update_user[:password]
+        update_user[:password] = encryption_password(update_user[:password])
+      end
+
+      if user.update(update_user)
+        render status: 200, json: {status: 'SUCCESS', user: user}
+      else
+        render status: 400, json: {status: 'ERROR', error_detail: user.errors}
+      end
+    else
+      render status: 400, json: {status: 'ERROR', error_detail: 'illegal_uid'}
+    end
   end
 
   def destroy
@@ -120,6 +136,10 @@ class Api::V1::UsersController < ApplicationController
         users.push(user)
       end
     return users
+  end
+
+  def update_user_params
+    params.require(:user).permit(:uid, :name, :password)
   end
 
 end

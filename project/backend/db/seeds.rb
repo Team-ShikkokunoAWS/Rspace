@@ -6,6 +6,6 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-51.times do |n|
-  User.create(:uid => "#{n}", :name => "name_#{n}", :password => "Zaq12wsx")
+1000.times do |n|
+  User.create(:uid => "uid_#{n}", :name => "name_#{n}", :password => "Zaq12wsx")
 end

@@ -204,7 +204,9 @@ export default defineComponent({
 
 		// アイコン画像編集リンク押下時の処理
 		const onclickEditIconImage = () => {
-			alert('アイコン編集');
+			store.dispatch('iconImageModal/setIconImageModal', {
+				isShow: true,
+			});
 			// モーダルメニューの削除
 			const target = document.getElementById('imageEditModal');
 			target?.classList.remove('active');

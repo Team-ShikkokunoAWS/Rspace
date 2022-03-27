@@ -3,7 +3,7 @@
 		<div class="modal-wrapper">
 			<!-- プレビューゾーン -->
 			<div
-				id="backPreview"
+				id="iconPreview"
 				class="image-preview-zone"
 				@dragenter="dragEnter()"
 				@dragleave="dragLeave()"
@@ -11,6 +11,31 @@
 				@drop.prevent="dropFile($event)"
 			>
 				ファイルアップロード
+			</div>
+			<!-- <div
+				id="iconPreview"
+				class="image-preview-zone"
+				@dragenter="dragEnter()"
+				@dragleave="dragLeave()"
+				@dragover.prevent
+				@drop.prevent="dropFile($event)"
+			> -->
+			<div v-if="state.objectURL !== ''">
+				<vue-cropper
+					ref="cropper"
+					:guides="true"
+					:view-mode="2"
+					:auto-crop-area="0.5"
+					:min-container-width="500"
+					:min-container-height="500"
+					:background="true"
+					:rotatable="false"
+					:src="imgSrc"
+					:img-style="{ width: '500px', height: '500px' }"
+					:aspect-ratio="targetWidth / targetHeight"
+					drag-mode="crop"
+				/>
+				<!-- </div> -->
 			</div>
 			<div class="submit-zone">
 				<div class="cancel-btn" @click="onclickCancel()">キャンセル</div>
@@ -23,6 +48,8 @@
 <script lang="ts">
 import { defineComponent, reactive } from 'vue';
 import { useStore } from '@/store';
+import VueCropper from 'vue-cropperjs';
+import 'cropperjs/dist/cropper.css';
 import Overlay from '@/components/parts/Overlay.vue';
 
 interface State {
@@ -31,14 +58,15 @@ interface State {
 }
 
 export default defineComponent({
-	name: 'BackImageModal',
+	name: 'IconImageModal',
 	components: {
 		Overlay,
+		VueCropper,
 	},
 	setup() {
 		// 状態管理
 		const store = useStore();
-		const modal = store.state.backImageModal;
+		const modal = store.state.iconImageModal;
 
 		const state = reactive<State>({
 			files: [],
@@ -50,7 +78,7 @@ export default defineComponent({
     ----------------------*/
 		const dragEnter = () => {
 			// 枠線の色を変更するクラスを付与
-			const target = document.getElementById('backPreview');
+			const target = document.getElementById('iconPreview');
 			target?.classList.add('enter');
 		};
 
@@ -59,7 +87,7 @@ export default defineComponent({
     ----------------------*/
 		const dragLeave = () => {
 			// 枠線の色を変更するクラスを削除
-			const target = document.getElementById('backPreview');
+			const target = document.getElementById('iconPreview');
 			target?.classList.remove('enter');
 		};
 
@@ -68,7 +96,7 @@ export default defineComponent({
     ----------------------*/
 		const dropFile = (event: any) => {
 			// 枠線の色を変更するクラスを削除
-			const target = document.getElementById('backPreview');
+			const target = document.getElementById('iconPreview');
 			target?.classList.remove('enter');
 
 			// ファイル情報の読み取り
@@ -100,49 +128,28 @@ export default defineComponent({
 			// ローカルURLを作成
 			const objectURL = window.URL.createObjectURL(state.files[0]);
 			state.objectURL = objectURL;
-			// 画像をBase64形式に変換
-			encodeBase64(state.files[0]).then((value: any) => {
-				console.log(value);
-				// この処理内部でしかbase64でエンコードした変数は生きれない模様
-
-				// previewする要素を取得
-				const preview = document.getElementById('backPreview');
-				if (preview !== null && preview !== undefined) {
-					preview.style.backgroundImage = `url(${objectURL})`;
-					// プレビューゾーンの文字を削除
-					preview.innerText = '';
-				} else {
-					// エラー
+			// previewする要素を取得
+			const preview = document.getElementById('iconPreview');
+			if (preview) {
+				preview.style.backgroundImage = `url(${objectURL})`;
+				// プレビューゾーンの文字を削除
+				preview.innerText = '';
+			} else {
+				// エラー
+				store.dispatch('toast/setToastShow', {
+					message: '画像の読み込みができませんでした。再度お試しください',
+					toastType: 'danger',
+					isShow: true,
+				});
+				// トーストを2秒表示し、消す
+				setTimeout(() => {
 					store.dispatch('toast/setToastShow', {
-						message: '画像の読み込みができませんでした。再度お試しください',
-						toastType: 'danger',
-						isShow: true,
+						message: '',
+						toastType: '',
+						isShow: false,
 					});
-					// トーストを2秒表示し、消す
-					setTimeout(() => {
-						store.dispatch('toast/setToastShow', {
-							message: '',
-							toastType: '',
-							isShow: false,
-						});
-					}, 2000);
-				}
-			});
-		};
-
-		/**
-		 * 画像ファイルをBase64形式へのエンコード処理
-		 * @param file: Fileオブジェクト
-		 * @return Promise<string>
-		 **/
-		const encodeBase64 = (file: File): Promise<string> => {
-			const reader = new FileReader();
-			reader.readAsDataURL(file);
-			return new Promise((resolve) => {
-				reader.onload = (e: any) => {
-					resolve(e.target.result);
-				};
-			});
+				}, 2000);
+			}
 		};
 
 		// OKボタン押下時の処理
@@ -161,19 +168,20 @@ export default defineComponent({
 
 		// オーバーレイ or キャンセルボタンクリック時の処理
 		const onclickCancel = () => {
-			const preview = document.getElementById('backPreview');
+			const preview = document.getElementById('iconPreview');
 			if (preview !== null && preview !== undefined) {
 				preview.style.backgroundImage = '';
 				// ドラッグ＆ドロップ時に削除したinnerTextを再度追加
 				preview.innerText = 'ファイルアップロード';
 			}
 			// モーダルを閉じる
-			store.dispatch('backImageModal/setBackImageModal', {
+			store.dispatch('iconImageModal/setIconImageModal', {
 				isShow: false,
 			});
 		};
 
 		return {
+			state,
 			dragEnter,
 			dragLeave,
 			dropFile,

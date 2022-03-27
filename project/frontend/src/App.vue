@@ -6,6 +6,7 @@
 		<Dialog />
 		<SideBar />
 		<BackImageModal />
+		<IconImageModal />
 		<!-- 画面表示領域 -->
 		<Header />
 		<router-view />
@@ -20,6 +21,7 @@ import Dialog from '@/components/globals/Dialog.vue';
 import Loader from '@/components/globals/Loader.vue';
 import SideBar from '@/components/globals/SideBar.vue';
 import BackImageModal from '@/components/globals/BackImageModal.vue';
+import IconImageModal from '@/components/globals/IconImageModal.vue';
 
 export default defineComponent({
 	name: 'App',
@@ -30,6 +32,7 @@ export default defineComponent({
 		Loader,
 		SideBar,
 		BackImageModal,
+		IconImageModal,
 	},
 	setup() {
 		return {};

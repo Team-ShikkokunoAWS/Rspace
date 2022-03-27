@@ -5,7 +5,9 @@ Rails.application.routes.draw do
     namespace 'v1' do
       post 'auth' => 'users#auth'
       post 'all-users' => 'users#all_users'
-      resources :users
+      post 'users/show' => 'users#show'
+      post 'users/update' => 'users#update'
+      resources :users, except:[:show, :update]
     end
   end
 end

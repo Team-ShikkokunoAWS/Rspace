@@ -1,3 +1,4 @@
+# coding: utf-8
 require 'securerandom'
 require 'digest/md5'
 
@@ -74,6 +75,13 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def show
+    user = User.find_by(uid: params[:uid])
+
+    if user
+      render status: 200, json: {status: 'SUCCESS', user: user}
+    else
+      render status: 400, json: {status: 'ERROR', error_detail: 'illegal_uid'}
+    end
   end
 
   def update

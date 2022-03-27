@@ -85,12 +85,27 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def update
-    update_user = update_user_params
-    user = User.find_by(uid: update_user[:uid])
+    update_user = Hash.new()
+    user = User.find_by(uid: params[:uid])
 
     if user
-      if update_user[:password]
-        update_user[:password] = encryption_password(update_user[:password])
+      if params[:current_password] && params[:new_password]
+        encode_password = encryption_password(params[:current_password])
+
+        if user[:password] == encode_password
+          update_user[:password] = encryption_password(params[:new_password])
+        else
+          render status: 400, json: {status: 'ERROR', error_detail: 'current_password_error'} and return
+        end
+      end
+
+      if params[:name]
+        if (User.find_by(name: params[:name])) && (user[:name] != params[:name])
+          binding.pry
+          render status: 400, json: {status: 'ERROR', error_detail: 'already_regist'} and return
+        else
+          update_user[:name] = params[:name]
+        end
       end
 
       if user.update(update_user)
@@ -136,10 +151,6 @@ class Api::V1::UsersController < ApplicationController
         users.push(user)
       end
     return users
-  end
-
-  def update_user_params
-    params.require(:user).permit(:uid, :name, :password)
   end
 
 end

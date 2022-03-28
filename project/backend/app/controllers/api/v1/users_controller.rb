@@ -1,3 +1,4 @@
+# coding: utf-8
 require 'securerandom'
 require 'digest/md5'
 
@@ -74,9 +75,47 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def show
+    user = User.find_by(uid: params[:uid])
+
+    if user
+      render status: 200, json: {status: 'SUCCESS', user: user}
+    else
+      render status: 400, json: {status: 'ERROR', error_detail: 'illegal_uid'}
+    end
   end
 
   def update
+    update_user = Hash.new()
+    user = User.find_by(uid: params[:uid])
+
+    if user
+      if params[:current_password] && params[:new_password]
+        encode_password = encryption_password(params[:current_password])
+
+        if user[:password] == encode_password
+          update_user[:password] = encryption_password(params[:new_password])
+        else
+          render status: 400, json: {status: 'ERROR', error_detail: 'current_password_error'} and return
+        end
+      end
+
+      if params[:name]
+        if (User.find_by(name: params[:name])) && (user[:name] != params[:name])
+          binding.pry
+          render status: 400, json: {status: 'ERROR', error_detail: 'already_regist'} and return
+        else
+          update_user[:name] = params[:name]
+        end
+      end
+
+      if user.update(update_user)
+        render status: 200, json: {status: 'SUCCESS', user: user}
+      else
+        render status: 400, json: {status: 'ERROR', error_detail: user.errors}
+      end
+    else
+      render status: 400, json: {status: 'ERROR', error_detail: 'illegal_uid'}
+    end
   end
 
   def destroy

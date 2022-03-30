@@ -3,13 +3,13 @@
 		<!-- 背景・ユーザーアイコン -->
 		<div class="background-image-wrapper" :style="styles">
 			<!-- 背景。ユーザーアイコン編集モーダル呼び出しボタン -->
-			<fa-icon
+			<!-- <fa-icon
 				icon="pen-to-square"
 				class="image-edit-btn"
 				@click="showImageEditModal"
-			/>
+			/> -->
 			<!-- 背景・ユーザーアイコン編集選択肢リスト -->
-			<div id="imageEditModal" class="image-edit-modal">
+			<!-- <div id="imageEditModal" class="image-edit-modal">
 				<div class="modal-list">
 					<span class="edit-back" @click="onclickEditBackImage()"
 						>背景画像を編集する</span
@@ -20,7 +20,7 @@
 						>アイコン画像を編集する</span
 					>
 				</div>
-			</div>
+			</div> -->
 			<div class="user-info">
 				<UserIcon
 					class="userIcon"
@@ -112,7 +112,7 @@
 						width="400px"
 						colorType="teal"
 						:disabled="
-							(state.username && user.name !== state.username) ||
+							state.user.name !== state.username ||
 							(state.currentPassword &&
 								state.newPassword &&
 								state.newPasswordConfirm)
@@ -128,9 +128,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive } from 'vue';
+import { defineComponent, computed, reactive, onMounted } from 'vue';
 import { useValidate } from '@/hooks/useValidate';
 import { useStore } from '@/store';
+import { useRoute, useRouter } from 'vue-router';
+import { User } from '@/types/user';
+import axios from '@/plugins/axios';
 import ErrorList from '@/components/parts/ErrorList.vue';
 import InputForm from '@/components/parts/InputForm.vue';
 import UserIcon from '@/components/parts/UserIcon.vue';
@@ -138,7 +141,9 @@ import CButton from '@/components/parts/CButton.vue';
 import MainCard from '@/components/parts/MainCard.vue';
 
 interface State {
+	user: User;
 	username: string;
+	description: string;
 	currentPassword: string;
 	newPassword: string;
 	newPasswordConfirm: string;
@@ -155,6 +160,32 @@ export default defineComponent({
 		MainCard,
 	},
 	setup() {
+		// 状態管理
+		const store = useStore();
+
+		const state = reactive<State>({
+			user: {
+				uid: '',
+				name: '',
+				description: '',
+				iconImage: '',
+				backImage: '',
+			},
+			username: store.state.user.name,
+			description: '',
+			currentPassword: '',
+			newPassword: '',
+			newPasswordConfirm: '',
+			errorMessages: [],
+		});
+
+		// router
+		const route = useRoute();
+		const router = useRouter();
+
+		// バリデーション関連
+		const { updateUserValidate } = useValidate();
+
 		// mockData
 		const user = {
 			uid: 'test-1234-user-5678-abcd-9012-gues-tuse',
@@ -172,19 +203,58 @@ export default defineComponent({
 			};
 		});
 
-		// 状態管理
-		const store = useStore();
-
-		const state = reactive<State>({
-			username: user.name,
-			currentPassword: '',
-			newPassword: '',
-			newPasswordConfirm: '',
-			errorMessages: [],
+		/*====================================
+	 * ユーザー情報の取得
+	 ====================================*/
+		onMounted(() => {
+			// URLからuidを取得
+			const uid = route.params.uid;
+			// APIでユーザー情報を取得
+			axios
+				.post('v1/users/show', { uid: uid })
+				.then((response) => {
+					// cookieのuidとURLのuidが一致しない場合、404ページへ遷移させる
+					if (store.state.user.uid !== response.data.user.uid) {
+						router.push('/404NotFound');
+						// 遷移後、トーストメッセージ表示
+						store.dispatch('toast/setToastShow', {
+							message: 'ユーザー情報を再度ご確認ください。',
+							toastType: 'danger',
+							isShow: true,
+						});
+						// トーストを2秒表示し、消す
+						setTimeout(() => {
+							store.dispatch('toast/setToastShow', {
+								message: '',
+								toastType: '',
+								isShow: false,
+							});
+						}, 2000);
+					}
+					// 取得データを表示用データとして格納する
+					state.user = response.data.user;
+				})
+				.catch((err) => {
+					console.log(err);
+					router.push('/404NotFound');
+					if (err.response.data.error_detail === 'illegal_uid') {
+						// 遷移後、トーストメッセージ表示
+						store.dispatch('toast/setToastShow', {
+							message: 'ユーザー情報を再度ご確認ください。',
+							toastType: 'danger',
+							isShow: true,
+						});
+						// トーストを2秒表示し、消す
+						setTimeout(() => {
+							store.dispatch('toast/setToastShow', {
+								message: '',
+								toastType: '',
+								isShow: false,
+							});
+						}, 2000);
+					}
+				});
 		});
-
-		// バリデーション関連
-		const { updateUserValidate } = useValidate();
 
 		// 画像関連編集モーダル呼び出しボタン押下時の処理
 		const showImageEditModal = () => {

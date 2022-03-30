@@ -3,13 +3,13 @@
 		<!-- 背景・ユーザーアイコン -->
 		<div class="background-image-wrapper" :style="styles">
 			<!-- 背景。ユーザーアイコン編集モーダル呼び出しボタン -->
-			<fa-icon
+			<!-- <fa-icon
 				icon="pen-to-square"
 				class="image-edit-btn"
 				@click="showImageEditModal"
-			/>
+			/> -->
 			<!-- 背景・ユーザーアイコン編集選択肢リスト -->
-			<div id="imageEditModal" class="image-edit-modal">
+			<!-- <div id="imageEditModal" class="image-edit-modal">
 				<div class="modal-list">
 					<span class="edit-back" @click="onclickEditBackImage()"
 						>背景画像を編集する</span
@@ -20,7 +20,7 @@
 						>アイコン画像を編集する</span
 					>
 				</div>
-			</div>
+			</div> -->
 			<div class="user-info">
 				<UserIcon
 					class="userIcon"

@@ -6,6 +6,7 @@ const state: User = {
 	// ユーザーの状態
 	uid: '',
 	name: '',
+	description: '',
 	isLogined: false,
 	iconImage: '',
 	backImage: '',
@@ -27,6 +28,7 @@ const mutations = {
 	login(state: User, { user }: any) {
 		state.uid = user.uid;
 		state.name = user.name;
+		state.description = user.description;
 		state.isLogined = user.isLogined;
 		state.iconImage = user.iconImage;
 		state.backImage = user.backImage;
@@ -35,6 +37,7 @@ const mutations = {
 	logout(state: User) {
 		state.uid = '';
 		state.name = '';
+		state.description = '';
 		state.isLogined = false;
 		state.iconImage = '';
 		state.backImage = '';

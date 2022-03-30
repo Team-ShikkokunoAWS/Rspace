@@ -7,7 +7,7 @@
 					class="userIcon"
 					width="240px"
 					height="240px"
-					:backgroundImage="user.iconImage"
+					:backgroundImage="state.user.iconImage"
 				/>
 			</div>
 		</div>
@@ -21,14 +21,17 @@
 			>
 				<!-- ユーザー名欄 -->
 				<div class="user-name">
-					{{ user.name }}
+					{{ state.user.name }}
 				</div>
 				<!-- プロフィール欄 -->
 				<div class="user-description">
-					{{ user.description }}
+					{{ state.user.description }}
 				</div>
 				<!-- 編集ページ遷移ボタン -->
-				<div class="user-edit-page-link" v-if="currentUser.uid === user.uid">
+				<div
+					class="user-edit-page-link"
+					v-if="currentUser.uid === state.user.uid"
+				>
 					<CButton
 						name="編集"
 						width="400px"
@@ -42,13 +45,18 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue';
-import { useRouter } from 'vue-router';
+import { defineComponent, reactive, computed, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import { useStore } from '@/store';
+import { User } from '@/types/User';
 import axios from '@/plugins/axios';
 import UserIcon from '@/components/parts/UserIcon.vue';
 import CButton from '@/components/parts/CButton.vue';
 import MainCard from '@/components/parts/MainCard.vue';
+
+interface State {
+	user: User;
+}
 
 export default defineComponent({
 	name: 'UserPage',
@@ -58,27 +66,61 @@ export default defineComponent({
 		MainCard,
 	},
 	setup() {
+		const state = reactive<State>({
+			user: {
+				uid: '',
+				name: '',
+				description: '',
+				iconImage: '',
+				backImage: '',
+			},
+		});
 		// storeを取得する
 		const store = useStore();
 		const currentUser = computed(() => store.state.user);
 		// VueRouter
 		const router = useRouter();
-
-		// mockData(ゲストユーザーでログイン状態は編集ページリンクが出る)
-		const user = {
-			uid: 'test-1234-user-5678-abcd-9012-gues-tuse',
-			name: 'ゲストユーザー',
-			description:
-				'自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。',
-			iconImage: 'img.jpg',
-			backImage: 'backImg.jpg',
-		};
+		const route = useRoute();
 
 		// CSS
 		const styles = computed(() => {
 			return {
-				'--backgroundImage': `url(${user.backImage})`,
+				'--backgroundImage': `url(${state.user.backImage})`,
 			};
+		});
+
+		/*====================================
+	 * ユーザー情報の取得・表示
+	 ====================================*/
+		onMounted(() => {
+			// URLからuidを取得
+			const uid = route.params.uid;
+			// APIでユーザー情報を取得
+			axios
+				.post('v1/users/show', { uid: uid })
+				.then((response) => {
+					state.user = response.data.user;
+				})
+				.catch((err) => {
+					console.log(err);
+					router.push('/404NotFound');
+					if (err.response.data.error_detail === 'illegal_uid') {
+						// 遷移後、トーストメッセージ表示
+						store.dispatch('toast/setToastShow', {
+							message: 'ユーザー情報を再度ご確認ください。',
+							toastType: 'danger',
+							isShow: true,
+						});
+						// トーストを2秒表示し、消す
+						setTimeout(() => {
+							store.dispatch('toast/setToastShow', {
+								message: '',
+								toastType: '',
+								isShow: false,
+							});
+						}, 2000);
+					}
+				});
 		});
 
 		// ユーザー編集ページへのリンク押下時の処理
@@ -87,30 +129,11 @@ export default defineComponent({
 		};
 
 		return {
-			user,
+			state,
 			currentUser,
 			styles,
 			onclickEditPage,
 		};
-	},
-
-	/*====================================
-	 * 遷移完了前のバリデーション
-	 ====================================*/
-	beforeRouteEnter(to, from, next) {
-		// ルーティングのuidを取得
-		const uid = to.params.uid;
-		axios
-			.post('v1/users/show', { uid: uid })
-			.then((response) => {
-				console.log(response);
-				// マイページへ遷移
-				next();
-			})
-			.catch((error) => {
-				console.log(error);
-				next('/404NotFound');
-			});
 	},
 }); // export default defineComponent
 </script>
@@ -168,7 +191,10 @@ export default defineComponent({
 /* 自己紹介 */
 .user-description {
 	width: 60%;
+	min-height: 50%;
 	margin: 30px auto;
+	border: 1px solid #ddd;
+	border-radius: 8px;
 	/* 文字関連 */
 	font-size: 24px;
 }

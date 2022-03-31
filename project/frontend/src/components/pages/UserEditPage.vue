@@ -284,15 +284,33 @@ export default defineComponent({
 
 		// 保存するボタン押下時の処理
 		const onclickEditBtn = () => {
-			state.errorMessages = [];
 			// バリデーション
+			state.errorMessages = [];
 			state.errorMessages = updateUserValidate(
 				state.username,
 				state.currentPassword,
 				state.newPassword,
 				state.newPasswordConfirm
 			);
+
 			// 処理
+			axios
+				.post('v1/users/update', {
+					uid: state.user.uid,
+					name: state.username,
+					description: state.user.description,
+					currentPassword: state.currentPassword,
+					newPassword: state.newPassword,
+				})
+				.then((response) => {
+					console.log(response);
+				})
+				.catch((err) => {
+					console.log(err);
+				})
+				.finally(() => {
+					console.log('最終処理');
+				});
 		};
 
 		return {

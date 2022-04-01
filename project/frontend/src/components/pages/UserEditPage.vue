@@ -26,7 +26,7 @@
 					class="userIcon"
 					width="240px"
 					height="240px"
-					:backgroundImage="user.iconImage"
+					:backgroundImage="state.user.iconImage"
 				/>
 			</div>
 		</div>
@@ -133,6 +133,7 @@ import { useValidate } from '@/hooks/useValidate';
 import { useStore } from '@/store';
 import { useRoute, useRouter } from 'vue-router';
 import { User } from '@/types/user';
+import { MessageManager, Messages } from '@/constants/MessageManager';
 import axios from '@/plugins/axios';
 import ErrorList from '@/components/parts/ErrorList.vue';
 import InputForm from '@/components/parts/InputForm.vue';
@@ -171,7 +172,7 @@ export default defineComponent({
 				iconImage: '',
 				backImage: '',
 			},
-			username: store.state.user.name,
+			username: store.state.user.name, // 初期値にcookieの値を設定
 			description: '',
 			currentPassword: '',
 			newPassword: '',
@@ -185,16 +186,6 @@ export default defineComponent({
 
 		// バリデーション関連
 		const { updateUserValidate } = useValidate();
-
-		// mockData
-		const user = {
-			uid: 'test-1234-user-5678-abcd-9012-gues-tuse',
-			name: 'ゲストユーザー',
-			description:
-				'自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。自己紹介が入ります。',
-			iconImage: 'img.jpg',
-			backImage: 'backImg.jpg',
-		};
 
 		// CSS
 		const styles = computed(() => {
@@ -284,19 +275,75 @@ export default defineComponent({
 
 		// 保存するボタン押下時の処理
 		const onclickEditBtn = () => {
-			state.errorMessages = [];
 			// バリデーション
+			state.errorMessages = [];
 			state.errorMessages = updateUserValidate(
 				state.username,
 				state.currentPassword,
 				state.newPassword,
 				state.newPasswordConfirm
 			);
+			// ローディング表示
+			store.dispatch('loading/setLoading', {
+				isShow: true,
+			});
 			// 処理
+			axios
+				.post('v1/users/update', {
+					uid: state.user.uid,
+					name: state.username,
+					description: state.user.description,
+					currentPassword: state.currentPassword,
+					newPassword: state.newPassword,
+				})
+				.then((response) => {
+					console.log(response);
+					const responseUser: User = response.data.user;
+					setTimeout(() => {
+						// 返却されたユーザー情報をstoreに登録
+						store.dispatch('user/setUser', {
+							uid: responseUser.uid,
+							name: responseUser.name,
+							description: responseUser.description,
+							isLogined: true,
+							iconImage: responseUser.iconImage,
+							backImage: responseUser.backImage,
+						});
+						// フォームにstoreの値を再設定
+						state.user = responseUser;
+						// loading削除
+						store.dispatch('loading/setLoading', {
+							isShow: false,
+						});
+						// トースト(success)
+						store.dispatch('toast/setToastShow', {
+							message: MessageManager(Messages.MSG_004, ['ユーザー情報を更新']),
+							toastType: 'success',
+							isShow: true,
+						});
+						// トーストを2秒表示し、消す
+						setTimeout(() => {
+							store.dispatch('toast/setToastShow', {
+								message: '',
+								toastType: '',
+								isShow: false,
+							});
+						}, 2000);
+					}, 1000);
+				})
+				.catch((err) => {
+					console.log(err);
+					// フォームはそのまま
+					// loading削除
+					// トースト(danger)
+					// current_password_error 現在のパスワードが間違っているエラー
+					// already_regist そのユーザー名はすでに登録されていますエラー
+					// illegal_uid 現在ログインしているユーザーが見つからないエラー
+					// システムエラー
+				});
 		};
 
 		return {
-			user,
 			styles,
 			state,
 			showImageEditModal,

@@ -21,6 +21,10 @@ const actions = {
 	logout({ commit, state }: any) {
 		commit('logout');
 	},
+	// ユーザー情報を再セットするためのコミット
+	setUser({ commit, state }: any, user: User) {
+		commit('setUser', { user: user });
+	},
 };
 
 const mutations = {
@@ -41,6 +45,15 @@ const mutations = {
 		state.isLogined = false;
 		state.iconImage = '';
 		state.backImage = '';
+	},
+	// ユーザー情報を再セットする
+	setUser(state: User, { user }: any) {
+		state.uid = user.uid;
+		state.name = user.name;
+		state.description = user.description;
+		state.isLogined = user.isLogined;
+		state.iconImage = user.iconImage;
+		state.backImage = user.backImage;
 	},
 };
 

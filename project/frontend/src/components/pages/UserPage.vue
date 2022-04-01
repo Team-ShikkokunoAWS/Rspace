@@ -49,6 +49,7 @@ import { defineComponent, reactive, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from '@/store';
 import { User } from '@/types/User';
+import { MessageManager, Messages } from '@/constants/MessageManager';
 import axios from '@/plugins/axios';
 import UserIcon from '@/components/parts/UserIcon.vue';
 import CButton from '@/components/parts/CButton.vue';
@@ -107,7 +108,7 @@ export default defineComponent({
 					if (err.response.data.error_detail === 'illegal_uid') {
 						// 遷移後、トーストメッセージ表示
 						store.dispatch('toast/setToastShow', {
-							message: 'ユーザー情報を再度ご確認ください。',
+							message: MessageManager(Messages.MSG_005, 'ユーザー情報'),
 							toastType: 'danger',
 							isShow: true,
 						});

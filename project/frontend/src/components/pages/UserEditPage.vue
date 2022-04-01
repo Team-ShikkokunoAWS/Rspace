@@ -329,6 +329,11 @@ export default defineComponent({
 								isShow: false,
 							});
 						}, 2000);
+						// フォームを再設定
+						state.username = store.state.user.name;
+						state.currentPassword = '';
+						state.newPassword = '';
+						state.newPasswordConfirm = '';
 					}, 1000);
 				})
 				.catch((err) => {

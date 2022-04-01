@@ -133,7 +133,7 @@ import { useValidate } from '@/hooks/useValidate';
 import { useStore } from '@/store';
 import { useRoute, useRouter } from 'vue-router';
 import { User } from '@/types/user';
-import { MessageManager, Messages } from '@/constants/MessageManager';
+import { useUpdateUser } from '@/hooks/useUpdateUser';
 import axios from '@/plugins/axios';
 import ErrorList from '@/components/parts/ErrorList.vue';
 import InputForm from '@/components/parts/InputForm.vue';
@@ -186,6 +186,8 @@ export default defineComponent({
 
 		// バリデーション関連
 		const { updateUserValidate } = useValidate();
+		// 更新処理
+		const { update } = useUpdateUser();
 
 		// CSS
 		const styles = computed(() => {
@@ -273,7 +275,9 @@ export default defineComponent({
 			target?.classList.remove('active');
 		};
 
-		// 保存するボタン押下時の処理
+		/*====================================
+	 * 保存するボタン押下時の処理
+	 ====================================*/
 		const onclickEditBtn = () => {
 			// バリデーション
 			state.errorMessages = [];
@@ -283,64 +287,11 @@ export default defineComponent({
 				state.newPassword,
 				state.newPasswordConfirm
 			);
-			// ローディング表示
-			store.dispatch('loading/setLoading', {
-				isShow: true,
-			});
-			// 処理
-			axios
-				.post('v1/users/update', {
-					uid: state.user.uid,
-					name: state.username,
-					description: state.user.description,
-					currentPassword: state.currentPassword,
-					newPassword: state.newPassword,
-				})
-				.then((response) => {
-					console.log(response);
-					const responseUser: User = response.data.user;
-					setTimeout(() => {
-						// 返却されたユーザー情報をstoreに登録
-						store.dispatch('user/setUser', {
-							uid: responseUser.uid,
-							name: responseUser.name,
-							description: responseUser.description,
-							isLogined: true,
-							iconImage: responseUser.iconImage,
-							backImage: responseUser.backImage,
-						});
-						// フォームにstoreの値を再設定
-						state.user = responseUser;
-						// loading削除
-						store.dispatch('loading/setLoading', {
-							isShow: false,
-						});
-						// トースト(success)
-						store.dispatch('toast/setToastShow', {
-							message: MessageManager(Messages.MSG_004, ['ユーザー情報を更新']),
-							toastType: 'success',
-							isShow: true,
-						});
-						// トーストを2秒表示し、消す
-						setTimeout(() => {
-							store.dispatch('toast/setToastShow', {
-								message: '',
-								toastType: '',
-								isShow: false,
-							});
-						}, 2000);
-					}, 1000);
-				})
-				.catch((err) => {
-					console.log(err);
-					// フォームはそのまま
-					// loading削除
-					// トースト(danger)
-					// current_password_error 現在のパスワードが間違っているエラー
-					// already_regist そのユーザー名はすでに登録されていますエラー
-					// illegal_uid 現在ログインしているユーザーが見つからないエラー
-					// システムエラー
-				});
+			// エラー発生時、処理中断
+			if (state.errorMessages.length > 0) return;
+
+			// 更新処理
+			update(state, store, router);
 		};
 
 		return {

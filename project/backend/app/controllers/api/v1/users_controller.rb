@@ -101,7 +101,6 @@ class Api::V1::UsersController < ApplicationController
 
       if params[:name]
         if (User.find_by(name: params[:name])) && (user[:name] != params[:name])
-          binding.pry
           render status: 400, json: {status: 'ERROR', error_detail: 'already_regist'} and return
         else
           update_user[:name] = params[:name]

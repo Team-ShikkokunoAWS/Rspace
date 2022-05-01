@@ -23,6 +23,7 @@ class Api::V1::UsersController < ApplicationController
     all_users = User.all.order(created_at: 'ASC')
 
     if all_users
+      # いつの間にか設計が変わっていた
       if params[:nextStart] > 0
         if params[:nextStart] > all_users.count
           render status: 400, json: {status: 'ERROR', errorDetail: 'illegalNextStart'} and return
@@ -105,6 +106,10 @@ class Api::V1::UsersController < ApplicationController
         else
           update_user[:name] = params[:name]
         end
+      end
+
+      if params[:description]
+        update_user[:description] = params[:description]
       end
 
       if user.update(update_user)

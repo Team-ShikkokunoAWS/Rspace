@@ -23,7 +23,7 @@ class Api::V1::UsersController < ApplicationController
     all_users = User.all.order(created_at: 'ASC')
 
     if all_users
-      # いつの間にか設計が変わっていた
+
       if params[:nextStart] > 0
         if params[:nextStart] > all_users.count
           render status: 400, json: {status: 'ERROR', errorDetail: 'illegalNextStart'} and return
@@ -86,11 +86,12 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def update
+
     update_user = Hash.new()
     user = User.find_by(uid: params[:uid])
 
     if user
-      if params[:currentPassword] && params[:newPassword]
+      if params[:currentPassword].present? && params[:newPassword].present?
         encode_password = encryption_password(params[:currentPassword])
 
         if user[:password] == encode_password
@@ -108,7 +109,7 @@ class Api::V1::UsersController < ApplicationController
         end
       end
 
-      if params[:description]
+      if params[:description].present?
         update_user[:description] = params[:description]
       end
 

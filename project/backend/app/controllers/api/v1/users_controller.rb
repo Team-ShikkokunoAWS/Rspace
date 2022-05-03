@@ -12,10 +12,10 @@ class Api::V1::UsersController < ApplicationController
       if user[:password] == encryption_password(user_params[:password])
         render status: 200, json: {status: 'SUCCESS', user: user}
       else
-        render status: 400, json: {status: 'ERROR', error_detail: 'password_error'}
+        render status: 400, json: {status: 'ERROR', errorDetail: 'passwordError'}
       end
     else
-      render status: 400, json: {status: 'ERROR', error_detail: 'name_error'}
+      render status: 400, json: {status: 'ERROR', errorDetail: 'nameError'}
     end
   end
 
@@ -23,22 +23,23 @@ class Api::V1::UsersController < ApplicationController
     all_users = User.all.order(created_at: 'ASC')
 
     if all_users
-      if params[:next_start] > 0
-        if params[:next_start] > all_users.count
-          render status: 400, json: {status: 'ERROR', error_detail: 'illegal_next_start'} and return
+      # いつの間にか設計が変わっていた
+      if params[:nextStart] > 0
+        if params[:nextStart] > all_users.count
+          render status: 400, json: {status: 'ERROR', errorDetail: 'illegalNextStart'} and return
         else
           # 配列のインデックスに合わせるため、1を減算
-          get_start = params[:next_start] - 1
+          get_start = params[:nextStart] - 1
 
           if all_users.count > get_start + ALL_USERS_LIMIT
             users_count = get_start + ALL_USERS_LIMIT
             users = users_response(all_users, get_start, users_count)
-            next_start = users_count
+            nextStart = users_count
           else
             users = users_response(all_users, get_start, all_users.count)
           end
 
-          render status: 200, json: {status: 'SUCCESS', users: users, next_start: next_start}
+          render status: 200, json: {status: 'SUCCESS', users: users, nextStart: nextStart}
         end
       else
         if all_users.count <= ALL_USERS_LIMIT
@@ -47,12 +48,12 @@ class Api::V1::UsersController < ApplicationController
           users = users_response(all_users, 0, ALL_USERS_LIMIT)
 
           # 実際の件数に合わせるために、1を加算
-          next_start = ALL_USERS_LIMIT + 1
+          nextStart = ALL_USERS_LIMIT + 1
         end
-        render status: 200, json: {status: 'SUCCESS', users: users, next_start: next_start}
+        render status: 200, json: {status: 'SUCCESS', users: users, nextStart: nextStart}
       end
     else
-      render status: 400, json: {status: 'ERROR', error_detail: 'error'}
+      render status: 400, json: {status: 'ERROR', errorDetail: 'error'}
     end
   end
 
@@ -60,7 +61,7 @@ class Api::V1::UsersController < ApplicationController
     user = user_params
 
     if User.find_by(name: user[:name])
-      render status: 400, json: {status: 'ERROR', error_detail: 'already_regist'} and return
+      render status: 400, json: {status: 'ERROR', errorDetail: 'alreadyRegist'} and return
     end
 
     user[:uid] = create_uid
@@ -70,7 +71,7 @@ class Api::V1::UsersController < ApplicationController
     if user.save
       render status: 200, json: {status: 'SUCCESS', user: user}
     else
-      render status: 400, json: {status: 'ERROR', error_detail: user.errors}
+      render status: 400, json: {status: 'ERROR', errorDetail: user.errors}
     end
   end
 
@@ -80,7 +81,7 @@ class Api::V1::UsersController < ApplicationController
     if user
       render status: 200, json: {status: 'SUCCESS', user: user}
     else
-      render status: 400, json: {status: 'ERROR', error_detail: 'illegal_uid'}
+      render status: 400, json: {status: 'ERROR', errorDetail: 'illegalUid'}
     end
   end
 
@@ -89,31 +90,35 @@ class Api::V1::UsersController < ApplicationController
     user = User.find_by(uid: params[:uid])
 
     if user
-      if params[:current_password] && params[:new_password]
-        encode_password = encryption_password(params[:current_password])
+      if params[:currentPassword] && params[:newPassword]
+        encode_password = encryption_password(params[:currentPassword])
 
         if user[:password] == encode_password
-          update_user[:password] = encryption_password(params[:new_password])
+          update_user[:password] = encryption_password(params[:newPassword])
         else
-          render status: 400, json: {status: 'ERROR', error_detail: 'current_password_error'} and return
+          render status: 400, json: {status: 'ERROR', errorDetail: 'currentPasswordError'} and return
         end
       end
 
       if params[:name]
         if (User.find_by(name: params[:name])) && (user[:name] != params[:name])
-          render status: 400, json: {status: 'ERROR', error_detail: 'already_regist'} and return
+          render status: 400, json: {status: 'ERROR', errorDetail: 'alreadyRegist'} and return
         else
           update_user[:name] = params[:name]
         end
       end
 
+      if params[:description]
+        update_user[:description] = params[:description]
+      end
+
       if user.update(update_user)
         render status: 200, json: {status: 'SUCCESS', user: user}
       else
-        render status: 400, json: {status: 'ERROR', error_detail: user.errors}
+        render status: 400, json: {status: 'ERROR', errorDetail: user.errors}
       end
     else
-      render status: 400, json: {status: 'ERROR', error_detail: 'illegal_uid'}
+      render status: 400, json: {status: 'ERROR', errorDetail: 'illegalUid'}
     end
   end
 

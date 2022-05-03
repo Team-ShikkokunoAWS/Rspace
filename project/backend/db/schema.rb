@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_02_19_072649) do
+ActiveRecord::Schema.define(version: 2022_05_01_085445) do
 
 # Could not dump table "users" because of following StandardError
 #   Unknown type 'STRING' for column 'uid'

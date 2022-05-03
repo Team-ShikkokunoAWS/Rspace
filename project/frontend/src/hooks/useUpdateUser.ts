@@ -23,7 +23,7 @@ export const useUpdateUser = () => {
 			.post('v1/users/update', {
 				uid: state.user.uid,
 				name: state.username,
-				description: state.user.description,
+				description: state.description,
 				currentPassword: state.currentPassword,
 				newPassword: state.newPassword,
 			})
@@ -77,20 +77,20 @@ export const useUpdateUser = () => {
 					});
 					// トースト(danger)
 					let errorMessage: string = '';
-					switch (err.response && err.response.data.error_detail) {
-						// current_password_error 現在のパスワードが間違っているエラー
-						case 'current_password_error':
+					switch (err.response && err.response.data.errorDetail) {
+						// currentPasswordError 現在のパスワードが間違っているエラー
+						case 'currentPasswordError':
 							errorMessage = MessageManager(
 								Messages.MSG_005,
 								'現在のパスワード'
 							);
 							break;
-						// illegal_uid 現在ログインしているユーザーが見つからないエラー
-						case 'illegal_uid':
+						// illegalUid 現在ログインしているユーザーが見つからないエラー
+						case 'illegalUid':
 							errorMessage = MessageManager(Messages.MSG_005, 'ユーザー情報');
 							break;
-						// already_regist そのユーザー名はすでに登録されていますエラー
-						case 'already_regist':
+						// alreadyRegist そのユーザー名はすでに登録されていますエラー
+						case 'alreadyRegist':
 							errorMessage = MessageManager(Messages.MSG_006, [
 								'該当のユーザー名',
 								'利用',
@@ -98,7 +98,7 @@ export const useUpdateUser = () => {
 							break;
 					}
 					// illegal_uidの場合、強制遷移させる(404NotFound)
-					if (err.response.data.error_detail === 'illegal_uid') {
+					if (err.response.data.errorDetail === 'illegalUid') {
 						router.push('/404NotFound');
 						// 遷移後、トーストメッセージ表示
 						store.dispatch('toast/setToastShow', {

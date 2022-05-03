@@ -79,14 +79,14 @@ export const useAuth = () => {
 						isShow: false,
 					});
 					let errorMessage: string = '';
-					switch (err.response && err.response.data.error_detail) {
-						case 'name_error':
+					switch (err.response && err.response.data.errorDetail) {
+						case 'nameError':
 							errorMessage = MessageManager(Messages.MSG_005, 'ユーザー名');
 							break;
-						case 'password_error':
+						case 'passwordError':
 							errorMessage = MessageManager(Messages.MSG_005, 'パスワード');
 							break;
-						case 'already_regist':
+						case 'alreadyRegist':
 							errorMessage = MessageManager(Messages.MSG_006, [
 								'該当のユーザー名',
 								'利用',

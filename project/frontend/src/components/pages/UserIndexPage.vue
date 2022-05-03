@@ -83,9 +83,9 @@ export default defineComponent({
 			store.dispatch('loading/setLoading', {
 				isShow: true,
 			});
-			// 送信用データを格納(空のユーザー情報とnext_startの初期値0)
-			const data: { next_start: number } = {
-				next_start: 0,
+			// 送信用データを格納(空のユーザー情報とnextStartの初期値0)
+			const data: { nextStart: number } = {
+				nextStart: 0,
 			};
 			axios
 				.post('v1/all-users', data)
@@ -136,9 +136,9 @@ export default defineComponent({
 					store.dispatch('loading/setLoading', {
 						isShow: true,
 					});
-					// 送信用データを格納(空のユーザー情報とnext_startの初期値0)
-					const data: { next_start: number } = {
-						next_start: state.users.length,
+					// 送信用データを格納(空のユーザー情報とnextStartの初期値0)
+					const data: { nextStart: number } = {
+						nextStart: state.users.length,
 					};
 					axios
 						.post('v1/all-users', data)

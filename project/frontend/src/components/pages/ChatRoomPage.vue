@@ -6,14 +6,14 @@
 	</div>
 	<!-- チャット内容を表示する領域 -->
 	<div id="message-field-wrapper">
-		<div v-for="item in state.items" :key="item.message_id">
+		<div v-for="item in state.items" :key="item.messageId">
 			<MessageBallon
 				class="messageBallon"
-				:messageId="item.message_id"
+				:messageId="item.messageId"
 				:message="item.message"
 				:uid="item.uid"
 				:iconImage="item.iconImage"
-				:created_at="item.created_at"
+				:createdAt="item.createdAt"
 			/>
 		</div>
 	</div>
@@ -45,10 +45,10 @@ interface State {
 
 interface Message {
 	uid?: string;
-	message_id: string;
+	messageId: string;
 	iconImage?: string;
 	message?: string;
-	created_at: string;
+	createdAt: string;
 }
 
 export default defineComponent({
@@ -62,87 +62,87 @@ export default defineComponent({
 		let items: Message[] = [
 			{
 				uid: '1',
-				message_id: '1',
+				messageId: '1',
 				iconImage: 'image.jpg',
 				message: 'hello1',
-				created_at: '2022-03-04 18:00:00',
+				createdAt: '2022-03-04 18:00:00',
 			},
 			{
 				uid: 'test-1234-user-5678-abcd-9012-gues-tuse',
-				message_id: '2',
+				messageId: '2',
 				iconImage: 'no_image.jpg',
 				message: 'hello2',
-				created_at: '2022-03-04 18:10:12',
+				createdAt: '2022-03-04 18:10:12',
 			},
 			{
 				uid: '1',
-				message_id: '3',
+				messageId: '3',
 				iconImage: 'image.jpg',
 				message: 'hello3',
-				created_at: '2022-03-04 18:20:13',
+				createdAt: '2022-03-04 18:20:13',
 			},
 			{
 				uid: 'test-1234-user-5678-abcd-9012-gues-tuse',
-				message_id: '4',
+				messageId: '4',
 				iconImage: 'no_image.jpg',
 				message: 'hello4',
-				created_at: '2022-03-04 18:30:54',
+				createdAt: '2022-03-04 18:30:54',
 			},
 			{
 				uid: '1',
-				message_id: '5',
+				messageId: '5',
 				iconImage: 'image.jpg',
 				message: 'hello5',
-				created_at: '2022-03-04 18:40:32',
+				createdAt: '2022-03-04 18:40:32',
 			},
 			{
 				uid: 'test-1234-user-5678-abcd-9012-gues-tuse',
-				message_id: '6',
+				messageId: '6',
 				iconImage: 'no_image.jpg',
 				message: 'hello6',
-				created_at: '2022-03-04 18:50:32',
+				createdAt: '2022-03-04 18:50:32',
 			},
 			{
 				uid: '1',
-				message_id: '7',
+				messageId: '7',
 				iconImage: 'image.jpg',
 				message: 'hello7',
-				created_at: '2022-03-04 19:00:00',
+				createdAt: '2022-03-04 19:00:00',
 			},
 			{
 				uid: 'test-1234-user-5678-abcd-9012-gues-tuse',
-				message_id: '8',
+				messageId: '8',
 				iconImage: 'no_image.jpg',
 				message: 'hello8',
-				created_at: '2022-03-04 19:10:12',
+				createdAt: '2022-03-04 19:10:12',
 			},
 			{
 				uid: '1',
-				message_id: '9',
+				messageId: '9',
 				iconImage: 'image.jpg',
 				message: 'hello9',
-				created_at: '2022-03-04 19:20:13',
+				createdAt: '2022-03-04 19:20:13',
 			},
 			{
 				uid: 'test-1234-user-5678-abcd-9012-gues-tuse',
-				message_id: '10',
+				messageId: '10',
 				iconImage: 'no_image.jpg',
 				message: 'hello10',
-				created_at: '2022-03-04 19:30:54',
+				createdAt: '2022-03-04 19:30:54',
 			},
 			{
 				uid: '1',
-				message_id: '11',
+				messageId: '11',
 				iconImage: 'image.jpg',
 				message: 'hello11',
-				created_at: '2022-03-04 19:40:32',
+				createdAt: '2022-03-04 19:40:32',
 			},
 			{
 				uid: 'test-1234-user-5678-abcd-9012-gues-tuse',
-				message_id: '12',
+				messageId: '12',
 				iconImage: 'no_image.jpg',
 				message: 'hello12',
-				created_at: '2022-03-04 19:50:32',
+				createdAt: '2022-03-04 19:50:32',
 			},
 		];
 		const state = reactive<State>({
@@ -182,10 +182,10 @@ export default defineComponent({
 			formatedDate = formatedDate.replaceAll('/', '-');
 			const newMessage: Message = {
 				uid: uid,
-				message_id: String(items.length + 1),
+				messageId: String(items.length + 1),
 				iconImage: iconImage,
 				message: state.message,
-				created_at: String(formatedDate),
+				createdAt: String(formatedDate),
 			};
 			state.items.push(newMessage);
 			// messageテキストエリアをクリアにする

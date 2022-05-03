@@ -105,7 +105,7 @@ export default defineComponent({
 				.catch((err) => {
 					console.log(err);
 					router.push('/404NotFound');
-					if (err.response.data.error_detail === 'illegal_uid') {
+					if (err.response.data.errorDetail === 'illegalUid') {
 						// 遷移後、トーストメッセージ表示
 						store.dispatch('toast/setToastShow', {
 							message: MessageManager(Messages.MSG_005, 'ユーザー情報'),

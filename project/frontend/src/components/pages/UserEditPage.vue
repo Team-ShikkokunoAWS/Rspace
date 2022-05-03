@@ -104,7 +104,17 @@
 								: false
 						"
 					/>
-					<!-- TODO: プロフィール欄 -->
+				</div>
+				<!-- TODO: 仮組みのプロフィール欄をテキストエリアに修正 -->
+				<div class="new-password-confirm user-edit-margin-top">
+					<InputForm
+						v-model="state.description"
+						ctlName="description"
+						labelName="description"
+						type="text"
+						maxlength="200"
+						width="400px"
+					/>
 				</div>
 				<div class="user-edit-page-link">
 					<CButton
@@ -144,7 +154,7 @@ import MainCard from '@/components/parts/MainCard.vue';
 interface State {
 	user: User;
 	username: string;
-	description: string;
+	description: string | undefined;
 	currentPassword: string;
 	newPassword: string;
 	newPasswordConfirm: string;
@@ -173,7 +183,7 @@ export default defineComponent({
 				backImage: '',
 			},
 			username: store.state.user.name, // 初期値にcookieの値を設定
-			description: '',
+			description: store.state.user.description, // 初期値にcookieの値を設定
 			currentPassword: '',
 			newPassword: '',
 			newPasswordConfirm: '',
@@ -226,11 +236,12 @@ export default defineComponent({
 					}
 					// 取得データを表示用データとして格納する
 					state.user = response.data.user;
+					console.log(state.user);
 				})
 				.catch((err) => {
 					console.log(err);
 					router.push('/404NotFound');
-					if (err.response.data.error_detail === 'illegal_uid') {
+					if (err.response.data.errorDetail === 'illegalUid') {
 						// 遷移後、トーストメッセージ表示
 						store.dispatch('toast/setToastShow', {
 							message: 'ユーザー情報を再度ご確認ください。',

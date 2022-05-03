@@ -28,7 +28,6 @@ export const useUpdateUser = () => {
 				newPassword: state.newPassword,
 			})
 			.then((response) => {
-				console.log(response);
 				const responseUser: User = response.data.user;
 				setTimeout(() => {
 					// 返却されたユーザー情報をstoreに登録

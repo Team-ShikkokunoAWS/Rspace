@@ -125,7 +125,8 @@
 							state.user.name !== state.username ||
 							(state.currentPassword &&
 								state.newPassword &&
-								state.newPasswordConfirm)
+								state.newPasswordConfirm) ||
+							state.user.description !== state.description
 								? false
 								: true
 						"
@@ -235,8 +236,9 @@ export default defineComponent({
 						}, 2000);
 					}
 					// 取得データを表示用データとして格納する
-					state.user = response.data.user;
-					console.log(state.user);
+					state.user.uid = response.data.user.uid;
+					state.user.name = response.data.user.name;
+					state.user.description = response.data.user.description;
 				})
 				.catch((err) => {
 					console.log(err);

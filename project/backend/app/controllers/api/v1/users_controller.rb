@@ -23,7 +23,7 @@ class Api::V1::UsersController < ApplicationController
     all_users = User.all.order(created_at: 'ASC')
 
     if all_users
-
+      # いつの間にか設計が変わっていた
       if params[:nextStart] > 0
         if params[:nextStart] > all_users.count
           render status: 400, json: {status: 'ERROR', errorDetail: 'illegalNextStart'} and return
@@ -86,7 +86,6 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def update
-
     update_user = Hash.new()
     user = User.find_by(uid: params[:uid])
 
@@ -127,11 +126,9 @@ class Api::V1::UsersController < ApplicationController
   end
 
   private
-
   def user_params
     params.require(:user).permit(:name, :password)
   end
-
 
   def create_uid
     begin
@@ -141,11 +138,9 @@ class Api::V1::UsersController < ApplicationController
     return uid
   end
 
-
   def encryption_password(password)
     Digest::MD5.hexdigest(password)
   end
-
 
   def users_response(all_users, start, stop)
     users = Array.new()
@@ -157,5 +152,4 @@ class Api::V1::UsersController < ApplicationController
       end
     return users
   end
-
 end

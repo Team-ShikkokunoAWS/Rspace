@@ -8,6 +8,14 @@ Rails.application.routes.draw do
       post 'users/show' => 'users#show'
       post 'users/update' => 'users#update'
       resources :users, except:[:show, :update]
+
+      # get 'rooms/all-rooms' => 'rooms#all_rooms'
+      post 'rooms/index' => 'rooms#index'
+      post 'rooms/show' => 'rooms#show'
+      post 'rooms/create' => 'rooms#create'
+
+      post 'messages/all-messages' => 'messages#all_messages'
+      post 'messages/create' => 'messages#create'
     end
   end
 end

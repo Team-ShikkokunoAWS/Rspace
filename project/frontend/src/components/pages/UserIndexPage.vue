@@ -39,13 +39,7 @@
 </template>
 
 <script lang="ts">
-import {
-	defineComponent,
-	reactive,
-	computed,
-	onMounted,
-	onUnmounted,
-} from 'vue';
+import { defineComponent, reactive, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from '@/store';
 import { User } from '@/types/user';
@@ -69,7 +63,6 @@ export default defineComponent({
 		const router = useRouter();
 		// storeを取得する
 		const store = useStore();
-		const userInfo = computed(() => store.state.user);
 		const state = reactive<State>({
 			users: [] as User[],
 		});
@@ -176,20 +169,48 @@ export default defineComponent({
 
 		// ユーザーカード押下時の遷移
 		const onclickUserCard = (uid: string) => {
-			// router.push(`/users/${uid}`);
-			console.log(uid);
-			router.push(`/users/test-1234-user-5678-abcd-9012-gues-tuse`); // TODO:(fixme)ユーザーページがゲストユーザーしか遷移できない状態なので合わせている
+			router.push(`/users/${uid}`);
 		};
 
 		// DMリンク押下時の処理
 		const onclickMessageRoom = (uid: string) => {
-			console.log(userInfo, uid);
-			// API処理を行う
-			// 1. 相手のuidと自分のuidを元にUserRoom中間テーブルを検索
-			// 2-1. 検索結果が存在する場合、検索結果. room_idをバックエンドから受け取る
-			// 2-2. 検索結果が存在しない場合、新しく相手のuidと自分のuidを元に新規チャットルームを作成し、そのroom_idを受け取る
-			// 3. 2-1 or 2-2の処理を行い、バックエンドから送られてきたroom_idを元に遷移する  router.push(`/rooms/${response.data.room_id}`);
-			router.push(`/rooms/1`);
+			// ローディングの表示
+			store.dispatch('loading/setLoading', {
+				isShow: true,
+			});
+			const data = {
+				partnerUid: uid,
+				clientUid: store.state.user.uid,
+			};
+			axios
+				.post('v1/rooms/create', data)
+				.then((response) => {
+					router.push(`/rooms/${response.data.room.id}`);
+				})
+				.catch((error) => {
+					console.log(error);
+					store.dispatch('toast/setToastShow', {
+						message: MessageManager(Messages.SYS_ERROR),
+						toastType: 'danger',
+						isShow: true,
+					});
+					// トーストを2秒表示し、消す
+					setTimeout(() => {
+						store.dispatch('toast/setToastShow', {
+							message: '',
+							toastType: '',
+							isShow: false,
+						});
+					}, 2000);
+				})
+				.finally(() => {
+					setTimeout(() => {
+						// ローディングの削除
+						store.dispatch('loading/setLoading', {
+							isShow: false,
+						});
+					}, 1000);
+				});
 		};
 
 		/*=============================

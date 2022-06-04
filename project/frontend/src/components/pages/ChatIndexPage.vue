@@ -4,8 +4,8 @@
 			width="800px"
 			height="120px"
 			class="chat-room-card"
-			v-for="item in items"
-			:key="item.uid"
+			v-for="item in state.items"
+			:key="item.room_id"
 			@click="onclickChatRoom(item.roomId)"
 		>
 			<div class="chatIndex-user-wrapper">
@@ -24,17 +24,32 @@
 				<div class="message-bar">
 					{{ item.message }}
 				</div>
-				<div class="message-time">{{ item.timestamp }}</div>
+				<div class="message-time">{{ item.updated_at }}</div>
 			</div>
 		</MainCard>
 	</div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, onMounted, reactive } from 'vue';
+import { useRouter } from 'vue-router';
+import { MessageManager, Messages } from '@/constants/MessageManager';
+import { useStore } from '@/store';
 import MainCard from '@/components/parts/MainCard.vue';
 import UserIcon from '@/components/parts/UserIcon.vue';
-import { useRouter } from 'vue-router';
+import axios from '@/plugins/axios';
+
+type ChatCard = {
+	roomId: string;
+	iconImage: string;
+	username: string;
+	message: string;
+	timestamp: string;
+};
+
+interface State {
+	items: Array<ChatCard>;
+}
 
 export default defineComponent({
 	name: 'ChatIndexPage',
@@ -43,38 +58,101 @@ export default defineComponent({
 		UserIcon,
 	},
 	setup() {
-		// 描写用モックデータ
-		const items = [
-			{
-				roomId: '1',
-				iconImage: 'img.jpg',
-				uid: 'test-test-test-test-1',
-				username: 'John',
-				message: 'hello good night!!',
-				timestamp: '2022-03-03 21:54',
-			},
-			{
-				roomId: '2',
-				iconImage: 'img.jpg',
-				uid: 'test-test-test-test-2',
-				username: 'Mary',
-				message: 'lets talk with me??',
-				timestamp: '2022-03-02 20:32',
-			},
-			// 未設定（空白）でno_image画像になるかの検証データ
-			{
-				roomId: '3',
-				iconImage: '',
-				uid: 'test-test-test-test-3',
-				username: 'あいうえおあいうえおあいうえおあいうえおあいうえお',
-				message:
-					'lorem ipsum dolor sit am lorem ipsum dolor sit am lorem ipsum dolor sit',
-				timestamp: '2022-03-01 18:44',
-			},
-		];
+		/** BEGIN
+			// 描写用モックデータ
+			const items = [
+				{
+					roomId: '1',
+					iconImage: 'img.jpg',
+					uid: 'test-test-test-test-1',
+					username: 'John',
+					message: 'hello good night!!',
+					timestamp: '2022-03-03 21:54',
+				},
+				{
+					roomId: '2',
+					iconImage: 'img.jpg',
+					uid: 'test-test-test-test-2',
+					username: 'Mary',
+					message: 'lets talk with me??',
+					timestamp: '2022-03-02 20:32',
+				},
+				// 未設定（空白）でno_image画像になるかの検証データ
+				{
+					roomId: '3',
+					iconImage: '',
+					uid: 'test-test-test-test-3',
+					username: 'あいうえおあいうえおあいうえおあいうえおあいうえお',
+					message:
+						'lorem ipsum dolor sit am lorem ipsum dolor sit am lorem ipsum dolor sit',
+					timestamp: '2022-03-01 18:44',
+				},
+			];
+		END
+		*/
 
 		// VueRouter
 		const router = useRouter();
+		// storeを取得する
+		const store = useStore();
+		const state = reactive<State>({
+			items: [] as ChatCard[],
+		});
+
+		/*=============================
+		画面初期表示時の処理
+		=============================*/
+		onMounted(() => {
+			// ローディングの表示
+			store.dispatch('loading/setLoading', {
+				isShow: true,
+			});
+			const uid = store.state.user.uid;
+			const data = {
+				uid,
+			};
+			axios
+				.post('v1/rooms/index', data)
+				.then((response) => {
+					// 取得ルーム情報をstateにセット
+					state.items = response.data.rooms;
+				})
+				.catch((error) => {
+					// トークルームが0件の場合の処理
+					if (error.response.data.errorDetail === 'cannotGetRooms') {
+						store.dispatch('toast/setToastShow', {
+							message: MessageManager(
+								Messages.MSG_000,
+								'トークルームがありません。'
+							),
+							toastType: 'danger',
+							isShow: true,
+						});
+					} else {
+						store.dispatch('toast/setToastShow', {
+							message: MessageManager(Messages.SYS_ERROR),
+							toastType: 'danger',
+							isShow: true,
+						});
+					}
+					// トーストを2秒表示し、消す
+					setTimeout(() => {
+						store.dispatch('toast/setToastShow', {
+							message: '',
+							toastType: '',
+							isShow: false,
+						});
+					}, 2000);
+				})
+				.finally(() => {
+					setTimeout(() => {
+						// ローディングの削除
+						store.dispatch('loading/setLoading', {
+							isShow: false,
+						});
+					}, 1000);
+				});
+		});
 
 		// 各チャットルーム押下時の処理
 		const onclickChatRoom = (roomId: string) => {
@@ -82,7 +160,7 @@ export default defineComponent({
 		};
 
 		return {
-			items,
+			state,
 			onclickChatRoom,
 		};
 	},

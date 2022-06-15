@@ -19,7 +19,7 @@ class Api::V1::RoomsController < ApplicationController
 
     entries = user.entries
     if entries.present?
-      rooms = create_room_response(entries)
+      rooms = room_response(entries)
       render status: 200, json: {status: 'SUCCESS', rooms: rooms}
     else
       render status: 400, json: {status: 'ERROR', errorDetail: 'cannotGetRooms'}
@@ -75,7 +75,7 @@ class Api::V1::RoomsController < ApplicationController
       room = {'id' => chat_room_id, 'menbers' => menbers}
       render status: 200, json: {status: 'SUCCESS', room: room}
     else
-      new_room = Room.new()
+      new_room = Room.new
 
       if !new_room.save
         render status: 400, json: {status: 'ERROR', errorDetail: new_room.errors} and return
@@ -100,7 +100,7 @@ class Api::V1::RoomsController < ApplicationController
   end
 
   private
-  def create_room_response(entries)
+  def room_response(entries)
     entry_hash = entry_to_hash(entries)
     add_user_name(entry_hash)
     add_latest_message(entry_hash)
@@ -114,21 +114,21 @@ class Api::V1::RoomsController < ApplicationController
 
   def add_user_name(rooms)
     rooms.each do |room|
-      room['userName'] = search_user_name(room['uid'])
+      room['userName'] = user_name(room['uid'])
     end
   end
 
-  def search_user_name(uid)
+  def user_name(uid)
     User.find_by(uid: uid)[:name]
   end
 
   def add_latest_message(rooms)
     rooms.each do |room|
-      room['latestMessage'] = search_latest_message(room)
+      room['latestMessage'] = latest_message(room)
     end
   end
 
-  def search_latest_message(room)
+  def latest_message(room)
     latest_message = Message.order(created_at: 'DESC').find_by(room_id: room['room_id'])
 
     if latest_message

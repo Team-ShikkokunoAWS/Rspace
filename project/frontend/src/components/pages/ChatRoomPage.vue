@@ -32,23 +32,33 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
+import {
+	defineComponent,
+	reactive,
+	computed,
+	onMounted,
+	onUnmounted,
+} from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import { useStore } from '@/store';
+// import { MessageManager, Messages } from '@/constants/MessageManager';
 import TextAreaForm from '@/components/parts/TextAreaForm.vue';
 import MessageBallon from '@/components/parts/MessageBallon.vue';
+import axios from '@/plugins/axios';
 
 interface State {
 	message: string;
 	items: Message[];
+	otherUserUid: string;
 }
 
 interface Message {
 	uid?: string;
-	messageId: string;
+	roomId?: string;
+	messageId?: number;
 	iconImage?: string;
 	message?: string;
-	createdAt: string;
+	createdAt?: string;
 }
 
 export default defineComponent({
@@ -58,98 +68,13 @@ export default defineComponent({
 		MessageBallon,
 	},
 	setup() {
-		// mockData
-		let items: Message[] = [
-			{
-				uid: '1',
-				messageId: '1',
-				iconImage: 'image.jpg',
-				message: 'hello1',
-				createdAt: '2022-03-04 18:00:00',
-			},
-			{
-				uid: 'test-1234-user-5678-abcd-9012-gues-tuse',
-				messageId: '2',
-				iconImage: 'no_image.jpg',
-				message: 'hello2',
-				createdAt: '2022-03-04 18:10:12',
-			},
-			{
-				uid: '1',
-				messageId: '3',
-				iconImage: 'image.jpg',
-				message: 'hello3',
-				createdAt: '2022-03-04 18:20:13',
-			},
-			{
-				uid: 'test-1234-user-5678-abcd-9012-gues-tuse',
-				messageId: '4',
-				iconImage: 'no_image.jpg',
-				message: 'hello4',
-				createdAt: '2022-03-04 18:30:54',
-			},
-			{
-				uid: '1',
-				messageId: '5',
-				iconImage: 'image.jpg',
-				message: 'hello5',
-				createdAt: '2022-03-04 18:40:32',
-			},
-			{
-				uid: 'test-1234-user-5678-abcd-9012-gues-tuse',
-				messageId: '6',
-				iconImage: 'no_image.jpg',
-				message: 'hello6',
-				createdAt: '2022-03-04 18:50:32',
-			},
-			{
-				uid: '1',
-				messageId: '7',
-				iconImage: 'image.jpg',
-				message: 'hello7',
-				createdAt: '2022-03-04 19:00:00',
-			},
-			{
-				uid: 'test-1234-user-5678-abcd-9012-gues-tuse',
-				messageId: '8',
-				iconImage: 'no_image.jpg',
-				message: 'hello8',
-				createdAt: '2022-03-04 19:10:12',
-			},
-			{
-				uid: '1',
-				messageId: '9',
-				iconImage: 'image.jpg',
-				message: 'hello9',
-				createdAt: '2022-03-04 19:20:13',
-			},
-			{
-				uid: 'test-1234-user-5678-abcd-9012-gues-tuse',
-				messageId: '10',
-				iconImage: 'no_image.jpg',
-				message: 'hello10',
-				createdAt: '2022-03-04 19:30:54',
-			},
-			{
-				uid: '1',
-				messageId: '11',
-				iconImage: 'image.jpg',
-				message: 'hello11',
-				createdAt: '2022-03-04 19:40:32',
-			},
-			{
-				uid: 'test-1234-user-5678-abcd-9012-gues-tuse',
-				messageId: '12',
-				iconImage: 'no_image.jpg',
-				message: 'hello12',
-				createdAt: '2022-03-04 19:50:32',
-			},
-		];
 		const state = reactive<State>({
 			message: '',
-			items: items,
+			items: [] as Message[],
+			otherUserUid: '',
 		});
 		// VueRouter
+		const route = useRoute();
 		const router = useRouter();
 		// storeを取得する
 		const store = useStore();
@@ -157,49 +82,147 @@ export default defineComponent({
 		const uid = currentUser.value.uid;
 		const iconImage = currentUser.value.iconImage;
 
-		// 画面表示時の処理
+		// setIntervalを解除するためのID
+		let nIntervId: any;
+
+		/*=============================
+		画面表示時の処理
+		=============================*/
 		onMounted(() => {
+			// ローディングの表示
+			store.dispatch('loading/setLoading', {
+				isShow: true,
+			});
+			// URLからルームID取得
+			const roomId: string = String(route.params.room_id);
+			const data = {
+				roomId,
+			};
+			// TODO: 相手のユーザー名、相手のUIDを取得するためのAPIを叩く処理追加
+			axios
+				.post('v1/messages/all-messages', data)
+				.then((response) => {
+					console.log(response);
+					// 取得メッセージ情報をstateにセット
+					response.data.messages.forEach((item: any) => {
+						const message: Message = {
+							uid: item.uid,
+							messageId: item.id,
+							message: item.message,
+							createdAt: item.createdAt,
+						};
+						state.items.push(message);
+					});
+				})
+				.catch((error) => {
+					console.log(error);
+					// エラー処理
+					// if (error.response.data.errorDetail === 'illegalRoomId') {
+					// 	store.dispatch('toast/setToastShow', {
+					// 		message: MessageManager(
+					// 			Messages.MSG_000,
+					// 			'トークルームがありません。'
+					// 		),
+					// 		toastType: 'warning',
+					// 		isShow: true,
+					// 	});
+					// 	// 他人同士のルームに遷移している場合、ルーム一覧へ遷移させる。
+					// 	router.push('/rooms');
+					// } else {
+					// 	store.dispatch('toast/setToastShow', {
+					// 		message: MessageManager(Messages.SYS_ERROR),
+					// 		toastType: 'danger',
+					// 		isShow: true,
+					// 	});
+					// }
+					// トーストを2秒表示し、消す
+					// setTimeout(() => {
+					// 	store.dispatch('toast/setToastShow', {
+					// 		message: '',
+					// 		toastType: '',
+					// 		isShow: false,
+					// 	});
+					// }, 2000);
+				})
+				.finally(() => {
+					setTimeout(() => {
+						// ローディングの削除
+						store.dispatch('loading/setLoading', {
+							isShow: false,
+						});
+					}, 1000);
+				});
 			// メッセージ表示領域の最下部を表示する = 最新メッセージを表示する
 			moveLatestMessage();
+			// 10秒に一回未読メッセージを取得するイベントリスナー追加 & 解除用インターバルIDを変数に格納
+			nIntervId = window.setInterval(() => getUnReadMessages(roomId), 10000);
 		});
 
-		// 送信ボタン押下時の処理
+		/*=============================
+		未読メッセージの取得処理
+		=============================*/
+		// TODO: バックエンドの求めるUIDとフロントの送信するUIDが一致していないので注意
+		const getUnReadMessages = (roomId: string) => {
+			const data = {
+				roomId: roomId,
+				uid: uid,
+			};
+			axios.post('v1/messages/unread-messages', data).then((response) => {
+				// TODO: レスポンスをstateに追加する処理のレスポンス確認
+				const newMessage: Message = {
+					uid: response.data.message.uid,
+					messageId: response.data.message.id,
+					iconImage: response.data.message.iconImage,
+					message: response.data.message.message,
+					createdAt: response.data.message.createdAt,
+				};
+				state.items.push(newMessage);
+			});
+		};
+
+		/*=============================
+ 		送信ボタン押下時の処理
+		=============================*/
 		const sendMessage = () => {
 			// message未入力時は送信しない
 			if (!state.message) return;
 
-			// message入力時の処理
-			// items配列に追加する
-			const date = new Date();
-			let formatedDate = new Intl.DateTimeFormat('ja-jp', {
-				year: 'numeric',
-				month: '2-digit',
-				day: '2-digit',
-				hour: '2-digit',
-				minute: '2-digit',
-				second: '2-digit',
-			}).format(date);
-			formatedDate = formatedDate.replaceAll('/', '-');
+			// message送信処理
+			// URLからルームID取得
+			const roomId: string = String(route.params.room_id);
 			const newMessage: Message = {
 				uid: uid,
-				messageId: String(items.length + 1),
+				roomId: roomId,
 				iconImage: iconImage,
 				message: state.message,
-				createdAt: String(formatedDate),
 			};
-			state.items.push(newMessage);
+			axios.post('v1/messages/create', newMessage).then((response) => {
+				// TODO: レスポンスをstateに追加する処理のレスポンス確認
+				const newMessage: Message = {
+					uid: response.data.message.uid,
+					messageId: response.data.message.id,
+					iconImage: response.data.message.iconImage,
+					message: response.data.message.message,
+					createdAt: response.data.message.createdAt,
+				};
+				state.items.push(newMessage);
+			});
 			// messageテキストエリアをクリアにする
 			state.message = '';
 			// 最新のメッセージを表示する
 			moveLatestMessage();
 		};
 
-		// 戻るボタン押下時の処理
+		/*=============================
+		 戻るボタン押下時の処理
+		=============================*/
 		const onclickBack = () => {
 			router.push('/rooms');
 		};
 
-		// メッセージ表示領域の最下部へ遷移させる
+		/*=============================
+		メッセージ表示領域の最下部へ遷移させる
+		=============================*/
 		const moveLatestMessage = () => {
 			setTimeout(() => {
 				const messageFiled = document.getElementById('message-field-wrapper');
@@ -208,9 +231,13 @@ export default defineComponent({
 			});
 		};
 
+		/*=============================
+		ページを離れる前の処理
+		=============================*/
+		onUnmounted(() => window.clearInterval(nIntervId));
+
 		return {
 			state,
-			items,
 			sendMessage,
 			onclickBack,
 		};

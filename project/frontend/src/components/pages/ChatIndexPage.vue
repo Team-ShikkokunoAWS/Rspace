@@ -41,7 +41,7 @@ import axios from '@/plugins/axios';
 
 type ChatCard = {
 	roomId: string;
-	iconImage: string;
+	iconImage?: string;
 	username: string;
 	message: string;
 	timestamp: string;
@@ -58,39 +58,6 @@ export default defineComponent({
 		UserIcon,
 	},
 	setup() {
-		/** BEGIN
-			// 描写用モックデータ
-			const items = [
-				{
-					roomId: '1',
-					iconImage: 'img.jpg',
-					uid: 'test-test-test-test-1',
-					username: 'John',
-					message: 'hello good night!!',
-					timestamp: '2022-03-03 21:54',
-				},
-				{
-					roomId: '2',
-					iconImage: 'img.jpg',
-					uid: 'test-test-test-test-2',
-					username: 'Mary',
-					message: 'lets talk with me??',
-					timestamp: '2022-03-02 20:32',
-				},
-				// 未設定（空白）でno_image画像になるかの検証データ
-				{
-					roomId: '3',
-					iconImage: '',
-					uid: 'test-test-test-test-3',
-					username: 'あいうえおあいうえおあいうえおあいうえおあいうえお',
-					message:
-						'lorem ipsum dolor sit am lorem ipsum dolor sit am lorem ipsum dolor sit',
-					timestamp: '2022-03-01 18:44',
-				},
-			];
-		END
-		*/
-
 		// VueRouter
 		const router = useRouter();
 		// storeを取得する
@@ -115,7 +82,15 @@ export default defineComponent({
 				.post('v1/rooms/index', data)
 				.then((response) => {
 					// 取得ルーム情報をstateにセット
-					state.items = response.data.rooms;
+					for (let i = 0; i < response.data.rooms.length; i++) {
+						let roomData: ChatCard = {
+							roomId: response.data.rooms[i].roomId,
+							username: response.data.rooms[i].userName,
+							timestamp: response.data.rooms[i].updatedAt,
+							message: response.data.rooms[i].latestMessage,
+						};
+						state.items.push(roomData);
+					}
 				})
 				.catch((error) => {
 					// トークルームが0件の場合の処理
@@ -125,7 +100,7 @@ export default defineComponent({
 								Messages.MSG_000,
 								'トークルームがありません。'
 							),
-							toastType: 'danger',
+							toastType: 'warning',
 							isShow: true,
 						});
 					} else {

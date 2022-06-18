@@ -15,6 +15,7 @@ Rails.application.routes.draw do
       post 'rooms/create' => 'rooms#create'
 
       post 'messages/all-messages' => 'messages#all_messages'
+      post 'messages/unread-messages' => 'messages#unread_messages'
       post 'messages/create' => 'messages#create'
     end
   end

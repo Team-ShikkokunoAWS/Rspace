@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_29_051227) do
+ActiveRecord::Schema.define(version: 2022_06_15_114708) do
 
   create_table "entries", force: :cascade do |t|
     t.string "uid", null: false
@@ -19,13 +19,8 @@ ActiveRecord::Schema.define(version: 2022_05_29_051227) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "messages", force: :cascade do |t|
-    t.string "uid", null: false
-    t.integer "room_id", null: false
-    t.string "message"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-  end
+# Could not dump table "messages" because of following StandardError
+#   Unknown type 'bool' for column 'is_unread'
 
   create_table "rooms", force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
@@ -33,7 +28,7 @@ ActiveRecord::Schema.define(version: 2022_05_29_051227) do
   end
 
 # Could not dump table "users" because of following StandardError
-#   Unknown type 'STRING' for column 'uid'
+#   Unknown type '' for column 'uid'
 
   add_foreign_key "entries", "users", column: "uid", primary_key: "uid"
   add_foreign_key "messages", "users", column: "uid", primary_key: "uid"

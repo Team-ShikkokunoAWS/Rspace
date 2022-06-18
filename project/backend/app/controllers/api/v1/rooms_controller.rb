@@ -1,3 +1,5 @@
+require 'json'
+
 class Api::V1::RoomsController < ApplicationController
   def all_rooms
     rooms = Room.all.order(created_at: 'ASC')
@@ -11,9 +13,13 @@ class Api::V1::RoomsController < ApplicationController
 
   def index
     user = User.find_by(uid: params[:uid])
-    rooms = user.entries
+    if !user
+      render status: 400, json: {status: 'ERROR', errorDetail: 'illegalUid'} and return
+    end
 
-    if rooms
+    entries = user.entries
+    if entries.present?
+      rooms = room_response(entries)
       render status: 200, json: {status: 'SUCCESS', rooms: rooms}
     else
       render status: 400, json: {status: 'ERROR', errorDetail: 'cannotGetRooms'}
@@ -69,7 +75,7 @@ class Api::V1::RoomsController < ApplicationController
       room = {'id' => chat_room_id, 'menbers' => menbers}
       render status: 200, json: {status: 'SUCCESS', room: room}
     else
-      new_room = Room.new()
+      new_room = Room.new
 
       if !new_room.save
         render status: 400, json: {status: 'ERROR', errorDetail: new_room.errors} and return
@@ -90,6 +96,54 @@ class Api::V1::RoomsController < ApplicationController
         'menbers' => [params[:clientUid], params[:partnerUid]]
       }
       render status: 200, json: {status: 'SUCCESS', room: room}
+    end
+  end
+
+  private
+  def room_response(entries)
+    entry_hash = entry_to_hash(entries)
+    add_user_name(entry_hash)
+    add_latest_message(entry_hash)
+    change_key_for_js(entry_hash)
+  end
+
+  def entry_to_hash(entries)
+    room_json = entries.to_json
+    JSON.parse(room_json)
+  end
+
+  def add_user_name(rooms)
+    rooms.each do |room|
+      room['userName'] = user_name(room['uid'])
+    end
+  end
+
+  def user_name(uid)
+    User.find_by(uid: uid)[:name]
+  end
+
+  def add_latest_message(rooms)
+    rooms.each do |room|
+      room['latestMessage'] = latest_message(room)
+    end
+  end
+
+  def latest_message(room)
+    latest_message = Message.order(created_at: 'DESC').find_by(room_id: room['room_id'])
+
+    if latest_message
+      latest_message[:message]
+    end
+  end
+
+  def change_key_for_js(entries)
+    entries.each do |entry|
+      entry['roomId'] = entry['room_id']
+      entry['createdAt'] = entry['created_at']
+      entry['updatedAt'] = entry['updated_at']
+      entry.delete('room_id')
+      entry.delete('created_at')
+      entry.delete('updated_at')
     end
   end
 end

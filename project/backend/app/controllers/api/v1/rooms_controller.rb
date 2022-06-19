@@ -1,5 +1,3 @@
-require 'json'
-
 class Api::V1::RoomsController < ApplicationController
   def all_rooms
     rooms = Room.all.order(created_at: 'ASC')
@@ -14,12 +12,17 @@ class Api::V1::RoomsController < ApplicationController
   def index
     user = User.find_by(uid: params[:uid])
     if !user
-      render status: 400, json: {status: 'ERROR', errorDetail: 'illegalUid'} and return
+      render status: 400,
+        json: {status: 'ERROR', errorDetail: 'illegalUid'} and return
     end
 
     entries = user.entries
     if entries.present?
-      rooms = room_response(entries)
+      rooms = []
+      entries.each do |entry|
+        rooms << entry.index_response(params[:uid])
+      end
+
       render status: 200, json: {status: 'SUCCESS', rooms: rooms}
     else
       render status: 400, json: {status: 'ERROR', errorDetail: 'cannotGetRooms'}
@@ -30,7 +33,8 @@ class Api::V1::RoomsController < ApplicationController
     entries = Entry.where(room_id: params[:id])
 
     if !entries.present?
-      render status: 400, json: {status: 'ERROR', errorDetail: 'illegalRoomId'} and return
+      render status: 400,
+        json: {status: 'ERROR', errorDetail: 'illegalRoomId'} and return
     end
 
     menbers = []
@@ -78,17 +82,20 @@ class Api::V1::RoomsController < ApplicationController
       new_room = Room.new
 
       if !new_room.save
-        render status: 400, json: {status: 'ERROR', errorDetail: new_room.errors} and return
+        render status: 400,
+          json: {status: 'ERROR', errorDetail: new_room.errors} and return
       end
 
       client_entry = new_room.entries.build(uid: params[:clientUid])
       partner_entry = new_room.entries.build(uid: params[:partnerUid])
 
       if !client_entry.save
-        render status: 400, json: {status: 'ERROR', errorDetail: client_entry.errors} and return
+        render status: 400,
+          json: {status: 'ERROR', errorDetail: client_entry.errors} and return
       end
       if !partner_entry.save
-        render status: 400, json: {status: 'ERROR', errorDetail: partner_entry.errors} and return
+        render status: 400,
+          json: {status: 'ERROR', errorDetail: partner_entry.errors} and return
       end
 
       room = {
@@ -99,51 +106,39 @@ class Api::V1::RoomsController < ApplicationController
     end
   end
 
-  private
-  def room_response(entries)
-    entry_hash = entry_to_hash(entries)
-    add_user_name(entry_hash)
-    add_latest_message(entry_hash)
-    change_key_for_js(entry_hash)
-  end
+  def check_room
+    entries = Entry.where(room_id: params[:roomId])
 
-  def entry_to_hash(entries)
-    room_json = entries.to_json
-    JSON.parse(room_json)
-  end
-
-  def add_user_name(rooms)
-    rooms.each do |room|
-      room['userName'] = user_name(room['uid'])
+    if !entries.present?
+      render status: 400,
+        json: {status: 'ERROR', errorDetail: 'illegalRoomId'} and return
     end
-  end
 
-  def user_name(uid)
-    User.find_by(uid: uid)[:name]
-  end
-
-  def add_latest_message(rooms)
-    rooms.each do |room|
-      room['latestMessage'] = latest_message(room)
-    end
-  end
-
-  def latest_message(room)
-    latest_message = Message.order(created_at: 'DESC').find_by(room_id: room['room_id'])
-
-    if latest_message
-      latest_message[:message]
-    end
-  end
-
-  def change_key_for_js(entries)
     entries.each do |entry|
-      entry['roomId'] = entry['room_id']
-      entry['createdAt'] = entry['created_at']
-      entry['updatedAt'] = entry['updated_at']
-      entry.delete('room_id')
-      entry.delete('created_at')
-      entry.delete('updated_at')
+      if entry.uid == params[:uid]
+        render status: 200,
+          json: {status: 'SUCCESS', isCorrectRoom: true} and return
+      end
     end
+
+    render status: 400, json: {status: 'ERROR', isCorrectRoom: false}
+  end
+
+  def partner
+    entries = Entry.where(room_id: params[:roomId])
+    if !entries.present?
+      render status: 400,
+        json: {status: 'ERROR', errorDetail: 'illegalRoomId'} and return
+    end
+
+    res_entry = Entry.new
+    entries.each do |entry|
+      if entry.uid != params[:uid]
+        res_entry = entry
+      end
+    end
+
+    partner = res_entry.partner_response
+    render status: 200, json: {status: 'SUCCESS', partner: partner}
   end
 end

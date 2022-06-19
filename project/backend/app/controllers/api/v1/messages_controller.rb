@@ -3,11 +3,15 @@ require 'json'
 
 class Api::V1::MessagesController < ApplicationController
   def all_messages
-    messages = Message.where(room_id: params[:roomId])
+    if Room.find_by(id: params[:roomId])
+      messages = Message.where(room_id: params[:roomId])
 
-    if messages.present?
-      response = messages_response(messages)
-      render status: 200, json: {status: 'SUCCESS', messages: response}
+      if messages.present?
+        response = messages_response(messages)
+        render status: 200, json: {status: 'SUCCESS', messages: response}
+      else
+        render status: 200, json: {status: 'SUCCESS', messages: []}
+      end
     else
       render status: 400, json: {status: 'ERROR', errorDetail: 'illegalRoomId'}
     end
@@ -16,18 +20,22 @@ class Api::V1::MessagesController < ApplicationController
   def unread_messages
     partner_uid = get_partner_uid(params[:roomId], params[:uid])
     if !partner_uid
-      render status: 400, json: {status: 'ERROR', errorDetail: 'illegalRoomId'} and return
+      render status: 400,
+        json: {status: 'ERROR', errorDetail: 'illegalRoomId'} and return
     end
 
     messages = Message.where(
-      room_id: params[:roomId], uid: partner_uid, is_unread: true
+      room_id: params[:roomId],
+      uid: partner_uid,
+      is_unread: true
     )
     if messages.present?
       response = messages_response(messages)
       update_is_read(messages)
       render status: 200, json: {status: 'SUCCESS', messages: response}
     else
-      render status: 400, json: {status: 'ERROR', errorDetail: 'cannotGetMessages'}
+      render status: 400,
+        json: {status: 'ERROR', errorDetail: 'cannotGetMessages'}
     end
   end
 
@@ -66,6 +74,8 @@ class Api::V1::MessagesController < ApplicationController
     message.delete('is_unread')
     message.delete('created_at')
     message.delete('updated_at')
+
+    return message
   end
 
   def get_partner_uid(room_id, client_uid)

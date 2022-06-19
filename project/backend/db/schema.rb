@@ -28,7 +28,7 @@ ActiveRecord::Schema.define(version: 2022_06_15_114708) do
   end
 
 # Could not dump table "users" because of following StandardError
-#   Unknown type 'STRING' for column 'uid'
+#   Unknown type '' for column 'uid'
 
   add_foreign_key "entries", "users", column: "uid", primary_key: "uid"
   add_foreign_key "messages", "users", column: "uid", primary_key: "uid"

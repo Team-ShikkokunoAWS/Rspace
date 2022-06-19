@@ -13,6 +13,8 @@ Rails.application.routes.draw do
       post 'rooms/index' => 'rooms#index'
       post 'rooms/show' => 'rooms#show'
       post 'rooms/create' => 'rooms#create'
+      post 'rooms/check-room' => 'rooms#check_room'
+      post 'rooms/partner' => 'rooms#partner'
 
       post 'messages/all-messages' => 'messages#all_messages'
       post 'messages/unread-messages' => 'messages#unread_messages'

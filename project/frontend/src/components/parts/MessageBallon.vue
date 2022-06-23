@@ -50,7 +50,7 @@ export default defineComponent({
 		},
 		// メッセージの一意になるid(message_id)
 		messageId: {
-			type: Number,
+			type: String,
 			default: '',
 		},
 		// 吹き出しの横幅(デフォルト値：300px)

@@ -2,7 +2,7 @@
 	<!-- チャット相手の情報および戻るボタン箇所 -->
 	<div class="chat-user-info-wrapper">
 		<fa-icon class="exit-btn" icon="angles-left" @click="onclickBack" />
-		<p class="chat-user-name">チャット相手の名前</p>
+		<p class="chat-user-name">{{ state.otherUserName }}</p>
 	</div>
 	<!-- チャット内容を表示する領域 -->
 	<div id="message-field-wrapper">
@@ -41,7 +41,7 @@ import {
 } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from '@/store';
-// import { MessageManager, Messages } from '@/constants/MessageManager';
+import { MessageManager, Messages } from '@/constants/MessageManager';
 import TextAreaForm from '@/components/parts/TextAreaForm.vue';
 import MessageBallon from '@/components/parts/MessageBallon.vue';
 import axios from '@/plugins/axios';
@@ -49,7 +49,7 @@ import axios from '@/plugins/axios';
 interface State {
 	message: string;
 	items: Message[];
-	otherUserUid: string;
+	otherUserName: string;
 }
 
 interface Message {
@@ -71,7 +71,7 @@ export default defineComponent({
 		const state = reactive<State>({
 			message: '',
 			items: [] as Message[],
-			otherUserUid: '',
+			otherUserName: '',
 		});
 		// VueRouter
 		const route = useRoute();
@@ -97,12 +97,38 @@ export default defineComponent({
 			const roomId: string = String(route.params.room_id);
 			const data = {
 				roomId,
+				uid,
 			};
-			// TODO: 相手のユーザー名、相手のUIDを取得するためのAPIを叩く処理追加
+			// 相手のユーザー名、相手のUIDを取得
+			axios
+				.post('v1/rooms/partner', data)
+				.then((response) => {
+					// state.otherUserIconImage = response.data.partner.iconImage;
+					state.otherUserName = response.data.partner.userName;
+				})
+				.catch((error) => {
+					if (error.response.data.errorDetail === 'illegalRoomId') {
+						// 他人同士のルームに遷移している場合、ルーム一覧へ遷移させる。
+						router.push('/rooms');
+					} else {
+						store.dispatch('toast/setToastShow', {
+							message: MessageManager(Messages.SYS_ERROR),
+							toastType: 'danger',
+							isShow: true,
+						});
+					}
+					// トーストを2秒表示し、消す
+					setTimeout(() => {
+						store.dispatch('toast/setToastShow', {
+							message: '',
+							toastType: '',
+							isShow: false,
+						});
+					}, 2000);
+				});
 			axios
 				.post('v1/messages/all-messages', data)
 				.then((response) => {
-					console.log(response);
 					// 取得メッセージ情報をstateにセット
 					response.data.messages.forEach((item: any) => {
 						const message: Message = {
@@ -116,33 +142,6 @@ export default defineComponent({
 				})
 				.catch((error) => {
 					console.log(error);
-					// エラー処理
-					// if (error.response.data.errorDetail === 'illegalRoomId') {
-					// 	store.dispatch('toast/setToastShow', {
-					// 		message: MessageManager(
-					// 			Messages.MSG_000,
-					// 			'トークルームがありません。'
-					// 		),
-					// 		toastType: 'warning',
-					// 		isShow: true,
-					// 	});
-					// 	// 他人同士のルームに遷移している場合、ルーム一覧へ遷移させる。
-					// 	router.push('/rooms');
-					// } else {
-					// 	store.dispatch('toast/setToastShow', {
-					// 		message: MessageManager(Messages.SYS_ERROR),
-					// 		toastType: 'danger',
-					// 		isShow: true,
-					// 	});
-					// }
-					// トーストを2秒表示し、消す
-					// setTimeout(() => {
-					// 	store.dispatch('toast/setToastShow', {
-					// 		message: '',
-					// 		toastType: '',
-					// 		isShow: false,
-					// 	});
-					// }, 2000);
 				})
 				.finally(() => {
 					setTimeout(() => {
@@ -151,9 +150,9 @@ export default defineComponent({
 							isShow: false,
 						});
 					}, 1000);
+					// メッセージ表示領域の最下部を表示する = 最新メッセージを表示する
+					moveLatestMessage();
 				});
-			// メッセージ表示領域の最下部を表示する = 最新メッセージを表示する
-			moveLatestMessage();
 			// 10秒に一回未読メッセージを取得するイベントリスナー追加 & 解除用インターバルIDを変数に格納
 			nIntervId = window.setInterval(() => getUnReadMessages(roomId), 10000);
 		});
@@ -161,22 +160,25 @@ export default defineComponent({
 		/*=============================
 		未読メッセージの取得処理
 		=============================*/
-		// TODO: バックエンドの求めるUIDとフロントの送信するUIDが一致していないので注意
 		const getUnReadMessages = (roomId: string) => {
 			const data = {
 				roomId: roomId,
 				uid: uid,
 			};
 			axios.post('v1/messages/unread-messages', data).then((response) => {
-				// TODO: レスポンスをstateに追加する処理のレスポンス確認
-				const newMessage: Message = {
-					uid: response.data.message.uid,
-					messageId: response.data.message.id,
-					iconImage: response.data.message.iconImage,
-					message: response.data.message.message,
-					createdAt: response.data.message.createdAt,
-				};
-				state.items.push(newMessage);
+				// レスポンスが存在する場合のみ処理
+				if (response.data != '') {
+					response.data.messages.forEach((message: any) => {
+						const newMessage: Message = {
+							uid: message.uid,
+							messageId: message.id,
+							iconImage: message.iconImage,
+							message: message.message,
+							createdAt: message.createdAt,
+						};
+						state.items.push(newMessage);
+					});
+				}
 			});
 		};
 
@@ -197,7 +199,6 @@ export default defineComponent({
 				message: state.message,
 			};
 			axios.post('v1/messages/create', newMessage).then((response) => {
-				// TODO: レスポンスをstateに追加する処理のレスポンス確認
 				const newMessage: Message = {
 					uid: response.data.message.uid,
 					messageId: response.data.message.id,
@@ -206,11 +207,11 @@ export default defineComponent({
 					createdAt: response.data.message.createdAt,
 				};
 				state.items.push(newMessage);
+				// 最新のメッセージを表示する
+				moveLatestMessage();
+				// messageテキストエリアをクリアにする
+				state.message = '';
 			});
-			// messageテキストエリアをクリアにする
-			state.message = '';
-			// 最新のメッセージを表示する
-			moveLatestMessage();
 		};
 
 		/*=============================
@@ -227,8 +228,8 @@ export default defineComponent({
 			setTimeout(() => {
 				const messageFiled = document.getElementById('message-field-wrapper');
 				const height = messageFiled?.scrollHeight;
-				messageFiled?.scroll(0, Number(height));
-			});
+				messageFiled?.scrollTo(0, Number(height));
+			}, 10);
 		};
 
 		/*=============================

@@ -24,7 +24,7 @@
 				<div class="message-bar">
 					{{ item.message }}
 				</div>
-				<div class="message-time">{{ item.updated_at }}</div>
+				<div class="message-time">{{ item.updatedAt }}</div>
 			</div>
 		</MainCard>
 	</div>
@@ -44,7 +44,7 @@ type ChatCard = {
 	iconImage?: string;
 	username: string;
 	message: string;
-	timestamp: string;
+	updatedAt: string;
 };
 
 interface State {
@@ -86,7 +86,7 @@ export default defineComponent({
 						let roomData: ChatCard = {
 							roomId: response.data.rooms[i].roomId,
 							username: response.data.rooms[i].userName,
-							timestamp: response.data.rooms[i].updatedAt,
+							updatedAt: response.data.rooms[i].updatedAt,
 							message: response.data.rooms[i].latestMessage,
 						};
 						state.items.push(roomData);

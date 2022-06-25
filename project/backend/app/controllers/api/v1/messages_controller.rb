@@ -31,7 +31,9 @@ class Api::V1::MessagesController < ApplicationController
     )
     if messages.present?
       response = messages_response(messages)
-      update_is_read(messages)
+      messages.each do |message|
+        message.update_is_read
+      end
       render status: 200, json: {status: 'SUCCESS', messages: response}
     else
       render status: 400,
@@ -45,7 +47,7 @@ class Api::V1::MessagesController < ApplicationController
     )
 
     if message.save
-      response = message_response(message)
+      response = message.message_response
       render status: 200, json: {status: 'SUCCESS', message: response}
     else
       render status: 400, json: {status: 'ERROR', errorDetail: message.errors}
@@ -54,28 +56,12 @@ class Api::V1::MessagesController < ApplicationController
 
   private
   def messages_response(messages)
-    messages_hash = to_hash(messages)
-    messages_hash.each do |message|
-      change_key_for_js(message)
+    response = []
+    messages.each do |message|
+      response << message.message_response
     end
-  end
 
-  def to_hash(message)
-    message_json = message.to_json
-    JSON.parse(message_json)
-  end
-
-  def change_key_for_js(message)
-    message['roomId'] = message['room_id']
-    message['isUnread'] = message['is_unread']
-    message['createdAt'] = message['created_at']
-    message['updatedAt'] = message['updated_at']
-    message.delete('room_id')
-    message.delete('is_unread')
-    message.delete('created_at')
-    message.delete('updated_at')
-
-    return message
+    return response
   end
 
   def get_partner_uid(room_id, client_uid)
@@ -86,17 +72,5 @@ class Api::V1::MessagesController < ApplicationController
         return entry.uid
       end
     end
-  end
-
-  def update_is_read(messages)
-    messages.each do |message|
-      update_message = Message.find(message[:id])
-      update_message.update({:is_unread => false})
-    end
-  end
-
-  def message_response(message)
-    message_hash = to_hash(message)
-    change_key_for_js(message_hash)
   end
 end

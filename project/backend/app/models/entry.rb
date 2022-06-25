@@ -1,3 +1,4 @@
+# coding: utf-8
 require 'json'
 
 class Entry < ApplicationRecord
@@ -52,8 +53,8 @@ class Entry < ApplicationRecord
 
   def change_key_for_js(entry)
     entry['roomId'] = entry['room_id']
-    entry['createdAt'] = entry['created_at']
-    entry['updatedAt'] = entry['updated_at']
+    entry['createdAt'] = Time.zone.parse(entry['created_at']).strftime("%Y-%m-%d %H:%M:%S")
+    entry['updatedAt'] = Time.zone.parse(entry['updated_at']).strftime("%Y-%m-%d %H:%M:%S")
     entry.delete('room_id')
     entry.delete('created_at')
     entry.delete('updated_at')

@@ -5,6 +5,9 @@
 			<!-- メッセージ -->
 			{{ props.message }}
 		</div>
+		<div class="current-user-message-ballon-timestamp">
+			{{ props.timestamp }}
+		</div>
 	</div>
 	<!-- ログインユーザー以外のメッセージ（画面左側に配置） -->
 	<div v-else>
@@ -12,6 +15,9 @@
 			<UserIcon width="60px" height="60px" :backgroundImage="props.iconImage" />
 			<div class="message-ballon-wrapper other-user-message" :style="styles">
 				{{ props.message }}
+			</div>
+			<div class="other-user-message-ballon-timestamp">
+				{{ props.timestamp }}
 			</div>
 		</div>
 	</div>
@@ -58,10 +64,10 @@ export default defineComponent({
 			type: String,
 			default: '300px',
 		},
-		// 吹き出しの高さ（デフォルト値：100px）
+		// 吹き出しの高さ（デフォルト値：25px）
 		height: {
 			type: String,
-			default: '100px',
+			default: '25px',
 		},
 	},
 	setup(props) {
@@ -110,6 +116,11 @@ export default defineComponent({
 	margin-left: auto;
 	margin-right: 28px;
 }
+.current-user-message-ballon-timestamp {
+	width: 200px;
+	margin-left: auto;
+	margin-right: 28px;
+}
 .current-user-message::before {
 	content: '';
 	position: absolute;
@@ -129,6 +140,10 @@ export default defineComponent({
  ----------------------*/
 .other-user-message {
 	background-color: #272635;
+	margin-left: 70px;
+}
+.other-user-message-ballon-timestamp {
+	width: 200px;
 	margin-left: 70px;
 }
 .other-user-message::before {

@@ -108,7 +108,8 @@ textarea {
 	overflow-y: scroll;
 	-ms-overflow-style: none;
 	scrollbar-width: none;
-	color: #eee; /** テキストエリア入力フォームの文字色を白にする */
+	/* color: #eee; * テキストエリア入力フォームの文字色を白にする */
+	color: #333;
 }
 textarea::-webkit-scrollbar {
 	/* Chrome, Safari 対応 */

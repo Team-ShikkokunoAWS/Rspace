@@ -13,7 +13,7 @@
 				:message="item.message"
 				:uid="item.uid"
 				:iconImage="item.iconImage"
-				:createdAt="item.createdAt"
+				:timestamp="item.createdAt"
 			/>
 		</div>
 	</div>
@@ -126,6 +126,7 @@ export default defineComponent({
 						});
 					}, 2000);
 				});
+			// 画面初期表示時の全件メッセージ取得
 			axios
 				.post('v1/messages/all-messages', data)
 				.then((response) => {
@@ -257,8 +258,10 @@ export default defineComponent({
 	margin: 0;
 	box-sizing: border-box;
 	position: relative;
-	color: #ddd;
-	background-color: #415566;
+	/* color: #ddd; */
+	color: #333;
+	/* background-color: #415566; */
+	background-color: #eee;
 	border-bottom: 1px solid #ccc;
 }
 /* メッセージ表示領域の欄 */
@@ -268,7 +271,8 @@ export default defineComponent({
 		100vh - (80px + 80px + 120px + 30px)
 	); /** 画面サイズ - (チャット相手情報の高さ80px + チャット入力フォームの高さ80px + ヘッダーの高さ120px + メッセージ表示領域のpadding15px*2) */
 	border-bottom: 1px solid #ccc;
-	background-color: #415566;
+	/* background-color: #415566; */
+	background-color: #eee;
 	padding: 15px 20px;
 	overflow-y: scroll;
 	-ms-overflow-style: none;
@@ -287,6 +291,7 @@ export default defineComponent({
 	position: relative;
 	background-color: #8491c3;
 	background-color: #415566;
+	background-color: #eee;
 }
 
 /*---------------------

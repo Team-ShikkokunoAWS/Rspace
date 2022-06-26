@@ -29,6 +29,7 @@ export default defineComponent({
 		// VueRouter
 		const router = useRouter();
 		const sidebar = computed(() => store.state.sidebar);
+		// TODO: バックエンドから情報を受け取って拡張性を高くする
 		const items = [
 			{ id: 1, name: 'チャット', path: '/rooms' },
 			{ id: 2, name: 'ゲーム1', path: '/game1' },
